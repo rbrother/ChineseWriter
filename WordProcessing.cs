@@ -18,9 +18,9 @@ namespace ChineseWriter {
 
         private int _maxWordLength;
 
-        private Dictionary<string /* hanyi */, ChineseWordInfo> _words; 
+        private Dictionary<string /* hanyi */, ChineseWordInfo> _words;
 
-        private readonly Regex LITERAL_REGEX = new Regex( @"^[!！\?\？\.。,，0-9]+" );
+        private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，]+" );
 
         private int MaxWordLength {
             get {
@@ -87,16 +87,10 @@ namespace ChineseWriter {
             if (chinese == "") {
                 return new ChineseWordInfo[] { };
             } else {
-                var first = chinese.Substring( 0, 1 );
-                if (Regex.IsMatch( first, @"[a-zA-Z]" )) {
-                    // ignore pinyin
-                    return HanyuToWords( chinese.Substring( 1 ) );
-                } else {
-                    var firstWord = FirstWord( chinese );
-                    var rest = HanyuToWords( chinese.Substring( firstWord.hanyu.Length ) );
-                    var result = ( new ChineseWordInfo[] { firstWord } ).Concat( rest ).ToArray( );
-                    return result;
-                }
+                var firstWord = FirstWord( chinese );
+                var rest = HanyuToWords( chinese.Substring( firstWord.hanyu.Length ) );
+                var result = ( new ChineseWordInfo[] { firstWord } ).Concat( rest ).ToArray( );
+                return result;
             }
         }
 
@@ -108,9 +102,9 @@ namespace ChineseWriter {
         /// <param name="chineseText"></param>
         /// <returns></returns>
         private ChineseWordInfo FirstWord( string chinese ) {
-            var specialMatch = LITERAL_REGEX.Match( chinese );
-            if (specialMatch.Success) {
-                var match = specialMatch.Value;
+            var nonHanyiMatch = NON_HANYI.Match( chinese );
+            if (nonHanyiMatch.Success) {
+                var match = nonHanyiMatch.Value;
                 return new ChineseWordInfo { hanyu = match, pinyin = match, english = match };
             } else {
                 // Find longest match from the beginning
