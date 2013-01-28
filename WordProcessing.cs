@@ -20,7 +20,7 @@ namespace ChineseWriter {
 
         private Dictionary<string /* hanyi */, ChineseWordInfo> _words;
 
-        private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，]+" );
+        private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\:\/=]+" );
 
         private int MaxWordLength {
             get {
