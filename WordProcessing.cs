@@ -20,7 +20,7 @@ namespace ChineseWriter {
 
         private Dictionary<string /* hanyi */, ChineseWordInfo> _words;
 
-        private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\:\/=]+" );
+        private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
         private int MaxWordLength {
             get {
@@ -32,6 +32,8 @@ namespace ChineseWriter {
         }
 
         private string FileName { get { return "words.xml"; } }
+
+        private string FilePath { get { return FileName; } }
 
         public Dictionary<string /* hanyi */, ChineseWordInfo> Words {
             get {
@@ -49,7 +51,7 @@ namespace ChineseWriter {
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
         public Dictionary<string /* hanyi */, ChineseWordInfo> LoadWords( ) {
-            return XElement.Load( FileName )
+            return XElement.Load( FilePath )
                 .XPathSelectElements( "//Word" )
                 .Select( word => WordElementToWordInfo( word ) )
                 .ToDictionary( word => word.hanyu );
@@ -65,7 +67,7 @@ namespace ChineseWriter {
                             new XAttribute( "english", word.english )
                             )
                     ) )
-                ).Save( FileName );
+                ).Save( FilePath );
         }
 
         private ChineseWordInfo WordElementToWordInfo( XElement wordElement ) {
@@ -81,7 +83,7 @@ namespace ChineseWriter {
         /// Unknown chars are marked as null:s
         /// </summary>
         /// <param name="chinese"></param>
-        /// <example>很抱歉我这里没有信号 -> ["很","抱歉",".",null,"没有","信号"]</example>
+        /// <example>很抱歉.我这里没有信号 -> ["很","抱歉",".",null,"没有","信号"]</example>
         /// <returns></returns>
         public IEnumerable<ChineseWordInfo> HanyuToWords( string chinese ) {
             if (chinese == "") {

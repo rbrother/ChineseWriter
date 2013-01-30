@@ -195,6 +195,7 @@ namespace ChineseWriter {
                 window.HanyuBox.Text = Chinese.SelectedText;
                 window.PinyinBox.Focus( );
                 Process.Start( "http://translate.google.com/#zh-CN/en/" + Chinese.SelectedText );
+                Process.Start( "http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + Chinese.SelectedText );
             } else {
                 window.HanyuBox.Focus( );
             }
