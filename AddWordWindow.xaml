@@ -21,7 +21,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0">Hanyu</Label>
-        <TextBox Name="HanyuBox" TextChanged="TextChanged" FontSize="30" FontFamily="SimSun" Grid.Column="1" Grid.Row="0" 
+        <TextBox Name="HanyuBox" TextChanged="HanyuChanged" FontSize="30" FontFamily="SimSun" Grid.Column="1" Grid.Row="0" 
                  Style="{StaticResource WidgetStyle}"/>
         <Label Grid.Column="0" Grid.Row="1">Pinyin</Label>
         <TextBox Name="PinyinBox" TextChanged="TextChanged" Grid.Column="1" Grid.Row="1" 

@@ -207,7 +207,7 @@ namespace ChineseWriter {
             }
             var result = window.ShowDialog( );
             if (result.HasValue && result.Value) {
-                _words.AddWord( window.NewWord );
+                _words.AddOrModifyWord( window.NewWord );
             }
         }
 

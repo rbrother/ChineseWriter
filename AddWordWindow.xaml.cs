@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChineseWriter {
     /// <summary>
@@ -41,6 +33,19 @@ namespace ChineseWriter {
             }
         }
 
+        private void HanyuChanged( object sender, TextChangedEventArgs e ) {
+            var existingWord =_existingWords.
+                FirstOrDefault( word => word.hanyu == HanyuBox.Text );
+            if (!existingWord.IsEmpty) {
+                PinyinBox.Text = existingWord.pinyin;
+                EnglishBox.Text = existingWord.english;
+                this.Title = "Modify existing word";
+            } else {
+                this.Title = "Add new word";
+            }
+            TextChanged( sender, e );
+        }
+
         private void TextChanged( object sender, TextChangedEventArgs e ) {
             OkButton.IsEnabled = ValidationErrors == null;
             ErrorMessage.Content = ValidationErrors;
@@ -51,9 +56,6 @@ namespace ChineseWriter {
                 if (PinyinBox.Text == "") return "Pinyin must not be empty";
                 if (HanyuBox.Text == "") return "Hanyu must not be empty";
                 if (EnglishBox.Text == "") return "English must not be empty";
-                if (_existingWords.Select( word => word.hanyu ).Contains( HanyuBox.Text )) {
-                    return "Database already contains " + HanyuBox.Text;
-                }
                 return null;
             }
         }

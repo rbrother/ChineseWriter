@@ -154,8 +154,8 @@ namespace ChineseWriter {
             return String.Join( "  ", words.Select( word => word.PinyinString ).ToArray( ) );
         }
 
-        public void AddWord( ChineseWordInfo newWord ) {
-            Words.Add( newWord.hanyu, newWord );
+        public void AddOrModifyWord( ChineseWordInfo newWord ) {
+            Words[ newWord.hanyu ] = newWord ;
             _wordsChanged.OnNext( _words.Count );
             SaveWords( );
         }
