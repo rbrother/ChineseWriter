@@ -56,6 +56,7 @@
     <Word pinyin="Bù biàn" hanyu="不便" english="Inconvenient, Inappropriate, Unsuitable" />
     <Word pinyin="Bù cuò" hanyu="不错" english="Not bad, Pretty good, Right, Correct" />
     <Word pinyin="Bù jiǔ" hanyu="不久" english="Soon, Soon after" />
+    <Word pinyin="Bù néng" hanyu="不能" english="Cannot, Should not, Must not" />
     <Word pinyin="Bù shì" hanyu="不是" english="No, Is not" />
     <Word pinyin="Bù xià" hanyu="不下" english="No less than" />
     <Word pinyin="Bù xìng" hanyu="不幸" english="Unfortunately, Sad, Misfortune" />
@@ -226,6 +227,7 @@
     <Word pinyin="Fù" hanyu="付" english="Pay" />
     <Word pinyin="Fù běn" hanyu="副本" english="Duplicate" />
     <Word pinyin="Fù jìn" hanyu="附近" english="Nearby, Vicinity, Neighborhood" />
+    <Word pinyin="Fù mǔ" hanyu="父母" english="Parents, Father and mother" />
     <Word pinyin="Fù qián" hanyu="付钱" english="Pay" />
     <Word pinyin="Fù qīn" hanyu="父亲" english="Father" />
     <Word pinyin="Fù yù" hanyu="富裕" english="Wealthy, RIch" />
@@ -283,6 +285,7 @@
     <Word pinyin="Hā" hanyu="哈" english="Ha" />
     <Word pinyin="Hā hā" hanyu="哈哈" english="Haha" />
     <Word pinyin="Hái" hanyu="还" english="Also, Still, Yet" />
+    <Word pinyin="Hái" hanyu="孩" english="Child" />
     <Word pinyin="Hǎi" hanyu="海" english="Sea, Ocean" />
     <Word pinyin="Hāi" hanyu="嗨" english="Hi" />
     <Word pinyin="Hài pà" hanyu="害怕" english="Be afraid" />
@@ -360,6 +363,7 @@
     <Word pinyin="Jí jiāng" hanyu="即将" english="Upcoming, On the verge of" />
     <Word pinyin="Jī ròu" hanyu="鸡肉" english="Chicken" />
     <Word pinyin="Jì suàn" hanyu="计算" english="Calculate, Compute, Count" />
+    <Word pinyin="Jǐ tiān" hanyu="几天" english="Several days" />
     <Word pinyin="Jì xù" hanyu="继续" english="Continue, Proceed, Go on" />
     <Word pinyin="Jì zhù" hanyu="记住" english="Remember" />
     <Word pinyin="Jiā" hanyu="家" english="Home, Family" />
@@ -369,6 +373,7 @@
     <Word pinyin="Jiā lǐ rén" hanyu="家里人" english="Family" />
     <Word pinyin="Jià qián" hanyu="价钱" english="Price" />
     <Word pinyin="Jiā rén" hanyu="家人" english="Family" />
+    <Word pinyin="Jiā tíng" hanyu="家庭" english="Family, Household" />
     <Word pinyin="Jiàn" hanyu="见" english="See" />
     <Word pinyin="Jiān" hanyu="间" english="Between" />
     <Word pinyin="Jiǎn chá" hanyu="检查" english="Check, Inspection, Examine" />
@@ -443,6 +448,7 @@
     <Word pinyin="Kè" hanyu="课" english="Lesson, Class" />
     <Word pinyin="Kě" hanyu="可" english="Can, May, But, Yet" />
     <Word pinyin="Kě bēi" hanyu="可悲" english="Sad" />
+    <Word pinyin="Kě lián" hanyu="可怜" english="Pitiful, Pathetic, Wretched" />
     <Word pinyin="Kě néng" hanyu="可能" english="May, Possible, Probable" />
     <Word pinyin="Kě shì" hanyu="可是" english="But, However" />
     <Word pinyin="Kè táng" hanyu="课堂" english="Classroom" />
@@ -477,6 +483,7 @@
     <Word pinyin="Lěng" hanyu="冷" english="Cold" />
     <Word pinyin="Lì" hanyu="力" english="Power, Force, Strength" />
     <Word pinyin="Lǐ" hanyu="里" english="In, Inside" />
+    <Word pinyin="Lí hūn" hanyu="离婚" english="Divorce, Divorce from spouse" />
     <Word pinyin="Lǐ jiě" hanyu="理解" english="Understand" />
     <Word pinyin="Lí kāi" hanyu="离开" english="Leave" />
     <Word pinyin="Lǐ miàn" hanyu="里面" english="Inside" />
@@ -792,6 +799,7 @@
     <Word pinyin="Tóu" hanyu="头" english="Head" />
     <Word pinyin="Tóu fǎ" hanyu="头发" english="Hair" />
     <Word pinyin="Tóu jīn" hanyu="头巾" english="Scarf" />
+    <Word pinyin="Tóu téng" hanyu="头疼" english="Headache" />
     <Word pinyin="Tóu tòng" hanyu="头痛" english="Headache" />
     <Word pinyin="Tōu tōu" hanyu="偷偷" english="Secretly" />
     <Word pinyin="Tú" hanyu="图" english="Map, Chart, Drawing, Picture" />
@@ -924,6 +932,7 @@
     <Word pinyin="Xiū xí" hanyu="休息" english="Rest, Break" />
     <Word pinyin="Xǔ xiào" hanyu="许笑" english="Laugh" />
     <Word pinyin="Xū yào" hanyu="需要" english="Require, Need, Want" />
+    <Word pinyin="Xué" hanyu="学" english="Study, Learn, School" />
     <Word pinyin="Xuě" hanyu="雪" english="Snow" />
     <Word pinyin="Xué fèi" hanyu="学费" english="Tuition, Tuition fee, School fee" />
     <Word pinyin="Xué qí" hanyu="学期" english="Semester" />
@@ -937,6 +946,7 @@
     <Word pinyin="Yán" hanyu="言" english="Speech, Word, Say, Speak, Talk" />
     <Word pinyin="Yán gé" hanyu="严格" english="Strict, Rigorous, Demanding" />
     <Word pinyin="Yān huā" hanyu="烟花" english="Fireworks" />
+    <Word pinyin="Yǎn jing" hanyu="眼睛" english="Eye, Eyes" />
     <Word pinyin="Yǎn jìng" hanyu="眼镜" english="Glasses, Spectacles, Eyeglasses" />
     <Word pinyin="Yán jiū" hanyu="研究" english="Study, Research" />
     <Word pinyin="Yán sè" hanyu="颜色" english="Color" />
@@ -1009,7 +1019,7 @@
     <Word pinyin="Yù" hanyu="豫" english="Henan" />
     <Word pinyin="Yǔ" hanyu="雨" english="Rain, Rainy" />
     <Word pinyin="Yǔ" hanyu="语" english="Language" />
-    <Word pinyin="Yǔ" hanyu="与" english="And" />
+    <Word pinyin="Yǔ" hanyu="与" english="Together with, And, Give" />
     <Word pinyin="Yù jì" hanyu="预计" english="Estimate, Forecast" />
     <Word pinyin="Yù jiàn" hanyu="遇见" english="Meet, Encounter" />
     <Word pinyin="Yú kuài" hanyu="愉快" english="Pleasant, Happy" />
