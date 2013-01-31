@@ -46,6 +46,7 @@
     <Word pinyin="Bì xū" hanyu="必须" english="Must, Need, Have to" />
     <Word pinyin="Biàn huà" hanyu="变化" english="Change" />
     <Word pinyin="Biàn lěng" hanyu="变冷" english="Chill" />
+    <Word pinyin="Biǎo jie" hanyu="表姐" english="Cousin, Cousin (older female cousin via female line)" />
     <Word pinyin="Bié" hanyu="别" english="Do not, Other, Another" />
     <Word pinyin="Bié rén" hanyu="别人" english="Other people" />
     <Word pinyin="Bīn guǎn" hanyu="宾馆" english="Guesthouse, Hotel" />
@@ -55,7 +56,9 @@
     <Word pinyin="Bù" hanyu="布" english="Cloth, Fabric" />
     <Word pinyin="Bù biàn" hanyu="不便" english="Inconvenient, Inappropriate, Unsuitable" />
     <Word pinyin="Bù cuò" hanyu="不错" english="Not bad, Pretty good, Right, Correct" />
+    <Word pinyin="Bù hǎo" hanyu="不好" english="No good" />
     <Word pinyin="Bù jiǔ" hanyu="不久" english="Soon, Soon after" />
+    <Word pinyin="Bù kě sī yì" hanyu="不可思议" english="Inconceivable, Unimaginable " />
     <Word pinyin="Bù néng" hanyu="不能" english="Cannot, Should not, Must not" />
     <Word pinyin="Bù shì" hanyu="不是" english="No, Is not" />
     <Word pinyin="Bù xià" hanyu="不下" english="No less than" />
@@ -138,6 +141,7 @@
     <Word pinyin="Dān xīn" hanyu="担心" english="Worry, Worried" />
     <Word pinyin="Dāng" hanyu="当" english="When, At" />
     <Word pinyin="Dāng rán" hanyu="当然" english="Of course, Certainly, Sure" />
+    <Word pinyin="Dāng shí" hanyu="当时" english="Then, At that time, While" />
     <Word pinyin="Dào" hanyu="到" english="To, Go To" />
     <Word pinyin="Dào chù" hanyu="到处" english="Everywhere" />
     <Word pinyin="Dào dá" hanyu="到达" english="Reach, Get to" />
@@ -231,6 +235,7 @@
     <Word pinyin="Fù qián" hanyu="付钱" english="Pay" />
     <Word pinyin="Fù qīn" hanyu="父亲" english="Father" />
     <Word pinyin="Fù yù" hanyu="富裕" english="Wealthy, RIch" />
+    <Word pinyin="Fù zá" hanyu="复杂" english="Complicated, Complex" />
     <Word pinyin="Gǎi biàn" hanyu="改变" english="Change, Alter" />
     <Word pinyin="Gǎn" hanyu="敢" english="Dare" />
     <Word pinyin="Gǎn" hanyu="赶" english="Rush" />
@@ -335,6 +340,7 @@
     <Word pinyin="Huài shì" hanyu="坏事" english="Bad thing, Wrong, Evil" />
     <Word pinyin="Huán chéng" hanyu="环城" english="Around city, encircling the city (of walls, ring road etc)" />
     <Word pinyin="Huán chéng lù" hanyu="环城路" english="Ring road" />
+    <Word pinyin="Huán gěi" hanyu="还给" english="Return, Return something to somebody" />
     <Word pinyin="Huán jìng" hanyu="环境" english="Environment, Setting" />
     <Word pinyin="Huǎn màn" hanyu="缓慢" english="Slow" />
     <Word pinyin="Huí" hanyu="回" english="Return, Go back" />
@@ -345,6 +351,7 @@
     <Word pinyin="Huí fù" hanyu="回复" english="Reply" />
     <Word pinyin="Huì huà" hanyu="绘画" english="Painting, Drawing, Paint, Draw" />
     <Word pinyin="Huí jiā" hanyu="回家" english="Return home" />
+    <Word pinyin="Huí lái" hanyu="回来" english="Come back, Return" />
     <Word pinyin="Huī sè" hanyu="灰色" english="Gray" />
     <Word pinyin="Huǒ chē" hanyu="火车" english="Train" />
     <Word pinyin="Huǒ chē zhàn" hanyu="火车站" english="Train station" />
@@ -461,6 +468,7 @@
     <Word pinyin="Kōng jiān" hanyu="空间" english="Space, Room" />
     <Word pinyin="Kòng xián" hanyu="空闲" english="Idle, Free" />
     <Word pinyin="Kǒu" hanyu="口" english="Mouth" />
+    <Word pinyin="Kū" hanyu="哭" english="Cry, Weep" />
     <Word pinyin="Kuài" hanyu="快" english="Fast, Quick, Rapid, Soon" />
     <Word pinyin="Kuài" hanyu="块" english="Piece, Block, Mass" />
     <Word pinyin="Kuài diǎn" hanyu="快点" english="Hurry" />
@@ -498,6 +506,7 @@
     <Word pinyin="Lián zi" hanyu="帘子" english="Curtain" />
     <Word pinyin="Liáng" hanyu="凉" english="Cool, Cold" />
     <Word pinyin="Liàng" hanyu="量" english="Amount, Volume, Capacity" />
+    <Word pinyin="Liǎng" hanyu="两" english="Two, Both, Some, Few" />
     <Word pinyin="Liáo" hanyu="聊" english="Chat" />
     <Word pinyin="Liǎo jiě" hanyu="了解" english="Find out, Understand" />
     <Word pinyin="Liáo tiān" hanyu="聊天" english="Chat" />
@@ -573,7 +582,7 @@
     <Word pinyin="Nǎ ge" hanyu="哪个" english="Which" />
     <Word pinyin="Nà lǐ" hanyu="那里" english="There" />
     <Word pinyin="Nǎ lǐ" hanyu="哪里" english="Where" />
-    <Word pinyin="Nà me" hanyu="那么" english="Then" />
+    <Word pinyin="Nà me" hanyu="那么" english="Like that, In that way, So, In that case" />
     <Word pinyin="Nán" hanyu="难" english="Difficult, Hard, Difficulty" />
     <Word pinyin="Nán" hanyu="南" english="South" />
     <Word pinyin="Nán dào" hanyu="难道" english="Could it be" />
@@ -602,6 +611,7 @@
     <Word pinyin="Nòng" hanyu="弄" english="Get, Do" />
     <Word pinyin="Nóng cūn" hanyu="农村" english="Countryside" />
     <Word pinyin="Nǚ" hanyu="女" english="Female, Woman, Girl" />
+    <Word pinyin="Nǚ ér" hanyu="女儿" english="Daughter" />
     <Word pinyin="Nǔ lì" hanyu="努力" english="Strive, Try hard, Great effort" />
     <Word pinyin="Nǚ péng yǒu" hanyu="女朋友" english="Girlfriend" />
     <Word pinyin="Nuǎn nuǎn" hanyu="暖暖" english="Warm" />
@@ -969,6 +979,7 @@
     <Word pinyin="Yī diǎn er" hanyu="一点儿" english="A little" />
     <Word pinyin="Yī fú" hanyu="衣服" english="Clothes" />
     <Word pinyin="Yī gè" hanyu="一个" english="a" />
+    <Word pinyin="Yī gè rén" hanyu="一个人" english="Alone" />
     <Word pinyin="Yí hàn" hanyu="遗憾" english="Sorry, Regret, Pity" />
     <Word pinyin="Yǐ hòu" hanyu="以后" english="After, Later, In the future" />
     <Word pinyin="Yi jiā" hanyu="宜家" english="IKEA" />
@@ -1020,6 +1031,7 @@
     <Word pinyin="Yǔ" hanyu="雨" english="Rain, Rainy" />
     <Word pinyin="Yǔ" hanyu="语" english="Language" />
     <Word pinyin="Yǔ" hanyu="与" english="Together with, And, Give" />
+    <Word pinyin="Yù dào" hanyu="遇到" english="Encounter" />
     <Word pinyin="Yù jì" hanyu="预计" english="Estimate, Forecast" />
     <Word pinyin="Yù jiàn" hanyu="遇见" english="Meet, Encounter" />
     <Word pinyin="Yú kuài" hanyu="愉快" english="Pleasant, Happy" />
