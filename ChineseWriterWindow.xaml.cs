@@ -31,67 +31,73 @@ namespace ChineseWriter {
         WordDatabase _words = new WordDatabase();
 
         public ChineseWriterWindow( ) {
-            InitializeComponent( );
-            Chinese.Focus( );
+            try {
+                InitializeComponent( );
+                _words.LoadWords( ); // These would be loaded later lazily, but force here early loading for fail-fast in case of errors
+                Chinese.Focus( );
 
-            var ChineseTextChanges = Observable
-                .FromEventPattern<TextChangedEventArgs>( Chinese, "TextChanged" )
-                .Select( args => args.EventArgs );
+                var ChineseTextChanges = Observable
+                    .FromEventPattern<TextChangedEventArgs>( Chinese, "TextChanged" )
+                    .Select( args => args.EventArgs );
 
-            var KeyPresses = ChineseTextChanges
-                .Where( arg => arg.Changes.Count == 1 )
-                .Select( arg => arg.Changes.First( ) )
-                .Where( change => change.AddedLength == 1 || change.RemovedLength == 1 )
-                .ObserveOnDispatcher()
-                .Select( change => new TextChangeInfo { text = Chinese.Text, position = Chinese.SelectionStart } );
+                var KeyPresses = ChineseTextChanges
+                    .Where( arg => arg.Changes.Count == 1 )
+                    .Select( arg => arg.Changes.First( ) )
+                    .Where( change => change.AddedLength == 1 || change.RemovedLength == 1 )
+                    .ObserveOnDispatcher( )
+                    .Select( change => new TextChangeInfo { text = Chinese.Text, position = Chinese.SelectionStart } );
 
-            var PinyinWrites = KeyPresses
-                .Where( change => PinyinEntered( change ) != null )
-                .Select( change => PinyinEntered( change ) )
-                .DistinctUntilChanged( );
+                var PinyinWrites = KeyPresses
+                    .Where( change => PinyinEntered( change ) != null )
+                    .Select( change => PinyinEntered( change ) )
+                    .DistinctUntilChanged( );
 
-            var PinyinSelections = KeyPresses
-                .Where( change => PinyinSelected( change ).HasValue )
-                .Select( change => PinyinSelected( change ).Value )
-                .Where( pinyinInfo => Suggestions.RowDefinitions.Count >= pinyinInfo.selectedIndex );
+                var PinyinSelections = KeyPresses
+                    .Where( change => PinyinSelected( change ).HasValue )
+                    .Select( change => PinyinSelected( change ).Value )
+                    .Where( pinyinInfo => Suggestions.RowDefinitions.Count >= pinyinInfo.selectedIndex );
 
-            var EnglishChecked = Observable
-                .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
-                .Select( args => true );
-            var EnglishUnchecked = Observable
-                .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Unchecked" )
-                .Select( args => false );
-            var EnglishChechedChanged = new bool[] { false }.ToObservable( )
-                .Merge( EnglishChecked )
-                .Merge( EnglishUnchecked );
+                var EnglishChecked = Observable
+                    .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
+                    .Select( args => true );
+                var EnglishUnchecked = Observable
+                    .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Unchecked" )
+                    .Select( args => false );
+                var EnglishChechedChanged = new bool[] { false }.ToObservable( )
+                    .Merge( EnglishChecked )
+                    .Merge( EnglishUnchecked );
 
-            var WordsDatabaseChanged = new int[] { 0 }.ToObservable()
-                .Concat( _words.WordsChanged )
-                .ObserveOnDispatcher( );
+                var WordsDatabaseChanged = new int[] { 0 }.ToObservable( )
+                    .Concat( _words.WordsChanged )
+                    .ObserveOnDispatcher( );
 
-            WordsDatabaseChanged
-                .Subscribe( arg => WordCountLabel.Content = string.Format( "Words: {0}", _words.Words.Count ) );
-    
-            PinyinWrites
-                .CombineLatest( EnglishChechedChanged, (pinyin, english) => Tuple.Create( pinyin, english ) )
-                .Throttle( TimeSpan.FromSeconds( 0.2 ) )
-                .ObserveOnDispatcher( )
-                .Subscribe( args => UpdateSuggestions( args.Item1, args.Item2 ) );                
+                WordsDatabaseChanged
+                    .Subscribe( arg => WordCountLabel.Content = string.Format( "Words: {0}", _words.Words.Count ) );
 
-            PinyinSelections
-                .Subscribe( pinyinInfo => ConvertPinyinToHanyu( pinyinInfo ) );
+                PinyinWrites
+                    .CombineLatest( EnglishChechedChanged, ( pinyin, english ) => Tuple.Create( pinyin, english ) )
+                    .Throttle( TimeSpan.FromSeconds( 0.2 ) )
+                    .ObserveOnDispatcher( )
+                    .Subscribe( args => UpdateSuggestions( args.Item1, args.Item2 ) );
 
-            ChineseTextChanges
-                .ObserveOnDispatcher( )
-                .Subscribe( args => RemoveSpaces( ) );
+                PinyinSelections
+                    .Subscribe( pinyinInfo => ConvertPinyinToHanyu( pinyinInfo ) );
 
-            ChineseTextChanges
-                .Select( e => Chinese.Text )
-                .CombineLatest( EnglishChechedChanged, (chinese, english) => Tuple.Create( chinese, english ))
-                .DistinctUntilChanged( )
-                .CombineLatest( WordsDatabaseChanged, ( args, newword ) => args )
-                .ObserveOnDispatcher( )
-                .Subscribe( args => PopulateCharGrid( args.Item1, args.Item2 ) );
+                ChineseTextChanges
+                    .ObserveOnDispatcher( )
+                    .Subscribe( args => RemoveSpaces( ) );
+
+                ChineseTextChanges
+                    .Select( e => Chinese.Text )
+                    .CombineLatest( EnglishChechedChanged, ( chinese, english ) => Tuple.Create( chinese, english ) )
+                    .DistinctUntilChanged( )
+                    .CombineLatest( WordsDatabaseChanged, ( args, newword ) => args )
+                    .ObserveOnDispatcher( )
+                    .Subscribe( args => PopulateCharGrid( args.Item1, args.Item2 ) );
+            } catch (Exception ex) {
+                MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
+                this.Close( );
+            }
         }
 
         private void RemoveSpaces( ) {

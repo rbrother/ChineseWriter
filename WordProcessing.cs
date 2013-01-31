@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
@@ -18,6 +20,8 @@ namespace ChineseWriter {
 
         private int _maxWordLength;
 
+        private string _filePath;
+
         private Dictionary<string /* hanyi */, ChineseWordInfo> _words;
 
         private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
@@ -33,7 +37,28 @@ namespace ChineseWriter {
 
         private string FileName { get { return "words.xml"; } }
 
-        private string FilePath { get { return FileName; } }
+        private string FilePath { 
+            get {
+                if (_filePath == null) {
+                    _filePath = SearchUpwardFile( ExeDir );
+                }
+                return _filePath; 
+            } 
+        }
+
+        private static DirectoryInfo ExeDir {
+            get {
+                var exePath = new Uri( Assembly.GetExecutingAssembly( ).CodeBase ).LocalPath;
+                var exeDir = new FileInfo( exePath ).Directory;
+                return exeDir;
+            }
+        }
+
+        private string SearchUpwardFile( DirectoryInfo startDir ) {
+            var theFile = startDir.GetFiles( ).FirstOrDefault( file => file.Name == FileName );
+            if (theFile != null) return theFile.FullName;
+            return SearchUpwardFile( startDir.Parent );            
+        }
 
         public Dictionary<string /* hanyi */, ChineseWordInfo> Words {
             get {
