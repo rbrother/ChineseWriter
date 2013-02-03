@@ -11,22 +11,21 @@ namespace ChineseWriter {
     internal class WritingState {
 
         private WordDatabase _hanyuDb = new WordDatabase( );
-        private int _cursorPos = 0;
+        private int _cursorPos;
         private int _selectionStart = 0;
         private int _selectionLength = 0;
-        private IEnumerable<ChineseWordInfo> _words = new ChineseWordInfo[] { };
+        private ChineseWordInfo[] _words;
+        private ChineseWordInfo[] _suggestions;
         private bool _english;
         private string _pinyinInput = "";
 
         // Observables
         public Subject<string> PinyinChanges = new Subject<string>( );
         public Subject<bool> EnglishChanges = new Subject<bool>( );
-        public Subject<IEnumerable<ChineseWordInfo>> SuggestionsChanges = new Subject<IEnumerable<ChineseWordInfo>>( );
-        public Subject<IEnumerable<ChineseWordInfo>> WordsChanges = new Subject<IEnumerable<ChineseWordInfo>>( );
+        public Subject<ChineseWordInfo[]> SuggestionsChanges = new Subject<ChineseWordInfo[]>( );
+        public Subject<ChineseWordInfo[]> WordsChanges = new Subject<ChineseWordInfo[]>( );
+        public Subject<int> CursorPosChanges = new Subject<int>( );
         public IObservable<int> WordsDatabaseChanged;
-
-        // Simple accessors
-        public int CursorPos { get { return _cursorPos; } }
 
         // Observables accessors
         public bool English {
@@ -37,9 +36,13 @@ namespace ChineseWriter {
             get { return _pinyinInput;  }
             set { _pinyinInput = value; PinyinChanges.OnNext( value ); }
         }
-        public IEnumerable<ChineseWordInfo> Words { 
+        public ChineseWordInfo[] Words { 
             get { return _words; }
             set { _words = value; WordsChanges.OnNext( _words ); }
+        }
+        public int CursorPos {
+            get { return _cursorPos; }
+            set { _cursorPos = value; CursorPosChanges.OnNext( value ); }
         }
 
         // Constructor
@@ -48,24 +51,13 @@ namespace ChineseWriter {
                 Concat( _hanyuDb.WordsChanged );
             PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => 0 ).
                 Subscribe( value => UpdateSuggestions( ) );
-            PinyinInput = "";
-            English = false;
         }
 
         private void UpdateSuggestions( ) {
-            SuggestionsChanges.OnNext( _hanyuDb.MatchingSuggestions( PinyinInput, _english ).Take( 9 ) );
-        }
-
-        public string ChineseText {
-            get {
-                throw new NotImplementedException( "This should return current text as hanyi string" );
-            }
-        }
-
-        public string SelectedChineseText {
-            get {
-                throw new NotImplementedException( "This should return current selected text as hanyi string" );
-            }
+            _suggestions = PinyinInput == "" ?
+                new ChineseWordInfo[] {} :
+                _hanyuDb.MatchingSuggestions( PinyinInput, _english ).Take( 9 ).ToArray();
+            SuggestionsChanges.OnNext( _suggestions );
         }
 
         public void AddPinyinInput( string newPinyin ) {
@@ -74,22 +66,51 @@ namespace ChineseWriter {
 
         public void BackSpace( ) {
             if (PinyinInput == "") {
-                throw new NotImplementedException( );
+                if (CursorPos > 0) {
+                    Words = Words.Take( CursorPos - 1 ).
+                        Concat( Words.Skip( CursorPos ) ).
+                        ToArray( );
+                    CursorPos--;
+                }
             } else {
                 PinyinInput = PinyinInput.DropLast( );
             }
         }
 
         internal void SelectPinyin( int n ) {
-            
+            if (n <= _suggestions.Length) {
+                Words = Words.Take( CursorPos ).
+                    Concat( new ChineseWordInfo[] { WordToInsert(n) } ).
+                    Concat( Words.Skip( CursorPos ) ).
+                    ToArray( );
+                PinyinInput = "";
+                CursorPos = CursorPos + 1;
+            }
+        }
+
+        private ChineseWordInfo WordToInsert( int suggestionIndex ) {
+            return suggestionIndex == 0 ?
+                new ChineseWordInfo { hanyu = PinyinInput, pinyin = PinyinInput, english = PinyinInput } :
+                _suggestions[suggestionIndex - 1];
         }
 
         public object HanyiPinyinLines { 
-            get { 
-                return _hanyuDb.HanyiPinyinLines( ChineseText ); 
+            get {
+                var pinyinLine = string.Join( "  ", Words
+                    .Select( word => word.PinyinString ).ToArray( ) );
+                var hanyiLine = string.Join( " ", Words
+                    .Select( word => word.hanyu ).ToArray( ) );
+                return hanyiLine + "\n" + pinyinLine;
             } 
         }
 
+        internal void MoveRight( ) {
+            CursorPos = Math.Min( CursorPos + 1, Words.Length );
+        }
+
+        internal void MoveLeft( ) {
+            CursorPos = Math.Max( CursorPos - 1, 0 );
+        }
     } // class
 
 } // namespace

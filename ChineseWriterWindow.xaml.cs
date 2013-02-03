@@ -18,33 +18,41 @@ namespace ChineseWriter {
     /// </summary>
     public partial class ChineseWriterWindow : Window {
 
-        WritingState _writingState = new WritingState( );
+        private WritingState _writingState = new WritingState( );
+        private Label _cursorLabel;
+        private FrameworkElement _cursorPanel;
 
         public ChineseWriterWindow( ) {
             try {
                 InitializeComponent( );
-                this.Characters.Focus( );
+                _cursorLabel = new Label {
+                    MinWidth = 10, MinHeight = 40,
+                    Background = new SolidColorBrush( Colors.GreenYellow ),
+                    Content = "",
+                    FontSize = 18.0,
+                    VerticalContentAlignment = VerticalAlignment.Center
+                };
+                _cursorPanel = WrapToBorder( _cursorLabel );
 
                 var KeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( this, "KeyUp" ).
-                    Select( args => args.EventArgs.Key );
+                    Select( args => args.EventArgs );
                 var AlphaKeyPresses = KeyPresses.
-                    Where( key => StringUtils.IsAlphaKey( key ) ).
-                    Select( key => key.ToString().ToLower() );
+                    Where( args => StringUtils.IsAlphaKey( args.Key ) ).
+                    Select( args => args.Key.ToString( ).ToLower( ) );
                 var NumberKeyPresses = KeyPresses.
-                    Where( key => StringUtils.IsNumberKey( key ) ).
-                    Select( key => StringUtils.NumberKeyValue( key ) );
+                    Where( args => StringUtils.IsNumberKey( args.Key ) ).
+                    Select( args => StringUtils.NumberKeyValue( args.Key ) );
 
-                KeyPresses.Where( key => key == Key.Back ).
-                    Subscribe( key => _writingState.BackSpace() );
                 AlphaKeyPresses.
-                    Subscribe( newPinyin => _writingState.AddPinyinInput(newPinyin) );
-                NumberKeyPresses.Subscribe( n => _writingState.SelectPinyin( n ) ); 
-
-                _writingState.PinyinChanges.
-                    SubscribeOnDispatcher( ).Subscribe( pinyin => _cursorLabel.Content = pinyin );
-                _writingState.SuggestionsChanges.
-                    SubscribeOnDispatcher( ).Subscribe( suggestions => UpdateSuggestions( suggestions ) );
+                    Subscribe( newPinyin => _writingState.AddPinyinInput( newPinyin ) );
+                NumberKeyPresses.Subscribe( n => _writingState.SelectPinyin( n ) );
+                KeyPresses.Where( args => args.Key == Key.Back ).
+                    Subscribe( args => _writingState.BackSpace() );
+                KeyPresses.Where( args => args.Key == Key.Left ).
+                    Subscribe( args => _writingState.MoveLeft( ) );
+                KeyPresses.Where( args => args.Key == Key.Right ).
+                    Subscribe( args => _writingState.MoveRight( ) );
 
                 var EnglishChecked = Observable
                     .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
@@ -55,16 +63,24 @@ namespace ChineseWriter {
                 var EnglishChechedChanged = new bool[] { false }.ToObservable( )
                     .Merge( EnglishChecked )
                     .Merge( EnglishUnchecked );
-
                 EnglishChechedChanged.Subscribe( value => _writingState.English = value );
 
-                _writingState.WordsDatabaseChanged.
-                    ObserveOnDispatcher().
+                // Update UI based on writing state changes
+                _writingState.WordsDatabaseChanged.ObserveOnDispatcher( ).
                     Subscribe( count => WordCountLabel.Content = string.Format( "Words: {0}", count ) );
+                _writingState.PinyinChanges.ObserveOnDispatcher( ).
+                    Subscribe( pinyin => _cursorLabel.Content = pinyin );
+                _writingState.SuggestionsChanges.ObserveOnDispatcher( ).
+                    Subscribe( suggestions => UpdateSuggestions( suggestions ) );
+                _writingState.WordsChanges.
+                    CombineLatest(_writingState.CursorPosChanges, (words,cursor) => Tuple.Create(words,cursor)).                    
+                    ObserveOnDispatcher( ).
+                    Subscribe( value => PopulateCharGrid( value.Item1, value.Item2 ) );
 
-
-
-                PopulateCharGrid( true );
+                _writingState.PinyinInput = "";
+                _writingState.English = false;
+                _writingState.Words = new ChineseWordInfo[] { };
+                _writingState.CursorPos = 0;
 
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
@@ -72,63 +88,18 @@ namespace ChineseWriter {
             }
         }
 
-/*        private void ConvertPinyinToHanyu( PinyinSelectionInfo info ) {
-            var hanyu = ( (ChineseWordInfo)Suggestions.RowDefinitions[info.selectedIndex - 1].Tag ).hanyu;
-            Chinese.Text = info.text.Substring( 0, info.position - info.pinyinLength ) +
-                            hanyu + info.text.Substring( info.position );
-            Chinese.SelectionStart = info.position - info.pinyinLength + hanyu.Length;
-            Suggestions.Children.Clear( );
-        }
-*/
-
-/*
-        private static string PinyinEntered( TextChangeInfo change ) {
-            var start = change.text.Substring( 0, change.position );
-            var pinyinMatch = Regex.Match( start, @"[a-zA-Z]+$" );
-            return pinyinMatch.Success ? pinyinMatch.Value : null;
-        }
-*/
-
-/*
-        private static PinyinSelectionInfo? PinyinSelected( TextChangeInfo change ) {
-            var start = change.text.Substring( 0, change.position );
-            var pinyinMatch = Regex.Match( start, @"[a-zA-Z]+([1-9])$" );
-            return pinyinMatch.Success ?
-                new PinyinSelectionInfo { text = change.text, position = change.position,
-                    pinyinLength = pinyinMatch.Length, selectedIndex = int.Parse( pinyinMatch.Groups[1].Value ) } :
-                (PinyinSelectionInfo?) null;
-        }
-*/
-        private void PopulateCharGrid( bool english ) {
+        private void PopulateCharGrid( IEnumerable<ChineseWordInfo> words, int cursorPos ) {
             Characters.Children.Clear( );
-            // Add a dummy word in the end to allow cursor rendering 
             int pos = 0;
             foreach (ChineseWordInfo word in _writingState.Words) {
-                if (pos == _writingState.CursorPos) Characters.Children.Add( CursorPanel );
-                Characters.Children.Add( CreateHanyiPanel( word, english ) );
+                if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
+                Characters.Children.Add( CreateHanyiPanel( word ) );
                 pos++;
             }
-            if (pos == _writingState.CursorPos) Characters.Children.Add( CursorPanel );
+            if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
         }
 
-        private Label _cursorLabel;
-
-        private FrameworkElement CursorPanel {
-            get {
-                if (_cursorLabel == null ) {
-                    // TODO: Make background animated
-                    _cursorLabel = new Label {
-                        MinWidth = 10, MinHeight = 40,
-                        Background = new SolidColorBrush( Colors.GreenYellow ),
-                        Content = "",
-                        FontSize = 18.0
-                    };
-                }
-                return WrapToBorder( _cursorLabel );
-            }
-        }
-
-        private FrameworkElement CreateHanyiPanel( ChineseWordInfo word, bool english ) {
+        private FrameworkElement CreateHanyiPanel( ChineseWordInfo word ) {
             var color = word.pinyin == null ? Colors.Red : Colors.Transparent;
             var panel = new StackPanel {
                 Orientation = Orientation.Vertical,
@@ -144,14 +115,12 @@ namespace ChineseWriter {
                 Style = (Style) this.Resources["PinyinStyle"],
                 HorizontalContentAlignment = HorizontalAlignment.Center
             } );
-            if ( english ) {
-                panel.Children.Add( new Label {
-                    Content = word.ShortEnglish,
-                    FontSize = 12,
-                    Foreground = new SolidColorBrush( Color.FromArgb( 128, 0, 0, 0 ) ),
-                    HorizontalContentAlignment = HorizontalAlignment.Center
-                } );
-            }
+            panel.Children.Add( new Label {
+                Content = word.ShortEnglish,
+                FontSize = 12,
+                Foreground = new SolidColorBrush( Color.FromArgb( 128, 0, 0, 0 ) ),
+                HorizontalContentAlignment = HorizontalAlignment.Center
+            } );
             panel.ToolTip = word.english;
             return WrapToBorder( panel );
         }
