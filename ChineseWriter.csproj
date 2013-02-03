@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="StringUtils.cs" />
     <Compile Include="WordProcessing.cs" />
+    <Compile Include="WritingState.cs" />
     <Page Include="AddWordWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

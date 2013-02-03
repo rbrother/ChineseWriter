@@ -18,10 +18,10 @@
         <StackPanel Orientation="Horizontal" Name="Buttons">
             <Label Name="WordCountLabel" Style="{StaticResource WidgetStyle}"/>
             <Button Style="{StaticResource ButtonStyle}"
-                    Click="AddWordButton_Click">_Add word</Button>
+                    Click="AddWordButton_Click">Add word</Button>
             <Button Style="{StaticResource ButtonStyle}" 
-                    Click="Clear_Text_Click">C_lear text</Button>
-            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy _Chinese</Button>
+                    Click="Clear_Text_Click">Clear text</Button>
+            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy Chinese</Button>
             <Button Content="Pinyin Table" Tag="http://www.quickmandarin.com/chinesepinyintable/" 
                     Style="{StaticResource ButtonStyle}" Click="OpenLink_Click"/>
             <Button Content="Pinyin Pro"  Tag="http://www.pinyinpro.com/" 
@@ -40,21 +40,10 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!--                   -->
-            <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource WidgetStyle}">Chinese</Label>
-            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" >
-                <TextBox Name="Chinese" MinWidth="600" Style="{StaticResource WidgetStyle}"
-                         FontFamily="SimSun" FontSize="30"/>
-            </StackPanel>
-            <!--                   -->
-            <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource WidgetStyle}">Pinyin</Label>
-            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
-                <TextBox Name="Pinyin" MinWidth="600" Style="{StaticResource PinyinStyle}"/>
-            </StackPanel>
-            <!--                   -->
             <StackPanel Grid.Column="0" Grid.Row="2"  Orientation="Vertical">
                 <Label Style="{StaticResource WidgetStyle}">Combined</Label>
                 <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" 
-                          Style="{StaticResource WidgetStyle}">_English</CheckBox>
+                          Style="{StaticResource WidgetStyle}">English</CheckBox>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="2"  Orientation="Vertical">                
                 <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
