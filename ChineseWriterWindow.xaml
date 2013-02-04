@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ChineseWriter.ChineseWriterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Chinese Writer" SizeToContent="WidthAndHeight" FontSize="14" Background="#FFBDBDFF">
+        Title="Chinese Writer" SizeToContent="WidthAndHeight" Background="#FFBDBDFF" Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="WidgetStyle" TargetType="FrameworkElement">
             <Setter Property="Margin" Value="2"/>
@@ -16,48 +16,23 @@
     </Window.Resources>
     <StackPanel Orientation="Vertical" Margin="8">
         <StackPanel Orientation="Horizontal" Name="Buttons">
-            <Label Name="WordCountLabel" Style="{StaticResource WidgetStyle}"/>
             <Button Style="{StaticResource ButtonStyle}" 
-                    Click="Clear_Text_Click">Clear text</Button>
-            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy Chinese</Button>
-            <Button Content="Pinyin Table" Tag="http://www.quickmandarin.com/chinesepinyintable/" 
-                    Style="{StaticResource ButtonStyle}" Click="OpenLink_Click"/>
-            <Button Content="Pinyin Pro"  Tag="http://www.pinyinpro.com/" 
-                    Style="{StaticResource ButtonStyle}" Click="OpenLink_Click"/>
+                    Click="Clear_Text_Click">C_lear text</Button>
+            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">_Copy Chinese</Button>
+            <CheckBox Grid.Row="0" Grid.Column="0" Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+                          Style="{StaticResource WidgetStyle}">_English</CheckBox>
         </StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <!--                   -->
-            <StackPanel Grid.Column="0" Grid.Row="2"  Orientation="Vertical">
-                <Label Style="{StaticResource WidgetStyle}">Combined</Label>
-                <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" 
-                          Style="{StaticResource WidgetStyle}">English</CheckBox>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="2"  Orientation="Vertical">                
-                <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
-            </StackPanel>
-            <!--                   -->
-            <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource WidgetStyle}">Matches</Label>
-            <Border Grid.Column="1" Grid.Row="3" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
-                <Grid Name="Suggestions">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Name="NumberColumn" Width="Auto"/>
-                        <ColumnDefinition Name="PinyinColumn" Width="Auto"/>
-                        <ColumnDefinition Name="HanyiColumn" Width="Auto"/>
-                        <ColumnDefinition Name="EnglishColumn" Width="*"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </Border>
-        </Grid>
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
+        <!--                   -->
+        <Border Grid.Column="1" Grid.Row="1" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
+            <Grid Name="Suggestions">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Name="NumberColumn" Width="Auto"/>
+                    <ColumnDefinition Name="PinyinColumn" Width="Auto"/>
+                    <ColumnDefinition Name="HanyiColumn" Width="Auto"/>
+                    <ColumnDefinition Name="EnglishColumn" Width="*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Border>
     </StackPanel>
 </Window>

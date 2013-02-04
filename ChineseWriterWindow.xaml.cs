@@ -19,49 +19,26 @@ namespace ChineseWriter {
     public partial class ChineseWriterWindow : Window {
 
         private WritingState _writingState = new WritingState( );
-        private Label _cursorLabel;
+        private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
+
+        private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
 
         public ChineseWriterWindow( ) {
             try {
                 InitializeComponent( );
-                _cursorLabel = new Label {
-                    MinWidth = 10, MinHeight = 40,
-                    Background = new SolidColorBrush( Colors.GreenYellow ),
-                    Content = "",
-                    FontSize = 18.0,
-                    VerticalContentAlignment = VerticalAlignment.Center
-                };
-                _cursorPanel = WrapToBorder( _cursorLabel );
+                _pinyinInput = new TextBox();
+                _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
+                _pinyinInput.PreviewTextInput += new TextCompositionEventHandler(PinyinInput_PreviewTextInput);
+
+                _cursorPanel = WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
 
                 var KeyPresses = Observable.
-                    FromEventPattern<KeyEventArgs>( this, "KeyUp" ).
-                    Select( args => args.EventArgs );
-                var ControlKeyPresses = KeyPresses.
-                    Where( args => args.KeyboardDevice.Modifiers.HasFlag( ModifierKeys.Control ) ).
-                    Select( args => args.Key );
-                var NonControlKeyPresses = KeyPresses.
-                    Where( args => !args.KeyboardDevice.Modifiers.HasFlag( ModifierKeys.Control ) ).
-                    Select( args => args.Key );
-                var AlphaKeyPresses = NonControlKeyPresses.
-                    Where( key => StringUtils.IsAlphaKey( key ) ).
-                    Select( key => key.ToString( ).ToLower( ) );
-                var NumberKeyPresses = NonControlKeyPresses.
-                    Where( key => StringUtils.IsNumberKey( key ) ).
-                    Select( key => StringUtils.NumberKeyValue( key ) );
+                    FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
+                    Select( args => args.EventArgs.Key );
 
-                AlphaKeyPresses.
-                    Subscribe( newPinyin => _writingState.AddPinyinInput( newPinyin ) );
-                NumberKeyPresses.Subscribe( n => _writingState.SelectPinyin( n ) );
-                NonControlKeyPresses.Where( key => key == Key.Back ).
-                    Subscribe( key => _writingState.BackSpace( ) );
-                NonControlKeyPresses.Where( key => key == Key.Left ).
-                    Subscribe( key => _writingState.MoveLeft( ) );
-                NonControlKeyPresses.Where( key => key == Key.Right ).
-                    Subscribe( key => _writingState.MoveRight( ) );
-
-                ControlKeyPresses.
-                    Subscribe( key => HandleControlKey( key ) );
+                KeyPresses.Where( key => TEXT_EDIT_KEYS.Contains(key) ).
+                    Subscribe( key => _writingState.TextEdit( key ) );
 
                 var EnglishChecked = Observable
                     .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
@@ -76,9 +53,9 @@ namespace ChineseWriter {
 
                 // Update UI based on writing state changes
                 _writingState.WordsDatabaseChanged.ObserveOnDispatcher( ).
-                    Subscribe( count => WordCountLabel.Content = string.Format( "Words: {0}", count ) );
+                    Subscribe( count => this.Title = string.Format("ChineseWriter ({0} words)", count ) );
                 _writingState.PinyinChanges.ObserveOnDispatcher( ).
-                    Subscribe( pinyin => _cursorLabel.Content = pinyin );
+                    Subscribe( pinyin => _pinyinInput.Text = pinyin );
                 _writingState.SuggestionsChanges.ObserveOnDispatcher( ).
                     Subscribe( suggestions => UpdateSuggestions( suggestions ) );
                 _writingState.WordsChanges.
@@ -87,11 +64,24 @@ namespace ChineseWriter {
                     Subscribe( value => PopulateCharGrid( value.Item1, value.Item2 ) );
 
                 _writingState.Clear( );
-
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
                 this.Close( );
             }
+        }
+
+        void PinyinInput_PreviewTextInput(object sender, TextCompositionEventArgs e) {
+            if (e.Text.Length == 1) {
+                int n;
+                if (int.TryParse(e.Text.Substring(0,1), out n)) {
+                    _writingState.SelectPinyin(n);
+                    e.Handled = true;
+                }
+            }
+        }
+
+        void PinyinInput_TextChanged(object sender, TextChangedEventArgs e) {
+            _writingState.PinyinInput = _pinyinInput.Text;
         }
 
         private void PopulateCharGrid( IEnumerable<ChineseWordInfo> words, int cursorPos ) {
@@ -123,7 +113,6 @@ namespace ChineseWriter {
             } );
             panel.Children.Add( new Label {
                 Content = word.ShortEnglish,
-                FontSize = 12,
                 Foreground = new SolidColorBrush( Color.FromArgb( 128, 0, 0, 0 ) ),
                 HorizontalContentAlignment = HorizontalAlignment.Center
             } );
@@ -156,7 +145,7 @@ namespace ChineseWriter {
             Suggestions.Children.Add( CreateGridLabel( row.ToString( ), row, 0, color, pinyinStyle ) );
             Suggestions.Children.Add( CreateGridLabel( word.pinyin, row, 1, color, pinyinStyle ) );
             Suggestions.Children.Add( CreateGridLabel( word.hanyu, row, 2, color, pinyinStyle ) );
-            Suggestions.Children.Add( CreateGridLabel( word.english, row, 3, color, pinyinStyle ) );
+            Suggestions.Children.Add(CreateGridLabel(word.english, row, 3, color, (Style)this.Resources["WidgetStyle"]));
         }
 
         private static FrameworkElement CreateGridLabel( string text, int row, int col, Color color, Style style = null ) {
@@ -205,10 +194,8 @@ namespace ChineseWriter {
             Process.Start( ((FrameworkElement) sender).Tag.ToString() );
         }
 
-        private void HandleControlKey( Key key ) {
-            if (key == Key.E) {
-                ShowEnglish.IsChecked = !ShowEnglish.IsChecked;
-            }
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            _pinyinInput.Focus();
         }
 
     } // class

@@ -5,6 +5,7 @@ using System.Text;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Key = System.Windows.Input.Key;
 
 namespace ChineseWriter {
 
@@ -12,8 +13,6 @@ namespace ChineseWriter {
 
         private WordDatabase _hanyuDb = new WordDatabase( );
         private int _cursorPos;
-        private int _selectionStart = 0;
-        private int _selectionLength = 0;
         private ChineseWordInfo[] _words;
         private ChineseWordInfo[] _suggestions;
         private bool _english;
@@ -60,20 +59,32 @@ namespace ChineseWriter {
             SuggestionsChanges.OnNext( _suggestions );
         }
 
-        public void AddPinyinInput( string newPinyin ) {
-            PinyinInput = PinyinInput + newPinyin;
+        public void TextEdit( Key key ) {
+            if (PinyinInput != "") return;
+            switch (key ) {
+                case Key.Back: BackSpace(); break;
+                case Key.Delete: Delete(); break;
+                case Key.Left: CursorPos = Math.Max(CursorPos - 1, 0); break;
+                case Key.Right: CursorPos = Math.Min(CursorPos + 1, Words.Length); break;
+                case Key.Home: CursorPos = 0; break;
+                case Key.End: CursorPos = Words.Length; break;
+            }
         }
 
-        public void BackSpace( ) {
-            if (PinyinInput == "") {
-                if (CursorPos > 0) {
-                    Words = Words.Take( CursorPos - 1 ).
-                        Concat( Words.Skip( CursorPos ) ).
-                        ToArray( );
-                    CursorPos--;
-                }
-            } else {
-                PinyinInput = PinyinInput.DropLast( );
+        private void Delete() {
+            if (CursorPos < Words.Length) {
+                Words = Words.Take(CursorPos).
+                    Concat(Words.Skip(CursorPos + 1)).
+                    ToArray();
+            }            
+        }
+
+        private void BackSpace() {
+            if (CursorPos > 0) {
+                Words = Words.Take(CursorPos - 1).
+                    Concat(Words.Skip(CursorPos)).
+                    ToArray();
+                CursorPos--;
             }
         }
 
@@ -102,14 +113,6 @@ namespace ChineseWriter {
                     .Select( word => word.hanyu ).ToArray( ) );
                 return hanyiLine + "\n" + pinyinLine;
             } 
-        }
-
-        internal void MoveRight( ) {
-            CursorPos = Math.Min( CursorPos + 1, Words.Length );
-        }
-
-        internal void MoveLeft( ) {
-            CursorPos = Math.Max( CursorPos - 1, 0 );
         }
 
         internal void Clear( ) {
