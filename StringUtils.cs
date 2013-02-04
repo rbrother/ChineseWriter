@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Windows.Input;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -36,10 +37,6 @@ namespace ChineseWriter {
                 return s.Substring( 0, s.Length - count );
             }
         }
-
-//        public static string PadRight( string s, int finalLength ) {
-//            return s + new string( ' ', finalLength - s.Length );
-//        }
 
     } // class
 } // namespace

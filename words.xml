@@ -18,12 +18,14 @@
     <Word pinyin="Bǎi dù" hanyu="百度" english="Baidu" />
     <Word pinyin="Bǎi huò gōng sī" hanyu="百货公司" english="Department store" />
     <Word pinyin="Bàn" hanyu="半" english="Half" />
+    <Word pinyin="Bǎn" hanyu="版" english="Version, Edition" />
     <Word pinyin="Bān" hanyu="搬" english="Move" />
     <Word pinyin="Bàn gè" hanyu="半个" english="Half" />
     <Word pinyin="Bàn gōng shì" hanyu="办公室" english="Office" />
     <Word pinyin="Bàn yè" hanyu="半夜" english="Midnight" />
     <Word pinyin="Bāng" hanyu="帮" english="Help, Assist, Support" />
     <Word pinyin="Bāng zhù" hanyu="帮助" english="Help, Assist, Support" />
+    <Word pinyin="Bāo" hanyu="包" english="Bag, Package, Packet, Pack, Wrap" />
     <Word pinyin="Bǎo bèi" hanyu="宝贝" english="Baby, Treasure, Darling" />
     <Word pinyin="Bǎo chí" hanyu="保持" english="Maintain, Keep, Preserve" />
     <Word pinyin="Bǎo mì" hanyu="保密" english="Secret, Secrecy, Keep secret" />
@@ -44,6 +46,7 @@
     <Word pinyin="Bǐ rú" hanyu="比如" english="Such as, For example" />
     <Word pinyin="Bǐ sà" hanyu="比萨" english="Pizza" />
     <Word pinyin="Bì xū" hanyu="必须" english="Must, Need, Have to" />
+    <Word pinyin="bì yè" hanyu="毕业" english="Graduation, Finish school" />
     <Word pinyin="Biàn huà" hanyu="变化" english="Change" />
     <Word pinyin="Biàn lěng" hanyu="变冷" english="Chill" />
     <Word pinyin="Biǎo jie" hanyu="表姐" english="Cousin, Cousin (older female cousin via female line)" />
@@ -66,6 +69,7 @@
     <Word pinyin="Bùbì" hanyu="不必" english="Need not, Does not have to" />
     <Word pinyin="Cài" hanyu="菜" english="Dish, Vegetable" />
     <Word pinyin="Cāi" hanyu="猜" english="Guess, Suspect" />
+    <Word pinyin="Cài dān" hanyu="菜单" english="Menu" />
     <Word pinyin="Cái néng" hanyu="才能" english="Ability, Able, Talent" />
     <Word pinyin="Cǎi qǔ" hanyu="采取" english="Take, Adopt, Adoption" />
     <Word pinyin="Cān guān" hanyu="参观" english="Visit" />
@@ -83,6 +87,7 @@
     <Word pinyin="Chéng" hanyu="城" english="City, Town" />
     <Word pinyin="Chéng gōng" hanyu="成功" english="Success" />
     <Word pinyin="Chéng nuò" hanyu="承诺" english="Promise, Commit, Commitment" />
+    <Word pinyin="Chéng shú" hanyu="成熟" english="Mature" />
     <Word pinyin="Chǐ" hanyu="齿" english="Tooth" />
     <Word pinyin="Chī" hanyu="吃" english="Eat" />
     <Word pinyin="Chí dào" hanyu="迟到" english="Be late, Arrive late" />
@@ -110,13 +115,14 @@
     <Word pinyin="Chūn tiān" hanyu="春天" english="Spring, Springtime" />
     <Word pinyin="Chūn yùn" hanyu="春运" english="Spring Festival travel season" />
     <Word pinyin="Cǐ" hanyu="此" english="This, Here" />
+    <Word pinyin="Cí yǔ" hanyu="词语" english="Word, Hanyu word (including monosyllables through to short phrases)" />
     <Word pinyin="Cóng" hanyu="从" english="From" />
     <Word pinyin="Cóng lái bu" hanyu="从来不" english="Never" />
     <Word pinyin="Cuì ruò" hanyu="脆弱" english="Fragile, Frail, Weak" />
     <Word pinyin="Cuò" hanyu="错" english="Wrong, Mistaken, Fault" />
     <Word pinyin="Cuò wù" hanyu="错误" english="Error, Mistake, Wrong" />
     <Word pinyin="Dà" hanyu="大" english="Big, Large" />
-    <Word pinyin="Dǎ" hanyu="打" english="Beat, Fight, Play (racket games)" />
+    <Word pinyin="Dǎ" hanyu="打" english="Beat, Fight, Play (racket games), Call (with telephone), Make, Calculate" />
     <Word pinyin="Dà bā" hanyu="大巴" english="Bus" />
     <Word pinyin="Dà gài" hanyu="大概" english="Probably, About, Roughly" />
     <Word pinyin="Dǎ gōng" hanyu="打工" english="Wage, Work a temporary or casual job" />
@@ -131,10 +137,11 @@
     <Word pinyin="Dà xué" hanyu="大学" english="University" />
     <Word pinyin="Dà yuē" hanyu="大约" english="About, Approximately" />
     <Word pinyin="Dàdào" hanyu="大道" english="Avenue" />
-    <Word pinyin="Dài" hanyu="带" english="Show, Ribbon, Band" />
+    <Word pinyin="Dài" hanyu="带" english="Wear, Carry, Bring, Take along, Ribbon, Band, Belt, Region" />
+    <Word pinyin="Dài shǎng" hanyu="带上" english="Bring, Wear, Carry, Take along" />
     <Word pinyin="Dàn" hanyu="但" english="But, However, Yet" />
     <Word pinyin="Dàn" hanyu="蛋" english="Egg" />
-    <Word pinyin="Dān" hanyu="单" english="Single" />
+    <Word pinyin="Dān" hanyu="单" english="Bill, List, Form, Single, Only, Sole, Odd number" />
     <Word pinyin="Dān dú" hanyu="单独" english="Alone, Independent, By oneself" />
     <Word pinyin="Dàn gāo" hanyu="蛋糕" english="Cake" />
     <Word pinyin="Dàn shì" hanyu="但是" english="But, However" />
@@ -168,6 +175,8 @@
     <Word pinyin="Diàn nǎo" hanyu="电脑" english="Computer" />
     <Word pinyin="Diǎn xīn" hanyu="点心" english="Dessert" />
     <Word pinyin="Diàn yǐng" hanyu="电影" english="movie" />
+    <Word pinyin="Diàn zǐ" hanyu="电子" english="Electronic" />
+    <Word pinyin="Diàn zǐ yóu jiàn" hanyu="电子邮件" english="Email" />
     <Word pinyin="Diào chá" hanyu="调查" english="Investigate, Look into" />
     <Word pinyin="Diū le" hanyu="丢了" english="Lost" />
     <Word pinyin="Dǒng" hanyu="懂" english="Understand, Know" />
@@ -227,6 +236,7 @@
     <Word pinyin="Fēn lán wén" hanyu="芬兰文" english="Finnish, Finnish (language)" />
     <Word pinyin="Fèn nù" hanyu="愤怒" english="Anger, Angry, Rage, Fury, Outrage" />
     <Word pinyin="Fēng" hanyu="封" english="&lt;envelope&gt;, Classifier for letters" />
+    <Word pinyin="Fēng jǐng" hanyu="风景" english="Scenery, Landscape" />
     <Word pinyin="Fēng xìn" hanyu="封信" english="A letter" />
     <Word pinyin="Fù" hanyu="付" english="Pay" />
     <Word pinyin="Fù běn" hanyu="副本" english="Duplicate" />
@@ -234,6 +244,7 @@
     <Word pinyin="Fù mǔ" hanyu="父母" english="Parents, Father and mother" />
     <Word pinyin="Fù qián" hanyu="付钱" english="Pay" />
     <Word pinyin="Fù qīn" hanyu="父亲" english="Father" />
+    <Word pinyin="Fú wù yuán" hanyu="服务员" english="Waiter, Attendant, Customer service person" />
     <Word pinyin="Fù yù" hanyu="富裕" english="Wealthy, RIch" />
     <Word pinyin="Fù zá" hanyu="复杂" english="Complicated, Complex" />
     <Word pinyin="Gǎi biàn" hanyu="改变" english="Change, Alter" />
@@ -274,11 +285,13 @@
     <Word pinyin="Gǒu liáng" hanyu="狗粮" english="God food" />
     <Word pinyin="Gòu mǎi" hanyu="购买" english="Buy, Purchase" />
     <Word pinyin="Gù dìng" hanyu="固定" english="Fixed, Regular" />
+    <Word pinyin="Gū ér yuàn" hanyu="孤儿院" english="Orphanage" />
     <Word pinyin="Gù kè" hanyu="顾客" english="Customer" />
     <Word pinyin="Gù shì" hanyu="故事" english="Story, Tale, Narrative" />
     <Word pinyin="Guān" hanyu="关" english="Shut, Close" />
     <Word pinyin="Guān bì" hanyu="关闭" english="Close, Shut down, Shut, Closed" />
     <Word pinyin="Guān xīn" hanyu="关心" english="Interest, Concern, Care" />
+    <Word pinyin="Guān yú" hanyu="关于" english="Concerning, With regard to, About" />
     <Word pinyin="Guǐ" hanyu="鬼" english="Ghost, Devil, Spirit" />
     <Word pinyin="Guò" hanyu="过" english="&lt;experienced&gt;, Have experience of something" />
     <Word pinyin="Guǒ" hanyu="果" english="Fruit" />
@@ -295,9 +308,11 @@
     <Word pinyin="Hāi" hanyu="嗨" english="Hi" />
     <Word pinyin="Hài pà" hanyu="害怕" english="Be afraid" />
     <Word pinyin="Hái shì" hanyu="还是" english="Or" />
+    <Word pinyin="Hài xiū" hanyu="害羞" english="Shy, Embarrassed" />
     <Word pinyin="Hái yǒu" hanyu="还有" english="Also, There is still some left" />
     <Word pinyin="Hái zi" hanyu="孩子" english="Child" />
     <Word pinyin="Hái zi men" hanyu="孩子们" english="Children" />
+    <Word pinyin="Hán lěng" hanyu="寒冷" english="Very cold" />
     <Word pinyin="Hàn yǔ" hanyu="汉语" english="Chinese, Chinese language, Mandarin language" />
     <Word pinyin="Hào" hanyu="号" english="Number, Day of month" />
     <Word pinyin="Hǎo" hanyu="好" english="Good" />
@@ -316,6 +331,7 @@
     <Word pinyin="Hé yǐng" hanyu="合影" english="Group photo" />
     <Word pinyin="Hè'ěr xīn jī" hanyu="赫尔辛基" english="Helsinki" />
     <Word pinyin="Hēi" hanyu="黑" english="Black, Dark" />
+    <Word pinyin="Hèn" hanyu="恨" english="Hate, Regret" />
     <Word pinyin="Hěn" hanyu="很" english="Very" />
     <Word pinyin="Hěn duō" hanyu="很多" english="Very many, Very much" />
     <Word pinyin="Hěn hǎo" hanyu="很好" english="Very good" />
@@ -348,7 +364,7 @@
     <Word pinyin="Huì" hanyu="彙" english="Exchange, Remit, Collection" />
     <Word pinyin="Huī" hanyu="灰" english="Gray" />
     <Word pinyin="Huí dá" hanyu="回答" english="Reply, Answer" />
-    <Word pinyin="Huí fù" hanyu="回复" english="Reply" />
+    <Word pinyin="Huí fù" hanyu="回复" english="Reply, Recover, Return (to previous condition), Reply to (email)" />
     <Word pinyin="Huì huà" hanyu="绘画" english="Painting, Drawing, Paint, Draw" />
     <Word pinyin="Huí jiā" hanyu="回家" english="Return home" />
     <Word pinyin="Huí lái" hanyu="回来" english="Come back, Return" />
@@ -368,6 +384,7 @@
     <Word pinyin="Jì de" hanyu="记得" english="Remember, Recall" />
     <Word pinyin="Jì huà" hanyu="计划" english="Plan, A Plan, Project" />
     <Word pinyin="Jí jiāng" hanyu="即将" english="Upcoming, On the verge of" />
+    <Word pinyin="Jì jié" hanyu="季节" english="Season, Time, Period" />
     <Word pinyin="Jī ròu" hanyu="鸡肉" english="Chicken" />
     <Word pinyin="Jì suàn" hanyu="计算" english="Calculate, Compute, Count" />
     <Word pinyin="Jǐ tiān" hanyu="几天" english="Several days" />
@@ -410,11 +427,14 @@
     <Word pinyin="Jié guǒ" hanyu="结果" english="Result, Outcome" />
     <Word pinyin="Jié hūn" hanyu="结婚" english="Get married" />
     <Word pinyin="Jie jie" hanyu="姐姐" english="Sister, Older sister" />
+    <Word pinyin="Jiě jué" hanyu="解决" english="Solve, Resolve, Settle" />
     <Word pinyin="Jiè shào" hanyu="介绍" english="Intruction, To introduce, Presentation, To present" />
     <Word pinyin="Jiē shòu" hanyu="接受" english="Receive, Accept, Reception" />
     <Word pinyin="Jié shù" hanyu="结束" english="End, Finish, Ending" />
     <Word pinyin="Jìn" hanyu="劲" english="Strength, Energy, Vigor, Zeal" />
     <Word pinyin="Jìn" hanyu="近" english="Near, Close, Close to, Immediate" />
+    <Word pinyin="Jīn" hanyu="金" english="Gold" />
+    <Word pinyin="Jīn" hanyu="今" english="Today, This, Current" />
     <Word pinyin="Jìn chéng" hanyu="进城" english="City, City center" />
     <Word pinyin="Jìn de" hanyu="近的" english="Close, Near" />
     <Word pinyin="Jǐn jǐn" hanyu="仅仅" english="Only, Barely" />
@@ -422,6 +442,7 @@
     <Word pinyin="Jīn lín" hanyu="金琳" english="Jin Lin" />
     <Word pinyin="Jīn nián" hanyu="今年" english="This year" />
     <Word pinyin="Jīn qián" hanyu="金钱" english="Money, Monetary" />
+    <Word pinyin="Jìn qù" hanyu="进去" english="Go in" />
     <Word pinyin="Jìn rù" hanyu="进入" english="Enter, Join, Go in" />
     <Word pinyin="Jīn tiān" hanyu="今天" english="Today" />
     <Word pinyin="Jǐn zhāng" hanyu="紧张" english="Nervous" />
@@ -495,6 +516,7 @@
     <Word pinyin="Lǐ jiě" hanyu="理解" english="Understand" />
     <Word pinyin="Lí kāi" hanyu="离开" english="Leave" />
     <Word pinyin="Lǐ miàn" hanyu="里面" english="Inside" />
+    <Word pinyin="Lì rú" hanyu="例如" english="For example, Such as" />
     <Word pinyin="Lǐ wù" hanyu="礼物" english="Gift, Present" />
     <Word pinyin="Lǐ yóu" hanyu="理由" english="Reason" />
     <Word pinyin="Liǎn" hanyu="脸" english="Face" />
@@ -513,6 +535,7 @@
     <Word pinyin="Lín" hanyu="林" english="Forest" />
     <Word pinyin="Lín yù" hanyu="淋浴" english="Shower" />
     <Word pinyin="Lìng wài" hanyu="另外" english="Other, Additional, Separate, Furthermore" />
+    <Word pinyin="Lǐng yǎng" hanyu="领养" english="Adopt, Adopt (a child)" />
     <Word pinyin="Liú" hanyu="留" english="Stay, Remain" />
     <Word pinyin="Liù" hanyu="六" english="Six" />
     <Word pinyin="Liú gǎn" hanyu="流感" english="Flu" />
@@ -526,6 +549,7 @@
     <Word pinyin="Lù xiàn" hanyu="路线" english="Route, Line, Path" />
     <Word pinyin="Lǚ yóu" hanyu="旅游" english="Travel" />
     <Word pinyin="Luò pò" hanyu="落魄" english="Abjection, Spiritless, Living in poverty" />
+    <Word pinyin="ma" hanyu="么" english="&lt;Interrogative&gt;" />
     <Word pinyin="Ma" hanyu="吗" english="&lt;question&gt;" />
     <Word pinyin="Má fan" hanyu="麻烦" english="Trouble, Bother, Burden" />
     <Word pinyin="Mǎ lù" hanyu="马路" english="Road, Street" />
@@ -542,6 +566,7 @@
     <Word pinyin="Máng le" hanyu="忙了" english="Busy" />
     <Word pinyin="Máng lù" hanyu="忙碌" english="Busy" />
     <Word pinyin="Māo" hanyu="猫" english="Cat" />
+    <Word pinyin="Mào xiǎn" hanyu="冒险" english="Adventure, Take risks, Take chances" />
     <Word pinyin="Méi" hanyu="没" english="Not, Have not" />
     <Word pinyin="Měi" hanyu="每" english="Each, Every" />
     <Word pinyin="Měi" hanyu="美" english="Beautiful" />
@@ -561,6 +586,7 @@
     <Word pinyin="Mén kǒu" hanyu="门口" english="Doorway, Gate" />
     <Word pinyin="Mì mì" hanyu="秘密" english="Secret" />
     <Word pinyin="Mí rén" hanyu="迷人" english="Charming, Fascinating" />
+    <Word pinyin="Miǎn fèi" hanyu="免费" english="Free, Free of charge" />
     <Word pinyin="Miào" hanyu="庙" english="Temple" />
     <Word pinyin="Miáo shù" hanyu="描述" english="Description, Describe" />
     <Word pinyin="Míng" hanyu="明" english="Next, Clear, Bright, Ming-dynasty" />
@@ -591,6 +617,7 @@
     <Word pinyin="Nán péng yǒu" hanyu="男朋友" english="Boyfriend" />
     <Word pinyin="Nán rén" hanyu="男人" english="Man, Male" />
     <Word pinyin="Nán shòu" hanyu="难受" english="Uncomfortable" />
+    <Word pinyin="Nán yáng" hanyu="南阳" english="Nanyang, Nanyang (city in Henan)" />
     <Word pinyin="Nán yǒu" hanyu="男友" english="Boyfriend" />
     <Word pinyin="Ne" hanyu="呢" english="It" />
     <Word pinyin="Nèi" hanyu="内" english="Within, Inside" />
@@ -614,6 +641,7 @@
     <Word pinyin="Nǚ ér" hanyu="女儿" english="Daughter" />
     <Word pinyin="Nǔ lì" hanyu="努力" english="Strive, Try hard, Great effort" />
     <Word pinyin="Nǚ péng yǒu" hanyu="女朋友" english="Girlfriend" />
+    <Word pinyin="nǚ yǒu" hanyu="女友" english="Girlfriend" />
     <Word pinyin="Nuǎn nuǎn" hanyu="暖暖" english="Warm" />
     <Word pinyin="Ó" hanyu="哦" english="Oh" />
     <Word pinyin="Ōu yuán" hanyu="欧元" english="Euro" />
@@ -629,6 +657,7 @@
     <Word pinyin="Pián yi" hanyu="便宜" english="Cheap" />
     <Word pinyin="Piào" hanyu="票" english="Ticket" />
     <Word pinyin="Piào liang" hanyu="漂亮" english="Beautiful, Pretty" />
+    <Word pinyin="Píng bǎn" hanyu="平板" english="Tablet, Flat" />
     <Word pinyin="Píng guǒ" hanyu="苹果" english="Apple" />
     <Word pinyin="Píng yuán" hanyu="平原" english="Flat, Plane, Plain" />
     <Word pinyin="Qì" hanyu="汽" english="Steam, Vapor" />
@@ -664,6 +693,7 @@
     <Word pinyin="Rè" hanyu="热" english="Hot" />
     <Word pinyin="Rén" hanyu="人" english="Person, People, Man" />
     <Word pinyin="Rèn hé" hanyu="任何" english="Any, Whatever, Whichever" />
+    <Word pinyin="Rén mín" hanyu="人民" english="People" />
     <Word pinyin="Rěn nài" hanyu="忍耐" english="Patience" />
     <Word pinyin="Rén shēng" hanyu="人生" english="Life" />
     <Word pinyin="Rén shì" hanyu="人士" english="Person" />
@@ -694,6 +724,7 @@
     <Word pinyin="Shàng hǎi" hanyu="上海" english="Shanghai" />
     <Word pinyin="Shāng hài" hanyu="伤害" english="Hurt, Harm, Injure" />
     <Word pinyin="Shàng kè" hanyu="上课" english="Attend class" />
+    <Word pinyin="Shàng qù" hanyu="上去" english="Go up" />
     <Word pinyin="Shàng tiān" hanyu="上天" english="God, Heaven, Previous day, To Die" />
     <Word pinyin="Shàng wǎng" hanyu="上网" english="Online, At the Internet" />
     <Word pinyin="Shàng xiàn" hanyu="上线" english="On-line" />
@@ -757,6 +788,7 @@
     <Word pinyin="Shū" hanyu="书" english="Book" />
     <Word pinyin="Shū cài" hanyu="蔬菜" english="Vegetable" />
     <Word pinyin="Shū fú" hanyu="舒服" english="Well, Comfortable, Healthy" />
+    <Word pinyin="Shù jù kù" hanyu="数据库" english="Database" />
     <Word pinyin="Shú liàn" hanyu="熟练" english="Skilled, Proficient, Skillful, Trained, Skill, Experience" />
     <Word pinyin="Shū yè" hanyu="输液" english="Infusion, Transfusion" />
     <Word pinyin="Shuài gē" hanyu="帅哥" english="Guy" />
@@ -766,16 +798,21 @@
     <Word pinyin="Shuǐ guǒ" hanyu="水果" english="Fruit" />
     <Word pinyin="Shuì jiào" hanyu="睡觉" english="Sleep" />
     <Word pinyin="Shuì xǐng" hanyu="睡醒" english="Wake, Awake" />
+    <Word pinyin="Shùn fēng" hanyu="顺风" english="Bon Voyage!, Tail wind" />
     <Word pinyin="Shuō" hanyu="说" english="Say, Speak" />
     <Word pinyin="Shuō huà" hanyu="说话" english="Speak" />
     <Word pinyin="Sì" hanyu="四" english="Four" />
     <Word pinyin="Sǐ" hanyu="死" english="Dead, Die" />
     <Word pinyin="Sǐ bǎn" hanyu="死板" english="Rigid, Stiff, Inflexible" />
     <Word pinyin="Sǐ de" hanyu="死的" english="Dead" />
+    <Word pinyin="Sī kē" hanyu="思科" english="Cisco" />
+    <Word pinyin="Sī rén" hanyu="私人" english="Private, Personal" />
     <Word pinyin="Sù" hanyu="速" english="Speed, Velocity, Fast, Quick" />
     <Word pinyin="Sù jiàng" hanyu="速降" english="Downhill" />
     <Word pinyin="Sù shè" hanyu="宿舍" english="Dormitory" />
     <Word pinyin="Suàn" hanyu="蒜" english="Garlic" />
+    <Word pinyin="Suì" hanyu="穗" english="Ear of grain, Tassel" />
+    <Word pinyin="Suì" hanyu="岁" english="Years old" />
     <Word pinyin="Suīrán" hanyu="虽然" english="Although, Though, Despite" />
     <Word pinyin="Suǒ yǐ" hanyu="所以" english="Therefore, So, Thus" />
     <Word pinyin="Tā" hanyu="他" english="He" />
@@ -790,6 +827,7 @@
     <Word pinyin="Tài tài" hanyu="太太" english="Wife, Married woman" />
     <Word pinyin="Tài yáng" hanyu="太阳" english="Sun" />
     <Word pinyin="Tàn tǎo" hanyu="探讨" english="Investigate" />
+    <Word pinyin="Tān wán" hanyu="贪玩" english="Only want to have good time" />
     <Word pinyin="Táng" hanyu="糖" english="Sugar" />
     <Word pinyin="Tǎng" hanyu="躺" english="Lie, Lie down, Recline" />
     <Word pinyin="Tāng" hanyu="汤" english="Soup" />
@@ -873,6 +911,7 @@
     <Word pinyin="Xī hóng shì" hanyu="西红柿" english="Tomato" />
     <Word pinyin="Xǐ huan" hanyu="喜欢" english="Like, Love" />
     <Word pinyin="Xí sú" hanyu="习俗" english="Custom, Convention" />
+    <Word pinyin="Xǐ tóu" hanyu="洗头" english="Wash hair" />
     <Word pinyin="Xī wàng" hanyu="希望" english="Hope, Wish, Expect" />
     <Word pinyin="Xǐ zǎo" hanyu="洗澡" english="Shower, Bathe" />
     <Word pinyin="Xià" hanyu="下" english="Next, Below, Under, Down" />
@@ -882,6 +921,7 @@
     <Word pinyin="Xià xīng qí" hanyu="下星期" english="Next week" />
     <Word pinyin="Xià xuě" hanyu="下雪" english="Snowing" />
     <Word pinyin="Xià yǔ" hanyu="下雨" english="Raining" />
+    <Word pinyin="Xià zǎi" hanyu="下载" english="Download" />
     <Word pinyin="Xiàn" hanyu="线" english="Line, Route, Thread, Wire" />
     <Word pinyin="Xiān" hanyu="先" english="First, Prior, Former, In advance" />
     <Word pinyin="Xiàn zài" hanyu="现在" english="Now" />
@@ -940,6 +980,7 @@
     <Word pinyin="Xiū fù" hanyu="修复" english="Repair" />
     <Word pinyin="Xiū gǎi" hanyu="修改" english="Modify, Amend, Revise, Modification" />
     <Word pinyin="Xiū xí" hanyu="休息" english="Rest, Break" />
+    <Word pinyin="Xū nǐ" hanyu="虚拟" english="Virtual, Fictitious, Theoretical" />
     <Word pinyin="Xǔ xiào" hanyu="许笑" english="Laugh" />
     <Word pinyin="Xū yào" hanyu="需要" english="Require, Need, Want" />
     <Word pinyin="Xué" hanyu="学" english="Study, Learn, School" />
@@ -963,6 +1004,7 @@
     <Word pinyin="Yán wù" hanyu="延误" english="Delay" />
     <Word pinyin="Yán zhòng" hanyu="严重" english="Serious, Severe, Critical" />
     <Word pinyin="Yàng" hanyu="样" english="Kind" />
+    <Word pinyin="Yǎng mù" hanyu="仰慕" english="Admirers" />
     <Word pinyin="Yào" hanyu="要" english="Want, Wish, Must" />
     <Word pinyin="Yào" hanyu="药" english="Medicine, Drug, Medicated, Cure" />
     <Word pinyin="Yào shi" hanyu="钥匙" english="Key" />
@@ -990,6 +1032,7 @@
     <Word pinyin="Yī qiè" hanyu="一切" english="All, Everything" />
     <Word pinyin="Yī rán" hanyu="依然" english="Still, As before" />
     <Word pinyin="Yī shēng" hanyu="医生" english="Doctor, Medical" />
+    <Word pinyin="Yī shí zhù xíng" hanyu="衣食住行" english="Basic needs, Basic needs: clothing, food, housing and transport" />
     <Word pinyin="Yì shù" hanyu="艺术" english="Art" />
     <Word pinyin="Yì si" hanyu="意思" english="Meaning" />
     <Word pinyin="Yī tiān" hanyu="一天" english="Day" />
@@ -1005,7 +1048,6 @@
     <Word pinyin="Yìng lì" hanyu="应力" english="Stress, Tension, Anxiety" />
     <Word pinyin="Yǐng xiǎng" hanyu="影响" english="Affect, Influence" />
     <Word pinyin="Yīng yǔ" hanyu="英语" english="English, English language" />
-    <Word pinyin="Yīng yǔ" hanyu="英語" english="English, English language" />
     <Word pinyin="Yīyuàn" hanyu="医院" english="Hospital" />
     <Word pinyin="Yòng" hanyu="用" english="Use" />
     <Word pinyin="Yǒng bào" hanyu="拥抱" english="Hug, Embrace" />
@@ -1049,6 +1091,7 @@
     <Word pinyin="Yuè bǐng" hanyu="月饼" english="Moon cake" />
     <Word pinyin="Yuè dú" hanyu="阅读" english="Read" />
     <Word pinyin="Yùn dòng" hanyu="运动" english="Sport, Movement, Motion" />
+    <Word pinyin="Yún nán" hanyu="云南" english="Yunnan, Yunnan province" />
     <Word pinyin="Zài" hanyu="在" english="In, At" />
     <Word pinyin="Zài" hanyu="再" english="Again, Another" />
     <Word pinyin="Zài cì" hanyu="再次" english="Again, Once more" />
@@ -1097,6 +1140,7 @@
     <Word pinyin="Zhōng chéng de" hanyu="忠诚的" english="Faithful, Loyal" />
     <Word pinyin="Zhōng guó" hanyu="中国" english="China" />
     <Word pinyin="Zhōng qiū jié" hanyu="中秋节" english="Mid-autumn festival" />
+    <Word pinyin="Zhòng shì" hanyu="重视" english="Importance, Value, Pay attention" />
     <Word pinyin="Zhōng wén" hanyu="中文" english="Chinese, Chinese (language)" />
     <Word pinyin="Zhōng wǔ" hanyu="中午" english="Noon" />
     <Word pinyin="Zhōng xīn" hanyu="中心" english="Center" />
@@ -1107,8 +1151,12 @@
     <Word pinyin="Zhǔ yì" hanyu="主义" english="Doctrine, -ism" />
     <Word pinyin="Zhuàn" hanyu="赚" english="Earn" />
     <Word pinyin="Zhuàn pán" hanyu="转盘" english="Roundabout, Rotary, Turntable" />
+    <Word pinyin="Zhuān yòng" hanyu="专用" english="Dedicated, Special" />
     <Word pinyin="Zhǔn bèi" hanyu="准备" english="Ready" />
+    <Word pinyin="Zì fú" hanyu="字符" english="Character" />
     <Word pinyin="Zì jǐ" hanyu="自己" english="Oneself" />
+    <Word pinyin="Zì rán" hanyu="自然" english="Natural" />
+    <Word pinyin="Zī wèi" hanyu="滋味" english="Taste, Flavor, Feeling" />
     <Word pinyin="Zì xíng chē" hanyu="自行车" english="Bicyle, Bike" />
     <Word pinyin="Zì yóu" hanyu="自由" english="Free, Freedom" />
     <Word pinyin="Zì zé" hanyu="自责" english="Remorse" />

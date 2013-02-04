@@ -160,14 +160,6 @@ namespace ChineseWriter {
             SaveWords( );
         }
 
-        internal string HanyiPinyinLines( string chinese ) {
-            var words = HanyuToWords( chinese );
-            var pinyinLine = string.Join( "  ", words
-                .Select( word => word.PinyinString ).ToArray() );
-            var hanyiLine = string.Join( " ", words
-                .Select( word => word.hanyu ).ToArray() );
-            return hanyiLine + "\n" + pinyinLine;
-        }
     } // class
 
 } // namespace
