@@ -17,8 +17,6 @@
     <StackPanel Orientation="Vertical" Margin="8">
         <StackPanel Orientation="Horizontal" Name="Buttons">
             <Label Name="WordCountLabel" Style="{StaticResource WidgetStyle}"/>
-            <Button Style="{StaticResource ButtonStyle}"
-                    Click="AddWordButton_Click">Add word</Button>
             <Button Style="{StaticResource ButtonStyle}" 
                     Click="Clear_Text_Click">Clear text</Button>
             <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy Chinese</Button>

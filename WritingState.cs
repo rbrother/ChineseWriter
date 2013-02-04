@@ -111,6 +111,12 @@ namespace ChineseWriter {
         internal void MoveLeft( ) {
             CursorPos = Math.Max( CursorPos - 1, 0 );
         }
+
+        internal void Clear( ) {
+            Words = new ChineseWordInfo[] { };
+            PinyinInput = "";
+            CursorPos = 0;
+        }
     } // class
 
 } // namespace

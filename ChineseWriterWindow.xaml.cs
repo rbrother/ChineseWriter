@@ -37,22 +37,31 @@ namespace ChineseWriter {
                 var KeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( this, "KeyUp" ).
                     Select( args => args.EventArgs );
-                var AlphaKeyPresses = KeyPresses.
-                    Where( args => StringUtils.IsAlphaKey( args.Key ) ).
-                    Select( args => args.Key.ToString( ).ToLower( ) );
-                var NumberKeyPresses = KeyPresses.
-                    Where( args => StringUtils.IsNumberKey( args.Key ) ).
-                    Select( args => StringUtils.NumberKeyValue( args.Key ) );
+                var ControlKeyPresses = KeyPresses.
+                    Where( args => args.KeyboardDevice.Modifiers.HasFlag( ModifierKeys.Control ) ).
+                    Select( args => args.Key );
+                var NonControlKeyPresses = KeyPresses.
+                    Where( args => !args.KeyboardDevice.Modifiers.HasFlag( ModifierKeys.Control ) ).
+                    Select( args => args.Key );
+                var AlphaKeyPresses = NonControlKeyPresses.
+                    Where( key => StringUtils.IsAlphaKey( key ) ).
+                    Select( key => key.ToString( ).ToLower( ) );
+                var NumberKeyPresses = NonControlKeyPresses.
+                    Where( key => StringUtils.IsNumberKey( key ) ).
+                    Select( key => StringUtils.NumberKeyValue( key ) );
 
                 AlphaKeyPresses.
                     Subscribe( newPinyin => _writingState.AddPinyinInput( newPinyin ) );
                 NumberKeyPresses.Subscribe( n => _writingState.SelectPinyin( n ) );
-                KeyPresses.Where( args => args.Key == Key.Back ).
-                    Subscribe( args => _writingState.BackSpace() );
-                KeyPresses.Where( args => args.Key == Key.Left ).
-                    Subscribe( args => _writingState.MoveLeft( ) );
-                KeyPresses.Where( args => args.Key == Key.Right ).
-                    Subscribe( args => _writingState.MoveRight( ) );
+                NonControlKeyPresses.Where( key => key == Key.Back ).
+                    Subscribe( key => _writingState.BackSpace( ) );
+                NonControlKeyPresses.Where( key => key == Key.Left ).
+                    Subscribe( key => _writingState.MoveLeft( ) );
+                NonControlKeyPresses.Where( key => key == Key.Right ).
+                    Subscribe( key => _writingState.MoveRight( ) );
+
+                ControlKeyPresses.
+                    Subscribe( key => HandleControlKey( key ) );
 
                 var EnglishChecked = Observable
                     .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
@@ -77,10 +86,7 @@ namespace ChineseWriter {
                     ObserveOnDispatcher( ).
                     Subscribe( value => PopulateCharGrid( value.Item1, value.Item2 ) );
 
-                _writingState.PinyinInput = "";
-                _writingState.English = false;
-                _writingState.Words = new ChineseWordInfo[] { };
-                _writingState.CursorPos = 0;
+                _writingState.Clear( );
 
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
@@ -192,11 +198,17 @@ namespace ChineseWriter {
         }
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
-            throw new NotImplementedException( );
+            _writingState.Clear( );
         }
 
         private void OpenLink_Click( object sender, RoutedEventArgs e ) {
             Process.Start( ((FrameworkElement) sender).Tag.ToString() );
+        }
+
+        private void HandleControlKey( Key key ) {
+            if (key == Key.E) {
+                ShowEnglish.IsChecked = !ShowEnglish.IsChecked;
+            }
         }
 
     } // class
