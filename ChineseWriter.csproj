@@ -73,10 +73,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GuiUtils.cs" />
     <Compile Include="StringUtils.cs" />
+    <Compile Include="WordPanel.cs" />
     <Compile Include="WordProcessing.cs" />
     <Compile Include="WritingState.cs" />
-    <Page Include="AddWordWindow.xaml">
+    <Page Include="EditWordWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -84,8 +86,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddWordWindow.xaml.cs">
-      <DependentUpon>AddWordWindow.xaml</DependentUpon>
+    <Compile Include="EditWordWindow.xaml.cs">
+      <DependentUpon>EditWordWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

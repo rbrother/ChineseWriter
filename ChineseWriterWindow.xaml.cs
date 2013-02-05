@@ -18,7 +18,8 @@ namespace ChineseWriter {
     /// </summary>
     public partial class ChineseWriterWindow : Window {
 
-        private WritingState _writingState = new WritingState( );
+        private WordDatabase _wordDatabase;
+        private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
 
@@ -27,11 +28,15 @@ namespace ChineseWriter {
         public ChineseWriterWindow( ) {
             try {
                 InitializeComponent( );
+
+                _wordDatabase = new WordDatabase( );
+                _writingState = new WritingState( _wordDatabase );
+
                 _pinyinInput = new TextBox();
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
                 _pinyinInput.PreviewTextInput += new TextCompositionEventHandler(PinyinInput_PreviewTextInput);
 
-                _cursorPanel = WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
+                _cursorPanel = GuiUtils.WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
 
                 var KeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
@@ -51,8 +56,11 @@ namespace ChineseWriter {
                     .Merge( EnglishUnchecked );
                 EnglishChechedChanged.Subscribe( value => _writingState.English = value );
 
+                var WordsDatabaseChanged = new int[] { 0 }.ToObservable( ).
+                    Concat( _wordDatabase.WordsChanged );
+
                 // Update UI based on writing state changes
-                _writingState.WordsDatabaseChanged.ObserveOnDispatcher( ).
+                WordsDatabaseChanged.ObserveOnDispatcher( ).
                     Subscribe( count => this.Title = string.Format("ChineseWriter ({0} words)", count ) );
                 _writingState.PinyinChanges.ObserveOnDispatcher( ).
                     Subscribe( pinyin => _pinyinInput.Text = pinyin );
@@ -89,64 +97,38 @@ namespace ChineseWriter {
             int pos = 0;
             foreach (Word word in _writingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
-                Characters.Children.Add( CreateHanyiPanel( word ) );
+                var wordPanel = new WordPanel( word );
+                Characters.Children.Add( wordPanel );
+                wordPanel.MouseLeftButtonUp += new MouseButtonEventHandler( WordPanel_MouseLeftButtonUp );
                 pos++;
             }
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
         }
 
-        private FrameworkElement CreateHanyiPanel( Word word ) {
-            var color = word.pinyin == null ? Colors.Red : Colors.Transparent;
-            var panel = new StackPanel {
-                Orientation = Orientation.Vertical,
-                Background = new SolidColorBrush( color )
-            };
-            panel.Children.Add( new Label {
-                Content = word.hanyu,
-                FontFamily = new FontFamily( "SimSun" ), FontSize = 30,
-                HorizontalContentAlignment = HorizontalAlignment.Center
-            } );
-            panel.Children.Add( new Label {
-                Content = word.PinyinString,
-                Style = (Style) this.Resources["PinyinStyle"],
-                HorizontalContentAlignment = HorizontalAlignment.Center
-            } );
-            panel.Children.Add( new Label {
-                Content = word.ShortEnglish,
-                Foreground = new SolidColorBrush( Color.FromArgb( 128, 0, 0, 0 ) ),
-                HorizontalContentAlignment = HorizontalAlignment.Center
-            } );
-            panel.ToolTip = word.english;
-            return WrapToBorder( panel );
-        }
-
-        private FrameworkElement WrapToBorder( FrameworkElement child ) {
-            return new Border {
-                Child = child, BorderThickness = new Thickness( 1.0 ),
-                BorderBrush = new SolidColorBrush( Color.FromArgb( 50, 0, 0, 0 ) )
-            };
+        void WordPanel_MouseLeftButtonUp( object sender, MouseButtonEventArgs e ) {
+            var wordPanel = sender as WordPanel;
+            EditWord( wordPanel.Word );
         }
 
         private void UpdateSuggestions( IEnumerable<Word> suggestions ) {
             Suggestions.Children.Clear( );
             Suggestions.RowDefinitions.Clear( );
             var row = 0;
-            AddSuggestion( 0, new Word { pinyin = "", hanyu = "", 
-                english="(literal text, hanyu parsed to words)" } );
+            AddSuggestion( 0, "", "", "(literal text, hanyu parsed to words)" );
             foreach (Word word in suggestions) {
                 row++;
-                AddSuggestion( row, word );
+                AddSuggestion( row, word.Pinyin, word.Hanyu, word.English );
             }
         }
 
-        private void AddSuggestion( int row, Word word ) {
-            var pinyinStyle = (Style)this.Resources["PinyinStyle"];
+        private void AddSuggestion( int row, string pinyin, string hanyu, string english ) {
+            var pinyinStyle = GuiUtils.PinyinStyle;
             var color = ( row % 2 == 0 ? Colors.Transparent : Color.FromArgb( 50, 0, 0, 255 ) );
-            Suggestions.RowDefinitions.Add( new RowDefinition { Tag = word } );
+            Suggestions.RowDefinitions.Add( new RowDefinition() );
             Suggestions.Children.Add( CreateGridLabel( row.ToString( ), row, 0, color, pinyinStyle ) );
-            Suggestions.Children.Add( CreateGridLabel( word.pinyin, row, 1, color, pinyinStyle ) );
-            Suggestions.Children.Add( CreateGridLabel( word.hanyu, row, 2, color, pinyinStyle ) );
-            Suggestions.Children.Add(CreateGridLabel(word.english, row, 3, color, (Style)this.Resources["WidgetStyle"]));
+            Suggestions.Children.Add( CreateGridLabel( pinyin, row, 1, color, pinyinStyle ) );
+            Suggestions.Children.Add( CreateGridLabel( hanyu, row, 2, color, pinyinStyle ) );
+            Suggestions.Children.Add(CreateGridLabel( english, row, 3, color, (Style)this.Resources["WidgetStyle"]));
         }
 
         private static FrameworkElement CreateGridLabel( string text, int row, int col, Color color, Style style = null ) {
@@ -158,25 +140,13 @@ namespace ChineseWriter {
             return label;
         }
 
-        private void AddWordButton_Click( object sender, RoutedEventArgs e ) {
-            // TODO: Implement this in new way so that words are added automatically
-            // and their definitions can then be edited
-            throw new NotImplementedException( );
-
-/*            var window = new AddWordWindow( _hanyuDb.Words.Values );
-            if (SelectedChineseText != "") {
-                window.HanyuBox.Text = SelectedChineseText;
-                window.PinyinBox.Focus( );
-                Process.Start( "http://translate.google.com/#zh-CN/en/" + SelectedChineseText );
-                Process.Start( "http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + SelectedChineseText );
-            } else {
-                window.HanyuBox.Focus( );
-            }
+        private void EditWord( Word word ) {
+            var window = new EditWordWindow( word );
             var result = window.ShowDialog( );
             if (result.HasValue && result.Value) {
-                _hanyuDb.AddOrModifyWord( window.NewWord );
-            }
- */
+                _wordDatabase.AddOrModifyWord( window.NewWord );
+                _writingState.ReplaceWord( word, window.NewWord );
+            } 
         }
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
@@ -189,10 +159,6 @@ namespace ChineseWriter {
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
             _writingState.Clear( );
-        }
-
-        private void OpenLink_Click( object sender, RoutedEventArgs e ) {
-            Process.Start( ((FrameworkElement) sender).Tag.ToString() );
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {

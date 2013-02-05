@@ -11,7 +11,7 @@ namespace ChineseWriter {
 
     internal class WritingState {
 
-        private WordDatabase _hanyuDb = new WordDatabase( );
+        private WordDatabase _hanyuDb;
         private int _cursorPos;
         private Word[] _words;
         private Word[] _suggestions;
@@ -24,7 +24,6 @@ namespace ChineseWriter {
         public Subject<Word[]> SuggestionsChanges = new Subject<Word[]>( );
         public Subject<Word[]> WordsChanges = new Subject<Word[]>( );
         public Subject<int> CursorPosChanges = new Subject<int>( );
-        public IObservable<int> WordsDatabaseChanged;
 
         // Observables accessors
         public bool English {
@@ -45,9 +44,8 @@ namespace ChineseWriter {
         }
 
         // Constructor
-        public WritingState( ) {
-            WordsDatabaseChanged = new int[] { 0 }.ToObservable( ).
-                Concat( _hanyuDb.WordsChanged );
+        public WritingState( WordDatabase wordDatabase ) {
+            _hanyuDb = wordDatabase;
             PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => 0 ).
                 Subscribe( value => UpdateSuggestions( ) );
         }
@@ -109,9 +107,9 @@ namespace ChineseWriter {
         public object HanyiPinyinLines { 
             get {
                 var pinyinLine = string.Join( "  ", Words
-                    .Select( word => word.PinyinString ).ToArray( ) );
+                    .Select( word => word.Pinyin ).ToArray( ) );
                 var hanyiLine = string.Join( " ", Words
-                    .Select( word => word.hanyu ).ToArray( ) );
+                    .Select( word => word.Hanyu ).ToArray( ) );
                 return hanyiLine + "\n" + pinyinLine;
             } 
         }
@@ -120,6 +118,10 @@ namespace ChineseWriter {
             Words = new Word[] { };
             PinyinInput = "";
             CursorPos = 0;
+        }
+
+        internal void ReplaceWord( Word originalWord, KnownHanyu newWord ) {
+            Words = Words.Select( word => word == originalWord ? newWord : word ).ToArray();
         }
     } // class
 

@@ -3,51 +3,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace ChineseWriter {
 
-    public struct Word {
-        public string hanyu, pinyin, english;
+    public class Word {
+        virtual public string Hanyu { get { return ""; } }
+        virtual public string Pinyin { get { return ""; } }
+        virtual public string English { get { return ""; } }
+        virtual public string ShortEnglish { get { return English; } }
+        virtual public Color Color { get { return Colors.Transparent; } }
+    }
 
-        private string _simplePinyin; // with spaces and diacritics removed
+    public class LiteralWord : Word {
+        private string _text;
 
-        private string[] _englishParts;
+        public LiteralWord( string text ) {
+            _text = text;
+        }
 
-        public bool IsEmpty { get { return pinyin == null; } }
+        override public string Hanyu { get { return _text; } }
+        override public string Pinyin { get { return _text; } }
+        override public string English { get { return _text; } }
+        override public Color Color { get { return Color.FromArgb( 128, 255, 255, 255 ); } }
+    }
 
-        public string PinyinString { get { return pinyin == null ? "?" : pinyin; } }
+    public class UnknownHanyu : Word {
+        private string _hanyu;
 
-        private string SimplePinyin {
-            get {
-                if (_simplePinyin == null) {
-                    _simplePinyin = this.pinyin.RemoveDiacritics( ).ToLower( )
-                        .Replace( " ", "" ).Replace( "'", "" );
-                }
-                return _simplePinyin;
+        public UnknownHanyu( string hanyu ) {
+            _hanyu = hanyu;
+        }
+
+        override public string Hanyu { get { return _hanyu; } }
+        override public string Pinyin { get { return "?"; } }
+        override public string English { get { return "?"; } }
+        override public Color Color { get { return Color.FromArgb(128,255,0,0); } }
+    }
+
+    public class KnownHanyu : Word {
+        private readonly string _hanyu, _pinyin, _english;
+        private readonly string _simplePinyin; // with spaces and diacritics removed
+        private readonly string[] _englishParts;
+
+        override public string English { get { return _english; } }
+        override public string Hanyu { get { return _hanyu; } }
+        override public string Pinyin { get { return _pinyin; } }
+        override public string ShortEnglish { get { return EnglishParts.First( ); } }
+
+        private string SimplePinyin { get { return _simplePinyin; } }
+        private string[] EnglishParts { get { return _englishParts; } }
+
+        public KnownHanyu( string hanyu, string pinyin = null, string english = null) {
+            _hanyu = hanyu;
+            _pinyin = pinyin;
+            _english = english;
+            _simplePinyin = this._pinyin.RemoveDiacritics( ).ToLower( )
+                .Replace( " ", "" ).Replace( "'", "" );
+            _englishParts = _english == null ?
+                new string[] { "" } :
+                _english.ToLower( )
+                    .Split( ',' )
+                    .Select( word => word.Trim( ) )
+                    .ToArray( );
             }
-        }
-
-        public string ShortEnglish { 
-            get {
-                return EnglishParts.First( );
-            } 
-        }
-
-        private string[] EnglishParts {
-            get {
-                if (_englishParts == null) {
-                    if (english == null) {
-                        _englishParts = new string[] { "" };
-                    } else {
-                        _englishParts = english.ToLower( )
-                            .Split( ',' )
-                            .Select( word => word.Trim( ) )
-                            .ToArray();
-                    }
-                }
-                return _englishParts;
-            }
-        }
 
         public bool MatchesPinyin( string pinyinInput, bool useEnglish ) {
             if (useEnglish) {

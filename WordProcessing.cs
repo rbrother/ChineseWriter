@@ -22,14 +22,14 @@ namespace ChineseWriter {
 
         private string _filePath;
 
-        private Dictionary<string /* hanyi */, Word> _words;
+        private Dictionary<string /* hanyi */, KnownHanyu> _words;
 
         private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
         private int MaxWordLength {
             get {
                 if (_maxWordLength == 0) {
-                    _maxWordLength = _words.Max( word => word.Value.hanyu.Length );
+                    _maxWordLength = _words.Max( word => word.Value.Hanyu.Length );
                 }
                 return _maxWordLength;
             }
@@ -60,7 +60,7 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent );            
         }
 
-        public Dictionary<string /* hanyi */, Word> Words {
+        public Dictionary<string /* hanyi */, KnownHanyu> Words {
             get {
                 if (_words == null) {
                     _words = LoadWords( );
@@ -75,32 +75,32 @@ namespace ChineseWriter {
 
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
-        public Dictionary<string /* hanyi */, Word> LoadWords( ) {
+        public Dictionary<string /* hanyi */, KnownHanyu> LoadWords( ) {
             return XElement.Load( FilePath )
                 .XPathSelectElements( "//Word" )
                 .Select( word => WordElementToWordInfo( word ) )
-                .ToDictionary( word => word.hanyu );
+                .ToDictionary( word => word.Hanyu );
         }
 
         public void SaveWords( ) {
             new XElement( "Chinese",
                 new XElement( "Words",
-                    Words.Values.OrderBy(word => word.PinyinString).Select( word =>
+                    Words.Values.OrderBy(word => word.Pinyin).Select( word =>
                         new XElement( "Word",
-                            new XAttribute( "pinyin", word.pinyin ),
-                            new XAttribute( "hanyu", word.hanyu ),
-                            new XAttribute( "english", word.english )
+                            new XAttribute( "pinyin", word.Pinyin ),
+                            new XAttribute( "hanyu", word.Hanyu ),
+                            new XAttribute( "english", word.English )
                             )
                     ) )
                 ).Save( FilePath );
         }
 
-        private Word WordElementToWordInfo( XElement wordElement ) {
-            return new Word {
-                pinyin = wordElement.Attribute( "pinyin" ).Value,
-                hanyu = wordElement.Attribute( "hanyu" ).Value,
-                english = wordElement.Attribute( "english" ).Value
-            };
+        private KnownHanyu WordElementToWordInfo( XElement wordElement ) {
+            return new KnownHanyu( 
+                wordElement.Attribute( "hanyu" ).Value,
+                wordElement.Attribute( "pinyin" ).Value,
+                wordElement.Attribute( "english" ).Value
+            );
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace ChineseWriter {
                 return HanyuToWords( chinese.Substring( 1 ) ); // skip spaces
             } else {
                 var firstWord = FirstWord( chinese );
-                var rest = HanyuToWords( chinese.Substring( firstWord.hanyu.Length ) );
+                var rest = HanyuToWords( chinese.Substring( firstWord.Hanyu.Length ) );
                 return ( new Word[] { firstWord } ).Concat( rest ).ToArray( );
             }
         }
@@ -132,8 +132,7 @@ namespace ChineseWriter {
         private Word FirstWord( string chinese ) {
             var nonHanyiMatch = NON_HANYI.Match( chinese );
             if (nonHanyiMatch.Success) {
-                var match = nonHanyiMatch.Value;
-                return new Word { hanyu = match, pinyin = match, english = match };
+                return new LiteralWord(nonHanyiMatch.Value);
             } else {
                 // Find longest match from the beginning
                 for ( int wordLength = MaxWordLength; wordLength >= 1; wordLength--) {
@@ -141,22 +140,22 @@ namespace ChineseWriter {
                     if (Words.ContainsKey( part )) return Words[part];
                 }
                 // not found
-                return new Word { hanyu = chinese.First( ).ToString( ) };
+                return new UnknownHanyu( chinese.First( ).ToString( ) );
             }
         }
 
         public IEnumerable<Word> MatchingSuggestions( string pinyinInput, bool english ) {
             return Words.Values
                 .Where( word => word.MatchesPinyin( pinyinInput, english ) )
-                .OrderBy( word => word.hanyu.Length );
+                .OrderBy( word => word.Hanyu.Length );
         }
 
         public string PinyinText( IEnumerable<Word> words ) {
-            return String.Join( "  ", words.Select( word => word.PinyinString ).ToArray( ) );
+            return String.Join( "  ", words.Select( word => word.Pinyin ).ToArray( ) );
         }
 
-        public void AddOrModifyWord( Word newWord ) {
-            Words[ newWord.hanyu ] = newWord ;
+        public void AddOrModifyWord( KnownHanyu newWord ) {
+            Words[ newWord.Hanyu ] = newWord ;
             _wordsChanged.OnNext( _words.Count );
             SaveWords( );
         }
