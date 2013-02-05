@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace ChineseWriter {
 
-    public struct ChineseWordInfo {
-        public string pinyin, hanyu, english;
+    public struct Word {
+        public string hanyu, pinyin, english;
 
         private string _simplePinyin; // with spaces and diacritics removed
 

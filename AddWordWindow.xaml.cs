@@ -9,11 +9,11 @@ namespace ChineseWriter {
     /// </summary>
     public partial class AddWordWindow : Window {
 
-        private IEnumerable<ChineseWordInfo> _existingWords;
+        private IEnumerable<Word> _existingWords;
 
         /// <param name="existingWords">Existing words to use for validating the new one is not
         /// in the database already</param>
-        public AddWordWindow( IEnumerable<ChineseWordInfo> existingWords ) {
+        public AddWordWindow( IEnumerable<Word> existingWords ) {
             InitializeComponent( );
             _existingWords = existingWords;
         }
@@ -23,9 +23,9 @@ namespace ChineseWriter {
             this.Close( );
         }
 
-        public ChineseWordInfo NewWord {
+        public Word NewWord {
             get {
-                return new ChineseWordInfo {
+                return new Word {
                     pinyin = PinyinBox.Text,
                     hanyu = HanyuBox.Text,
                     english = EnglishBox.Text

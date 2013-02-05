@@ -13,16 +13,16 @@ namespace ChineseWriter {
 
         private WordDatabase _hanyuDb = new WordDatabase( );
         private int _cursorPos;
-        private ChineseWordInfo[] _words;
-        private ChineseWordInfo[] _suggestions;
+        private Word[] _words;
+        private Word[] _suggestions;
         private bool _english;
         private string _pinyinInput = "";
 
         // Observables
         public Subject<string> PinyinChanges = new Subject<string>( );
         public Subject<bool> EnglishChanges = new Subject<bool>( );
-        public Subject<ChineseWordInfo[]> SuggestionsChanges = new Subject<ChineseWordInfo[]>( );
-        public Subject<ChineseWordInfo[]> WordsChanges = new Subject<ChineseWordInfo[]>( );
+        public Subject<Word[]> SuggestionsChanges = new Subject<Word[]>( );
+        public Subject<Word[]> WordsChanges = new Subject<Word[]>( );
         public Subject<int> CursorPosChanges = new Subject<int>( );
         public IObservable<int> WordsDatabaseChanged;
 
@@ -35,7 +35,7 @@ namespace ChineseWriter {
             get { return _pinyinInput;  }
             set { _pinyinInput = value; PinyinChanges.OnNext( value ); }
         }
-        public ChineseWordInfo[] Words { 
+        public Word[] Words { 
             get { return _words; }
             set { _words = value; WordsChanges.OnNext( _words ); }
         }
@@ -54,7 +54,7 @@ namespace ChineseWriter {
 
         private void UpdateSuggestions( ) {
             _suggestions = PinyinInput == "" ?
-                new ChineseWordInfo[] {} :
+                new Word[] {} :
                 _hanyuDb.MatchingSuggestions( PinyinInput, _english ).Take( 9 ).ToArray();
             SuggestionsChanges.OnNext( _suggestions );
         }
@@ -89,20 +89,21 @@ namespace ChineseWriter {
         }
 
         internal void SelectPinyin( int n ) {
-            if (n <= _suggestions.Length) {
-                Words = Words.Take( CursorPos ).
-                    Concat( new ChineseWordInfo[] { WordToInsert(n) } ).
-                    Concat( Words.Skip( CursorPos ) ).
-                    ToArray( );
-                PinyinInput = "";
-                CursorPos = CursorPos + 1;
+            if (n > _suggestions.Length) return;
+            if (n == 0) {
+                InsertWords( _hanyuDb.HanyuToWords( PinyinInput ) );
+            } else {
+                InsertWords( new Word[] { _suggestions[n - 1] } );
             }
+            PinyinInput = "";
         }
 
-        private ChineseWordInfo WordToInsert( int suggestionIndex ) {
-            return suggestionIndex == 0 ?
-                new ChineseWordInfo { hanyu = PinyinInput, pinyin = PinyinInput, english = PinyinInput } :
-                _suggestions[suggestionIndex - 1];
+        private void InsertWords( IEnumerable<Word> newWords ) {
+            Words = Words.Take( CursorPos ).
+                Concat( newWords ).
+                Concat( Words.Skip( CursorPos ) ).
+                ToArray( );
+            CursorPos = CursorPos + newWords.Count();
         }
 
         public object HanyiPinyinLines { 
@@ -116,7 +117,7 @@ namespace ChineseWriter {
         }
 
         internal void Clear( ) {
-            Words = new ChineseWordInfo[] { };
+            Words = new Word[] { };
             PinyinInput = "";
             CursorPos = 0;
         }

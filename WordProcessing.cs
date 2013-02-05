@@ -22,7 +22,7 @@ namespace ChineseWriter {
 
         private string _filePath;
 
-        private Dictionary<string /* hanyi */, ChineseWordInfo> _words;
+        private Dictionary<string /* hanyi */, Word> _words;
 
         private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
@@ -60,7 +60,7 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent );            
         }
 
-        public Dictionary<string /* hanyi */, ChineseWordInfo> Words {
+        public Dictionary<string /* hanyi */, Word> Words {
             get {
                 if (_words == null) {
                     _words = LoadWords( );
@@ -75,7 +75,7 @@ namespace ChineseWriter {
 
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
-        public Dictionary<string /* hanyi */, ChineseWordInfo> LoadWords( ) {
+        public Dictionary<string /* hanyi */, Word> LoadWords( ) {
             return XElement.Load( FilePath )
                 .XPathSelectElements( "//Word" )
                 .Select( word => WordElementToWordInfo( word ) )
@@ -95,8 +95,8 @@ namespace ChineseWriter {
                 ).Save( FilePath );
         }
 
-        private ChineseWordInfo WordElementToWordInfo( XElement wordElement ) {
-            return new ChineseWordInfo {
+        private Word WordElementToWordInfo( XElement wordElement ) {
+            return new Word {
                 pinyin = wordElement.Attribute( "pinyin" ).Value,
                 hanyu = wordElement.Attribute( "hanyu" ).Value,
                 english = wordElement.Attribute( "english" ).Value
@@ -110,14 +110,15 @@ namespace ChineseWriter {
         /// <param name="chinese"></param>
         /// <example>很抱歉.我这里没有信号 -> ["很","抱歉",".",null,"没有","信号"]</example>
         /// <returns></returns>
-        public IEnumerable<ChineseWordInfo> HanyuToWords( string chinese ) {
+        public Word[] HanyuToWords( string chinese ) {
             if (chinese == "") {
-                return new ChineseWordInfo[] { };
+                return new Word[] { };
+            } else if (chinese.StartsWith( " " )) {
+                return HanyuToWords( chinese.Substring( 1 ) ); // skip spaces
             } else {
                 var firstWord = FirstWord( chinese );
                 var rest = HanyuToWords( chinese.Substring( firstWord.hanyu.Length ) );
-                var result = ( new ChineseWordInfo[] { firstWord } ).Concat( rest ).ToArray( );
-                return result;
+                return ( new Word[] { firstWord } ).Concat( rest ).ToArray( );
             }
         }
 
@@ -128,11 +129,11 @@ namespace ChineseWriter {
         /// </summary>
         /// <param name="chineseText"></param>
         /// <returns></returns>
-        private ChineseWordInfo FirstWord( string chinese ) {
+        private Word FirstWord( string chinese ) {
             var nonHanyiMatch = NON_HANYI.Match( chinese );
             if (nonHanyiMatch.Success) {
                 var match = nonHanyiMatch.Value;
-                return new ChineseWordInfo { hanyu = match, pinyin = match, english = match };
+                return new Word { hanyu = match, pinyin = match, english = match };
             } else {
                 // Find longest match from the beginning
                 for ( int wordLength = MaxWordLength; wordLength >= 1; wordLength--) {
@@ -140,21 +141,21 @@ namespace ChineseWriter {
                     if (Words.ContainsKey( part )) return Words[part];
                 }
                 // not found
-                return new ChineseWordInfo { hanyu = chinese.First( ).ToString( ) };
+                return new Word { hanyu = chinese.First( ).ToString( ) };
             }
         }
 
-        public IEnumerable<ChineseWordInfo> MatchingSuggestions( string pinyinInput, bool english ) {
+        public IEnumerable<Word> MatchingSuggestions( string pinyinInput, bool english ) {
             return Words.Values
                 .Where( word => word.MatchesPinyin( pinyinInput, english ) )
                 .OrderBy( word => word.hanyu.Length );
         }
 
-        public string PinyinText( IEnumerable<ChineseWordInfo> words ) {
+        public string PinyinText( IEnumerable<Word> words ) {
             return String.Join( "  ", words.Select( word => word.PinyinString ).ToArray( ) );
         }
 
-        public void AddOrModifyWord( ChineseWordInfo newWord ) {
+        public void AddOrModifyWord( Word newWord ) {
             Words[ newWord.hanyu ] = newWord ;
             _wordsChanged.OnNext( _words.Count );
             SaveWords( );

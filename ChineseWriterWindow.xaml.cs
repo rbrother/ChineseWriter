@@ -84,10 +84,10 @@ namespace ChineseWriter {
             _writingState.PinyinInput = _pinyinInput.Text;
         }
 
-        private void PopulateCharGrid( IEnumerable<ChineseWordInfo> words, int cursorPos ) {
+        private void PopulateCharGrid( IEnumerable<Word> words, int cursorPos ) {
             Characters.Children.Clear( );
             int pos = 0;
-            foreach (ChineseWordInfo word in _writingState.Words) {
+            foreach (Word word in _writingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
                 Characters.Children.Add( CreateHanyiPanel( word ) );
                 pos++;
@@ -95,7 +95,7 @@ namespace ChineseWriter {
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
         }
 
-        private FrameworkElement CreateHanyiPanel( ChineseWordInfo word ) {
+        private FrameworkElement CreateHanyiPanel( Word word ) {
             var color = word.pinyin == null ? Colors.Red : Colors.Transparent;
             var panel = new StackPanel {
                 Orientation = Orientation.Vertical,
@@ -127,18 +127,19 @@ namespace ChineseWriter {
             };
         }
 
-        private void UpdateSuggestions( IEnumerable<ChineseWordInfo> suggestions ) {
+        private void UpdateSuggestions( IEnumerable<Word> suggestions ) {
             Suggestions.Children.Clear( );
             Suggestions.RowDefinitions.Clear( );
             var row = 0;
-            AddSuggestion( 0, new ChineseWordInfo { pinyin = "", hanyu = "", english="(literal latin text, no conversion to hanyu)" } );
-            foreach (ChineseWordInfo word in suggestions) {
+            AddSuggestion( 0, new Word { pinyin = "", hanyu = "", 
+                english="(literal text, hanyu parsed to words)" } );
+            foreach (Word word in suggestions) {
                 row++;
                 AddSuggestion( row, word );
             }
         }
 
-        private void AddSuggestion( int row, ChineseWordInfo word ) {
+        private void AddSuggestion( int row, Word word ) {
             var pinyinStyle = (Style)this.Resources["PinyinStyle"];
             var color = ( row % 2 == 0 ? Colors.Transparent : Color.FromArgb( 50, 0, 0, 255 ) );
             Suggestions.RowDefinitions.Add( new RowDefinition { Tag = word } );
