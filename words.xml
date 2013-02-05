@@ -537,6 +537,7 @@
     <Word pinyin="Lìng wài" hanyu="另外" english="Other, Additional, Separate, Furthermore" />
     <Word pinyin="Lǐng yǎng" hanyu="领养" english="Adopt, Adopt (a child)" />
     <Word pinyin="Liú" hanyu="留" english="Stay, Remain" />
+    <Word pinyin="Liú" hanyu="刘" english="Liu, Liu (surname)" />
     <Word pinyin="Liù" hanyu="六" english="Six" />
     <Word pinyin="Liú gǎn" hanyu="流感" english="Flu" />
     <Word pinyin="Liú xíng" hanyu="流行" english="Popular, Fashionable" />
@@ -589,7 +590,7 @@
     <Word pinyin="Miǎn fèi" hanyu="免费" english="Free, Free of charge" />
     <Word pinyin="Miào" hanyu="庙" english="Temple" />
     <Word pinyin="Miáo shù" hanyu="描述" english="Description, Describe" />
-    <Word pinyin="Míng" hanyu="明" english="Next, Clear, Bright, Ming-dynasty" />
+    <Word pinyin="Míng" hanyu="明" english="Clear, Bright, Next, Ming-dynasty" />
     <Word pinyin="Míng bái" hanyu="明白" english="Understand" />
     <Word pinyin="Míng nián" hanyu="明年" english="Next year" />
     <Word pinyin="Míng tiān" hanyu="明天" english="Tomorrow" />
@@ -876,6 +877,7 @@
     <Word pinyin="Wǎng yè" hanyu="网页" english="Web page" />
     <Word pinyin="Wànnéng" hanyu="万能" english="All-powerful, Omnipotent, Universal" />
     <Word pinyin="Wèi" hanyu="为" english="For, As, Be" />
+    <Word pinyin="Wēi" hanyu="微" english="Tiny, Miniature, Profound" />
     <Word pinyin="Wéi jīn" hanyu="围巾" english="Scarf, Shawl" />
     <Word pinyin="Wèi jīng" hanyu="味精" english="Glutamate, MSG" />
     <Word pinyin="Wèi lái" hanyu="未来" english="Future" />
@@ -1147,6 +1149,7 @@
     <Word pinyin="Zhōu" hanyu="周" english="Week" />
     <Word pinyin="Zhōu mò" hanyu="周末" english="Weekend" />
     <Word pinyin="Zhù" hanyu="住" english="Live, Live at" />
+    <Word pinyin="Zhù" hanyu="祝" english="Wish, Pray" />
     <Word pinyin="Zhū ròu" hanyu="猪肉" english="Pork" />
     <Word pinyin="Zhǔ yì" hanyu="主义" english="Doctrine, -ism" />
     <Word pinyin="Zhuàn" hanyu="赚" english="Earn" />
