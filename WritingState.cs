@@ -58,7 +58,6 @@ namespace ChineseWriter {
         }
 
         public void TextEdit( Key key ) {
-            if (PinyinInput != "") return;
             switch (key ) {
                 case Key.Back: BackSpace(); break;
                 case Key.Delete: Delete(); break;

@@ -40,6 +40,7 @@ namespace ChineseWriter {
 
                 var KeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
+                    Where( args => args.EventArgs.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control)).
                     Select( args => args.EventArgs.Key );
 
                 KeyPresses.Where( key => TEXT_EDIT_KEYS.Contains(key) ).
