@@ -47,6 +47,7 @@
     <Word pinyin="Bǐ sà" hanyu="比萨" english="Pizza" />
     <Word pinyin="Bì xū" hanyu="必须" english="Must, Need, Have to" />
     <Word pinyin="bì yè" hanyu="毕业" english="Graduation, Finish school" />
+    <Word pinyin="Bì zhe" hanyu="闭着" english="Closed" />
     <Word pinyin="Biàn huà" hanyu="变化" english="Change" />
     <Word pinyin="Biàn lěng" hanyu="变冷" english="Chill" />
     <Word pinyin="Biǎo jie" hanyu="表姐" english="Cousin, Cousin (older female cousin via female line)" />
@@ -65,6 +66,7 @@
     <Word pinyin="Bù néng" hanyu="不能" english="Cannot, Should not, Must not" />
     <Word pinyin="Bù shì" hanyu="不是" english="No, Is not" />
     <Word pinyin="Bù xià" hanyu="不下" english="No less than" />
+    <Word pinyin="Bù xiàng huà" hanyu="不像话" english="Unreasonable, Shocking, Outrageous" />
     <Word pinyin="Bù xìng" hanyu="不幸" english="Unfortunately, Sad, Misfortune" />
     <Word pinyin="Bùbì" hanyu="不必" english="Need not, Does not have to" />
     <Word pinyin="Cài" hanyu="菜" english="Dish, Vegetable" />
@@ -929,6 +931,7 @@
     <Word pinyin="Xiàn zài" hanyu="现在" english="Now" />
     <Word pinyin="Xiàn zhuàng" hanyu="现状" english="Current situation" />
     <Word pinyin="Xiàng" hanyu="向" english="Towards, To, Direction" />
+    <Word pinyin="Xiàng" hanyu="像" english="Resemble, Be like, Look as if, Such as, Appearance, Image" />
     <Word pinyin="Xiǎng" hanyu="想" english="Want, Wish, Think, Miss" />
     <Word pinyin="Xiǎng bù dào" hanyu="想不到" english="Unexpected" />
     <Word pinyin="Xiāng chǔ" hanyu="相处" english="Live together, Get along" />
@@ -1053,6 +1056,7 @@
     <Word pinyin="Yīyuàn" hanyu="医院" english="Hospital" />
     <Word pinyin="Yòng" hanyu="用" english="Use" />
     <Word pinyin="Yǒng bào" hanyu="拥抱" english="Hug, Embrace" />
+    <Word pinyin="Yǒng yuǎn" hanyu="永远" english="Forever, Eternal" />
     <Word pinyin="Yóu" hanyu="邮" english="Mail, Postal" />
     <Word pinyin="Yòu" hanyu="又" english="Also, And, Again" />
     <Word pinyin="Yǒu" hanyu="有" english="Have, Be, Exist" />
@@ -1171,6 +1175,7 @@
     <Word pinyin="Zǔ" hanyu="組" english="Group, Team, Set, Series" />
     <Word pinyin="Zú gòu" hanyu="足够" english="Enough, Adequate, Sufficient" />
     <Word pinyin="Zuì" hanyu="最" english="Most" />
+    <Word pinyin="Zuǐ" hanyu="嘴" english="Mouth, Beak, Nozzle" />
     <Word pinyin="Zuì hòu" hanyu="最后" english="Last" />
     <Word pinyin="Zuì jìn" hanyu="最近" english="Recent, Recently" />
     <Word pinyin="Zūn zhòng" hanyu="尊重" english="Respect, Esteem, Value" />

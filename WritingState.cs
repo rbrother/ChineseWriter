@@ -36,7 +36,11 @@ namespace ChineseWriter {
         }
         public Word[] Words { 
             get { return _words; }
-            set { _words = value; WordsChanges.OnNext( _words ); }
+            set { 
+                _words = value;
+                if (_cursorPos > _words.Length) CursorPos = _words.Length;
+                WordsChanges.OnNext( _words ); 
+            }
         }
         public int CursorPos {
             get { return _cursorPos; }
@@ -119,8 +123,12 @@ namespace ChineseWriter {
             CursorPos = 0;
         }
 
-        internal void ReplaceWord( Word originalWord, KnownHanyu newWord ) {
-            Words = Words.Select( word => word == originalWord ? newWord : word ).ToArray();
+        internal string Hanyu {
+            get { return string.Join( "", Words.Select( word => word.Hanyu ).ToArray( ) ); }
+        }
+
+        internal void Reparse( ) {
+            Words = _hanyuDb.HanyuToWords( Hanyu );
         }
     } // class
 

@@ -22,6 +22,7 @@ namespace ChineseWriter {
         private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
+        private bool _dragging = false;
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
 
@@ -146,7 +147,7 @@ namespace ChineseWriter {
             var result = window.ShowDialog( );
             if (result.HasValue && result.Value) {
                 _wordDatabase.AddOrModifyWord( window.NewWord );
-                _writingState.ReplaceWord( word, window.NewWord );
+                _writingState.Reparse( );
             } 
         }
 
@@ -164,6 +165,10 @@ namespace ChineseWriter {
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             _pinyinInput.Focus();
+        }
+
+        private void AddWord_Click( object sender, RoutedEventArgs e ) {
+            EditWord( new UnknownHanyu( _writingState.Hanyu ) );
         }
 
     } // class
