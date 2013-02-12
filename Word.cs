@@ -12,7 +12,7 @@ namespace ChineseWriter {
         virtual public string Pinyin { get { return ""; } }
         virtual public string English { get { return ""; } }
         virtual public string ShortEnglish { get { return English; } }
-        virtual public Color Color { get { return Colors.Transparent; } }
+        virtual public Color Color { get { return Colors.White; } }
     }
 
     public class LiteralWord : Word {
@@ -25,7 +25,7 @@ namespace ChineseWriter {
         override public string Hanyu { get { return _text; } }
         override public string Pinyin { get { return _text; } }
         override public string English { get { return _text; } }
-        override public Color Color { get { return Color.FromArgb( 128, 255, 255, 255 ); } }
+        override public Color Color { get { return Color.FromRgb( 220, 220, 220 ); } }
     }
 
     public class UnknownHanyu : Word {
@@ -38,7 +38,7 @@ namespace ChineseWriter {
         override public string Hanyu { get { return _hanyu; } }
         override public string Pinyin { get { return "?"; } }
         override public string English { get { return "?"; } }
-        override public Color Color { get { return Color.FromArgb(128,255,0,0); } }
+        override public Color Color { get { return Color.FromRgb(255,200,200); } }
     }
 
     public class KnownHanyu : Word {

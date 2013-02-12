@@ -82,19 +82,6 @@ namespace ChineseWriter {
                 .ToDictionary( word => word.Hanyu );
         }
 
-        public void SaveWords( ) {
-            new XElement( "Chinese",
-                new XElement( "Words",
-                    Words.Values.OrderBy(word => word.Pinyin).Select( word =>
-                        new XElement( "Word",
-                            new XAttribute( "pinyin", word.Pinyin ),
-                            new XAttribute( "hanyu", word.Hanyu ),
-                            new XAttribute( "english", word.English )
-                            )
-                    ) )
-                ).Save( FilePath );
-        }
-
         private KnownHanyu WordElementToWordInfo( XElement wordElement ) {
             return new KnownHanyu( 
                 wordElement.Attribute( "hanyu" ).Value,
@@ -154,12 +141,9 @@ namespace ChineseWriter {
             return String.Join( "  ", words.Select( word => word.Pinyin ).ToArray( ) );
         }
 
-        public void AddOrModifyWord( KnownHanyu newWord ) {
-            Words[ newWord.Hanyu ] = newWord ;
-            _wordsChanged.OnNext( _words.Count );
-            SaveWords( );
+        internal Word WordForHanyu( string hanyu ) {
+            return Words.ContainsKey(hanyu) ? (Word) Words[hanyu] : new UnknownHanyu(hanyu);
         }
-
     } // class
 
 } // namespace

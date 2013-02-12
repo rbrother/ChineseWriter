@@ -65,11 +65,13 @@ namespace ChineseWriter {
             switch (key ) {
                 case Key.Back: BackSpace(); break;
                 case Key.Delete: Delete(); break;
-                case Key.Left: CursorPos = Math.Max(CursorPos - 1, 0); break;
-                case Key.Right: CursorPos = Math.Min(CursorPos + 1, Words.Length); break;
+                case Key.Left: CursorPos--; break;
+                case Key.Right: CursorPos++; break;
                 case Key.Home: CursorPos = 0; break;
                 case Key.End: CursorPos = Words.Length; break;
             }
+            if (CursorPos < 0) CursorPos = 0;
+            if (CursorPos > Words.Length) CursorPos = Words.Length;
         }
 
         private void Delete() {
@@ -82,10 +84,11 @@ namespace ChineseWriter {
 
         private void BackSpace() {
             if (CursorPos > 0) {
-                Words = Words.Take(CursorPos - 1).
-                    Concat(Words.Skip(CursorPos)).
+                var orignalCursor = CursorPos;
+                Words = Words.Take( orignalCursor - 1 ).
+                    Concat( Words.Skip( orignalCursor ) ).
                     ToArray();
-                CursorPos--;
+                CursorPos = orignalCursor - 1;
             }
         }
 

@@ -78,22 +78,15 @@
     <Compile Include="WordPanel.cs" />
     <Compile Include="WordProcessing.cs" />
     <Compile Include="WritingState.cs" />
-    <Page Include="EditWordWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ChineseWriterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="EditWordWindow.xaml.cs">
-      <DependentUpon>EditWordWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ChineseWordInfo.cs" />
+    <Compile Include="Word.cs" />
     <Compile Include="ChineseWriterWindow.xaml.cs">
       <DependentUpon>ChineseWriterWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -99,17 +99,12 @@ namespace ChineseWriter {
             int pos = 0;
             foreach (Word word in _writingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
-                var wordPanel = new WordPanel( word );
+                var wordPanel = new WordPanel( word, _wordDatabase );
                 Characters.Children.Add( wordPanel );
-                wordPanel.MouseLeftButtonUp += new MouseButtonEventHandler( WordPanel_MouseLeftButtonUp );
                 pos++;
             }
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
-        }
-
-        void WordPanel_MouseLeftButtonUp( object sender, MouseButtonEventArgs e ) {
-            var wordPanel = sender as WordPanel;
-            EditWord( wordPanel.Word );
+            _pinyinInput.Focus( );
         }
 
         private void UpdateSuggestions( IEnumerable<Word> suggestions ) {
@@ -142,15 +137,6 @@ namespace ChineseWriter {
             return label;
         }
 
-        private void EditWord( Word word ) {
-            var window = new EditWordWindow( word );
-            var result = window.ShowDialog( );
-            if (result.HasValue && result.Value) {
-                _wordDatabase.AddOrModifyWord( window.NewWord );
-                _writingState.Reparse( );
-            } 
-        }
-
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
             try {
                 Clipboard.SetData( DataFormats.UnicodeText, _writingState.HanyiPinyinLines );
@@ -165,10 +151,6 @@ namespace ChineseWriter {
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             _pinyinInput.Focus();
-        }
-
-        private void AddWord_Click( object sender, RoutedEventArgs e ) {
-            EditWord( new UnknownHanyu( _writingState.Hanyu ) );
         }
 
     } // class
