@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace ChineseWriter {
             }
         }
 
-        private string FileName { get { return "words.xml"; } }
+        private string FileName { get { return "cedict_ts.u8"; } }
 
         private string FilePath { 
             get {
@@ -76,18 +77,24 @@ namespace ChineseWriter {
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
         public Dictionary<string /* hanyi */, KnownHanyu> LoadWords( ) {
-            return XElement.Load( FilePath )
-                .XPathSelectElements( "//Word" )
-                .Select( word => WordElementToWordInfo( word ) )
-                .ToDictionary( word => word.Hanyu );
+            var words = File.ReadAllLines( FilePath, Encoding.UTF8 ).
+                Where( line => !line.StartsWith( "#" ) ).
+                Select( line => LineToWord( line ) );
+            var dict = new Dictionary<string, KnownHanyu>( );
+            // TODO: Following kills duplicates, try to retain
+            foreach (KnownHanyu word in words) dict[word.Hanyu] = word;
+            return dict;
         }
 
-        private KnownHanyu WordElementToWordInfo( XElement wordElement ) {
-            return new KnownHanyu( 
-                wordElement.Attribute( "hanyu" ).Value,
-                wordElement.Attribute( "pinyin" ).Value,
-                wordElement.Attribute( "english" ).Value
-            );
+        private readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
+
+        private KnownHanyu LineToWord( string line ) {
+            var match = CC_LINE.Match( line );
+            var traditional = match.Groups[1].Value;
+            var simplified = match.Groups[2].Value;
+            var pinyin = match.Groups[3].Value;
+            var english = match.Groups[4].Value;
+            return new KnownHanyu( simplified, pinyin, english.Replace("/", ", "));
         }
 
         /// <summary>
