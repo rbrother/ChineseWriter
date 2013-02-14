@@ -113,7 +113,7 @@ namespace ChineseWriter {
         public object HanyiPinyinLines { 
             get {
                 var pinyinLine = string.Join( "  ", Words
-                    .Select( word => word.Pinyin ).ToArray( ) );
+                    .Select( word => word.DisplayPinyin ).ToArray( ) );
                 var hanyiLine = string.Join( " ", Words
                     .Select( word => word.Hanyu ).ToArray( ) );
                 return hanyiLine + "\n" + pinyinLine;

@@ -112,9 +112,9 @@ namespace ChineseWriter {
             Suggestions.RowDefinitions.Clear( );
             var row = 0;
             AddSuggestion( 0, "", "", "(literal text, hanyu parsed to words)" );
-            foreach (Word word in suggestions) {
+            foreach (HanyuWord word in suggestions) {
                 row++;
-                AddSuggestion( row, word.Pinyin, word.Hanyu, word.English );
+                AddSuggestion( row, word.DisplayPinyin, word.Hanyu, word.English );
             }
         }
 

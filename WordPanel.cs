@@ -30,7 +30,7 @@ namespace ChineseWriter {
                 HorizontalContentAlignment = HorizontalAlignment.Center
             } );
             panel.Children.Add( new Label {
-                Content = word.Pinyin,
+                Content = word.DisplayPinyin,
                 Style = GuiUtils.PinyinStyle,
                 HorizontalContentAlignment = HorizontalAlignment.Center
             } );

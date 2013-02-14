@@ -23,7 +23,7 @@ namespace ChineseWriter {
 
         private string _filePath;
 
-        private Dictionary<string /* hanyi */, KnownHanyu> _words;
+        private Dictionary<string /* hanyi */, HanyuWord> _words;
 
         private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
@@ -61,7 +61,7 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent );            
         }
 
-        public Dictionary<string /* hanyi */, KnownHanyu> Words {
+        public Dictionary<string /* hanyi */, HanyuWord> Words {
             get {
                 if (_words == null) {
                     _words = LoadWords( );
@@ -76,25 +76,25 @@ namespace ChineseWriter {
 
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
-        public Dictionary<string /* hanyi */, KnownHanyu> LoadWords( ) {
+        public Dictionary<string /* hanyi */, HanyuWord> LoadWords( ) {
             var words = File.ReadAllLines( FilePath, Encoding.UTF8 ).
                 Where( line => !line.StartsWith( "#" ) ).
                 Select( line => LineToWord( line ) );
-            var dict = new Dictionary<string, KnownHanyu>( );
+            var dict = new Dictionary<string, HanyuWord>( );
             // TODO: Following kills duplicates, try to retain
-            foreach (KnownHanyu word in words) dict[word.Hanyu] = word;
+            foreach (HanyuWord word in words) dict[word.Hanyu] = word;
             return dict;
         }
 
         private readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
 
-        private KnownHanyu LineToWord( string line ) {
+        private HanyuWord LineToWord( string line ) {
             var match = CC_LINE.Match( line );
             var traditional = match.Groups[1].Value;
             var simplified = match.Groups[2].Value;
             var pinyin = match.Groups[3].Value;
             var english = match.Groups[4].Value;
-            return new KnownHanyu( simplified, pinyin, english.Replace("/", ", "));
+            return new HanyuWord( simplified, pinyin, english.Replace("/", ", "));
         }
 
         /// <summary>
@@ -134,22 +134,18 @@ namespace ChineseWriter {
                     if (Words.ContainsKey( part )) return Words[part];
                 }
                 // not found
-                return new UnknownHanyu( chinese.First( ).ToString( ) );
+                throw new ApplicationException( "Unknown chinese: " + chinese );
             }
         }
 
         public IEnumerable<Word> MatchingSuggestions( string pinyinInput, bool english ) {
             return Words.Values
                 .Where( word => word.MatchesPinyin( pinyinInput, english ) )
-                .OrderBy( word => word.Hanyu.Length );
+                .OrderBy( word => word.Pinyin );
         }
 
-        public string PinyinText( IEnumerable<Word> words ) {
-            return String.Join( "  ", words.Select( word => word.Pinyin ).ToArray( ) );
-        }
-
-        internal Word WordForHanyu( string hanyu ) {
-            return Words.ContainsKey(hanyu) ? (Word) Words[hanyu] : new UnknownHanyu(hanyu);
+        internal HanyuWord WordForHanyu( string hanyu ) {
+            return Words[hanyu];
         }
     } // class
 
