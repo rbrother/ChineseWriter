@@ -41,22 +41,24 @@ namespace ChineseWriter {
                 Text = big ? word.English : word.ShortEnglish,
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             } );
-            panel.ToolTip = CreateExplanationPanel();
+            if (_word is HanyuWord) {
+                panel.ToolTip = CreateExplanationPanel( _word as HanyuWord );
+            }
             this.Content = GuiUtils.WrapToBorder( panel );
         }
 
-        private object CreateExplanationPanel( ) {
-            if (_word.Hanyu.Length == 1) {
-                return _word.English;
+        private object CreateExplanationPanel( HanyuWord word ) {
+            if (word.Hanyu.Length == 1) {
+                return word.English;
             } else {
                 var panel = new StackPanel { Orientation = Orientation.Vertical };
-                panel.Children.Add( new Label { Content = _word.English } );
+                panel.Children.Add( new Label { Content = word.English } );
                 var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
                 panel.Children.Add( detailsPanel );
                 foreach (FrameworkElement childPanel in
-                    _word.Hanyu.ToCharArray( ).
+                    word.Hanyu.ToCharArray( ).
                         Select( c => _wordsDb.WordForHanyu( c.ToString( ) ) ).
-                        Select( word => new WordPanel( word, _wordsDb, big: true ) ))
+                        Select( w => new WordPanel( w, _wordsDb, big: true ) ))
                     detailsPanel.Children.Add( childPanel );
                 return panel;
             }

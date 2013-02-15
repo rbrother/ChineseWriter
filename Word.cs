@@ -27,18 +27,30 @@ namespace ChineseWriter {
         override public string Pinyin { get { return _text; } }
         override public string English { get { return _text; } }
         override public Color Color { get { return Color.FromRgb( 220, 220, 220 ); } }
+
+        public override string ToString( ) {
+            return string.Format("LiteralWord: {0}", _text);
+        }
     }
 
     public class HanyuWord : Word {
-        private readonly string _hanyu, _pinyin, _english;
-        private readonly string _simplePinyin; // with spaces, tone-numbers and diacritics removed
-        private string _displayPinyin; // with diacritics
+        private readonly string _hanyu, _english;
+        private readonly string _pinyin; // eg. "ma3 pa2"
+        private readonly string _simplePinyin; // with spaces removed eg. "ma3pa2"
+        private string _displayPinyin; // with diacritics added eg. "má pà"
         private readonly string[] _englishParts;
+        private bool _suggest = false; // Use this word in suggestions
 
         override public string English { get { return _english; } }
         override public string Hanyu { get { return _hanyu; } }
         override public string Pinyin { get { return _pinyin; } }
         override public string ShortEnglish { get { return EnglishParts.First( ); } }
+
+        public bool Suggest { get { return _suggest; } }
+
+        public override string ToString( ) {
+            return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _simplePinyin, _displayPinyin, English );
+        }
 
         override public string DisplayPinyin {
             get {
@@ -53,13 +65,12 @@ namespace ChineseWriter {
         private string SimplePinyin { get { return _simplePinyin; } }
         private string[] EnglishParts { get { return _englishParts; } }
 
-        private static readonly Regex SIMPLIFY_PINYIN = new Regex( @"[ '\d]" );
-
-        public HanyuWord( string hanyu, string pinyin, string english) {
+        public HanyuWord( string hanyu, string pinyin, string english, bool suggest) {
             _hanyu = hanyu;
             _pinyin = pinyin;
             _english = english;
-            _simplePinyin = SIMPLIFY_PINYIN.Replace( pinyin, "" ); 
+            _suggest = suggest;
+            _simplePinyin = pinyin.Replace( " ", "" ).ToLower(); 
             _englishParts = _english == null ?
                 new string[] { "" } :
                 _english.ToLower( )

@@ -57,7 +57,7 @@ namespace ChineseWriter {
         private void UpdateSuggestions( ) {
             _suggestions = PinyinInput == "" ?
                 new Word[] {} :
-                _hanyuDb.MatchingSuggestions( PinyinInput, _english ).Take( 9 ).ToArray();
+                _hanyuDb.MatchingSuggestions( PinyinInput, _english ).Take( 20 ).ToArray();
             SuggestionsChanges.OnNext( _suggestions );
         }
 

@@ -15,6 +15,16 @@ using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
 
+    class SuggestionComparer : IComparer<HanyuWord> {
+        int IComparer<HanyuWord>.Compare( HanyuWord x, HanyuWord y ) {
+            if (x.Hanyu.Length != y.Hanyu.Length) {
+                return x.Hanyu.Length < y.Hanyu.Length ? -1 : 1;
+            } else {
+                return StringComparer.InvariantCulture.Compare( x.Pinyin, y.Pinyin );
+            }
+        }
+    }
+
     class WordDatabase {
 
         Subject<int> _wordsChanged = new Subject<int>();
@@ -23,14 +33,17 @@ namespace ChineseWriter {
 
         private string _filePath;
 
-        private Dictionary<string /* hanyi */, HanyuWord> _words;
+        private HanyuWord[] _words;
+        private Dictionary<string /*hanyu*/, List<HanyuWord>> _wordsDict;
 
         private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
+
+        private readonly SuggestionComparer _suggestionComparer = new SuggestionComparer( );
 
         private int MaxWordLength {
             get {
                 if (_maxWordLength == 0) {
-                    _maxWordLength = _words.Max( word => word.Value.Hanyu.Length );
+                    _maxWordLength = _words.Max( word => word.Hanyu.Length );
                 }
                 return _maxWordLength;
             }
@@ -61,11 +74,11 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent );            
         }
 
-        public Dictionary<string /* hanyi */, HanyuWord> Words {
+        public HanyuWord[] Words {
             get {
                 if (_words == null) {
                     _words = LoadWords( );
-                    _wordsChanged.OnNext( _words.Count );
+                    _wordsChanged.OnNext( _words.Length );
                 }
                 return _words;
             }
@@ -74,16 +87,28 @@ namespace ChineseWriter {
             }
         }
 
+        private Dictionary<string /*hanyu*/, List<HanyuWord>> WordsDict {
+            get {
+                if (_wordsDict == null) {
+                    _wordsDict = new Dictionary<string /*hanyu*/, List<HanyuWord>>( 150000 );
+                }
+                foreach (HanyuWord word in Words) {
+                    if (!_wordsDict.ContainsKey( word.Hanyu )) {
+                        _wordsDict[word.Hanyu] = new List<HanyuWord>( );
+                    }
+                    _wordsDict[word.Hanyu].Add(word);
+                }
+                return _wordsDict;
+            }
+        }
+
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
-        public Dictionary<string /* hanyi */, HanyuWord> LoadWords( ) {
-            var words = File.ReadAllLines( FilePath, Encoding.UTF8 ).
+        public HanyuWord[] LoadWords( ) {
+            return File.ReadAllLines( FilePath, Encoding.UTF8 ).
                 Where( line => !line.StartsWith( "#" ) ).
-                Select( line => LineToWord( line ) );
-            var dict = new Dictionary<string, HanyuWord>( );
-            // TODO: Following kills duplicates, try to retain
-            foreach (HanyuWord word in words) dict[word.Hanyu] = word;
-            return dict;
+                Select( line => LineToWord( line ) ).
+                ToArray();
         }
 
         private readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
@@ -94,7 +119,7 @@ namespace ChineseWriter {
             var simplified = match.Groups[2].Value;
             var pinyin = match.Groups[3].Value;
             var english = match.Groups[4].Value;
-            return new HanyuWord( simplified, pinyin, english.Replace("/", ", "));
+            return new HanyuWord( simplified, pinyin, english.Replace("/", ", "), suggest: true);
         }
 
         /// <summary>
@@ -131,7 +156,13 @@ namespace ChineseWriter {
                 // Find longest match from the beginning
                 for ( int wordLength = MaxWordLength; wordLength >= 1; wordLength--) {
                     var part = chinese.TakeFirst( wordLength );
-                    if (Words.ContainsKey( part )) return Words[part];
+                    if (WordsDict.ContainsKey( part )) {
+                        // TODO: Here we ignore other possibilities. How to make the best pick?
+                        // One possibility: use ranking of likelihood
+                        // Another: return all words and allow user choose with some click 
+                        // (make a "MultiMeaningWord" implementation of Word class)
+                        return WordsDict[part].First();
+                    }
                 }
                 // not found
                 throw new ApplicationException( "Unknown chinese: " + chinese );
@@ -139,13 +170,16 @@ namespace ChineseWriter {
         }
 
         public IEnumerable<Word> MatchingSuggestions( string pinyinInput, bool english ) {
-            return Words.Values
+            // Is it possible to make this faster with some dictionary-speedups?
+            // eg. dictionary keyed by first and/or first+second chars.
+            return Words
                 .Where( word => word.MatchesPinyin( pinyinInput, english ) )
-                .OrderBy( word => word.Pinyin );
+                .OrderBy( word => word, _suggestionComparer );
         }
 
         internal HanyuWord WordForHanyu( string hanyu ) {
-            return Words[hanyu];
+            // TODO: Here we ignore other possibilities, how could we get the beast guess?
+            return WordsDict[hanyu].First();
         }
     } // class
 

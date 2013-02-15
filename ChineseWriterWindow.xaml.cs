@@ -25,6 +25,7 @@ namespace ChineseWriter {
         private bool _dragging = false;
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
+        private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
 
         public ChineseWriterWindow( ) {
             try {
@@ -35,17 +36,20 @@ namespace ChineseWriter {
 
                 _pinyinInput = new TextBox();
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
-                _pinyinInput.PreviewTextInput += new TextCompositionEventHandler(PinyinInput_PreviewTextInput);
 
                 _cursorPanel = GuiUtils.WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
 
-                var KeyPresses = Observable.
+                var ControlKeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
                     Where( args => args.EventArgs.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control)).
                     Select( args => args.EventArgs.Key );
 
-                KeyPresses.Where( key => TEXT_EDIT_KEYS.Contains(key) ).
+                ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains(key) ).
                     Subscribe( key => _writingState.TextEdit( key ) );
+
+                ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains(key) ).
+                    Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
+                    Subscribe( pinyinIndex => _writingState.SelectPinyin( pinyinIndex ) );
 
                 var EnglishChecked = Observable
                     .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
@@ -77,16 +81,6 @@ namespace ChineseWriter {
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
                 this.Close( );
-            }
-        }
-
-        void PinyinInput_PreviewTextInput(object sender, TextCompositionEventArgs e) {
-            if (e.Text.Length == 1) {
-                int n;
-                if (int.TryParse(e.Text.Substring(0,1), out n)) {
-                    _writingState.SelectPinyin(n);
-                    e.Handled = true;
-                }
             }
         }
 
