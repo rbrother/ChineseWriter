@@ -15,16 +15,6 @@ using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
 
-    class SuggestionComparer : IComparer<HanyuWord> {
-        int IComparer<HanyuWord>.Compare( HanyuWord x, HanyuWord y ) {
-            if (x.Hanyu.Length != y.Hanyu.Length) {
-                return x.Hanyu.Length < y.Hanyu.Length ? -1 : 1;
-            } else {
-                return StringComparer.InvariantCulture.Compare( x.Pinyin, y.Pinyin );
-            }
-        }
-    }
-
     class WordDatabase {
 
         Subject<int> _wordsChanged = new Subject<int>();
@@ -91,12 +81,12 @@ namespace ChineseWriter {
             get {
                 if (_wordsDict == null) {
                     _wordsDict = new Dictionary<string /*hanyu*/, List<HanyuWord>>( 150000 );
-                }
-                foreach (HanyuWord word in Words) {
-                    if (!_wordsDict.ContainsKey( word.Hanyu )) {
-                        _wordsDict[word.Hanyu] = new List<HanyuWord>( );
+                    foreach (HanyuWord word in Words) {
+                        if (!_wordsDict.ContainsKey( word.Hanyu )) {
+                            _wordsDict[word.Hanyu] = new List<HanyuWord>( );
+                        }
+                        _wordsDict[word.Hanyu].Add( word );
                     }
-                    _wordsDict[word.Hanyu].Add(word);
                 }
                 return _wordsDict;
             }
@@ -157,11 +147,7 @@ namespace ChineseWriter {
                 for ( int wordLength = MaxWordLength; wordLength >= 1; wordLength--) {
                     var part = chinese.TakeFirst( wordLength );
                     if (WordsDict.ContainsKey( part )) {
-                        // TODO: Here we ignore other possibilities. How to make the best pick?
-                        // One possibility: use ranking of likelihood
-                        // Another: return all words and allow user choose with some click 
-                        // (make a "MultiMeaningWord" implementation of Word class)
-                        return WordsDict[part].First();
+                        return WordForHanyu( part );
                     }
                 }
                 // not found
@@ -177,10 +163,24 @@ namespace ChineseWriter {
                 .OrderBy( word => word, _suggestionComparer );
         }
 
-        internal HanyuWord WordForHanyu( string hanyu ) {
-            // TODO: Here we ignore other possibilities, how could we get the beast guess?
-            return WordsDict[hanyu].First();
+        internal Word WordForHanyu( string hanyu ) {
+            var entries = WordsDict[hanyu].ToArray();
+            if (entries.Length == 1) {
+                return entries.First();
+            } else {
+                return new MultiMeaningWord(entries);
+            }
         }
     } // class
+
+    class SuggestionComparer : IComparer<HanyuWord> {
+        int IComparer<HanyuWord>.Compare( HanyuWord x, HanyuWord y ) {
+            if (x.Hanyu.Length != y.Hanyu.Length) {
+                return x.Hanyu.Length < y.Hanyu.Length ? -1 : 1;
+            } else {
+                return StringComparer.InvariantCulture.Compare( x.Pinyin, y.Pinyin );
+            }
+        }
+    }
 
 } // namespace

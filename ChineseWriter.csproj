@@ -76,7 +76,7 @@
     <Compile Include="GuiUtils.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="WordPanel.cs" />
-    <Compile Include="WordProcessing.cs" />
+    <Compile Include="WordDatabase.cs" />
     <Compile Include="WritingState.cs" />
     <Page Include="ChineseWriterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

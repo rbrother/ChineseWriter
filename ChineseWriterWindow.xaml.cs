@@ -34,7 +34,7 @@ namespace ChineseWriter {
                 _wordDatabase = new WordDatabase( );
                 _writingState = new WritingState( _wordDatabase );
 
-                _pinyinInput = new TextBox();
+                _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
 
                 _cursorPanel = GuiUtils.WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
@@ -102,33 +102,7 @@ namespace ChineseWriter {
         }
 
         private void UpdateSuggestions( IEnumerable<Word> suggestions ) {
-            Suggestions.Children.Clear( );
-            Suggestions.RowDefinitions.Clear( );
-            var row = 0;
-            AddSuggestion( 0, "", "", "(literal text, hanyu parsed to words)" );
-            foreach (HanyuWord word in suggestions) {
-                row++;
-                AddSuggestion( row, word.DisplayPinyin, word.Hanyu, word.English );
-            }
-        }
-
-        private void AddSuggestion( int row, string pinyin, string hanyu, string english ) {
-            var pinyinStyle = GuiUtils.PinyinStyle;
-            var color = ( row % 2 == 0 ? Colors.Transparent : Color.FromArgb( 50, 0, 0, 255 ) );
-            Suggestions.RowDefinitions.Add( new RowDefinition() );
-            Suggestions.Children.Add( CreateGridLabel( row.ToString( ), row, 0, color, pinyinStyle ) );
-            Suggestions.Children.Add( CreateGridLabel( pinyin, row, 1, color, pinyinStyle ) );
-            Suggestions.Children.Add( CreateGridLabel( hanyu, row, 2, color, pinyinStyle ) );
-            Suggestions.Children.Add(CreateGridLabel( english, row, 3, color, (Style)this.Resources["WidgetStyle"]));
-        }
-
-        private static FrameworkElement CreateGridLabel( string text, int row, int col, Color color, Style style = null ) {
-            var label = new Label { Content = text, Background = new SolidColorBrush(color), 
-                HorizontalContentAlignment = HorizontalAlignment.Left };
-            label.SetValue( Grid.ColumnProperty, col );
-            label.SetValue( Grid.RowProperty, row );
-            if (style != null) label.Style = style;
-            return label;
+            Suggestions.ItemsSource = suggestions;
         }
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
@@ -145,6 +119,10 @@ namespace ChineseWriter {
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             _pinyinInput.Focus();
+        }
+
+        private void Suggestions_LoadingRow( object sender, DataGridRowEventArgs e ) {
+            e.Row.Header = ( e.Row.GetIndex( ) + 1 ).ToString( );
         }
 
     } // class

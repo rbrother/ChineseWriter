@@ -89,4 +89,27 @@ namespace ChineseWriter {
 
     }
 
+    public class MultiMeaningWord : Word {
+        private HanyuWord[] _words;
+
+        public override Color Color { get { return Colors.Yellow; } }
+
+        override public string Hanyu { get { return _words.First().Hanyu; } }
+
+        override public string Pinyin { get { return JoinBy( word => word.Pinyin ); } }
+
+        override public string DisplayPinyin { get { return JoinBy( word => word.DisplayPinyin ); } }
+
+        override public string English { get { return JoinBy( word => word.English ); } }
+
+        override public string ShortEnglish { get { return JoinBy( word => word.ShortEnglish ); } }
+
+        private string JoinBy( Func<HanyuWord, string> selector ) {
+            return string.Join( " / ", _words.Select( selector ).ToArray() );
+        }
+
+        public MultiMeaningWord( HanyuWord[] words ) {
+            _words = words;
+        }
+    }
 }

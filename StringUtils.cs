@@ -34,7 +34,7 @@ namespace ChineseWriter {
                 // 呣 呣 [m4] /interjection expressing consent/um/
                 plainPinyin.Contains( 'm' ) ? plainPinyin.IndexOf( 'm' ) : -1;
             if (vovelIndex < 0) throw new ApplicationException( "Invalid pinyin: " + pinyinSyllable );
-            var chars = plainPinyin.ToCharArray( );
+            var chars = pinyinSyllable.DropLast( ).ToCharArray( );
             return new string( chars.Take( vovelIndex + 1 ).
                 Concat( new char[] { (char)TONE_DIACRITICS[tone - 1] } ).
                 Concat( chars.Skip( vovelIndex + 1 ) ).ToArray( ) ).
