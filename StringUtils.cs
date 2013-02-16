@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows.Input;
 using System.Globalization;
 using System.Linq;
@@ -22,24 +23,37 @@ namespace ChineseWriter {
             var lastChar = pinyinSyllable.TakeLast( );
             int tone;
             if ( !int.TryParse( lastChar, out tone ) ) return pinyinSyllable; // No tone mark: literal
-            var plainPinyin = pinyinSyllable.DropLast( ).ToLower();
+            var plainPinyin = pinyinSyllable.DropLast( );
             if (tone == 5) return plainPinyin; // neutral, no mark
-            int vovelIndex =
-                plainPinyin.Contains( 'a' ) ? plainPinyin.IndexOf( 'a' ) :
-                plainPinyin.Contains( 'e' ) ? plainPinyin.IndexOf( 'e' ) :
-                plainPinyin.Contains( 'o' ) ? plainPinyin.IndexOf( 'o' ) :
-                plainPinyin.Contains( "iu" ) ? plainPinyin.IndexOf( 'u' ) :
-                plainPinyin.Contains( 'i' ) ? plainPinyin.IndexOf( 'i' ) :
-                plainPinyin.Contains( 'u' ) ? plainPinyin.IndexOf( 'u' ) :
-                // 呣 呣 [m4] /interjection expressing consent/um/
-                plainPinyin.Contains( 'm' ) ? plainPinyin.IndexOf( 'm' ) : -1;
-            if (vovelIndex < 0) throw new ApplicationException( "Invalid pinyin: " + pinyinSyllable );
-            var chars = pinyinSyllable.DropLast( ).ToCharArray( );
-            return new string( chars.Take( vovelIndex + 1 ).
-                Concat( new char[] { (char)TONE_DIACRITICS[tone - 1] } ).
-                Concat( chars.Skip( vovelIndex + 1 ) ).ToArray( ) ).
-                Normalize( NormalizationForm.FormKC );
+            var diacriticInserted = InsertChar( 
+                original: plainPinyin, 
+                c: (char)TONE_DIACRITICS[tone - 1],
+                pos: VovelIndex( plainPinyin.ToLower( ) ) + 1 );
+            return new string( diacriticInserted ).Normalize( NormalizationForm.FormKC );
         }
+
+        private static char[] InsertChar( string original, char c, int pos ) {
+            return original.
+                ToCharArray().
+                Take( pos ).
+                Concat( new char[] { c } ).
+                Concat( original.Skip( pos ) ).
+                ToArray(); 
+        }
+
+        private static int VovelIndex( string plainPinyin ) {
+            foreach (Tuple<string, string> pair in DIACRITIC_VOVEL) {
+                if (plainPinyin.Contains( pair.Item1 )) {
+                    return plainPinyin.IndexOf( pair.Item2 );
+                }
+            }
+            throw new ApplicationException( "Invalid pinyin: " + plainPinyin );
+        }
+
+        private static Tuple<string, string>[] DIACRITIC_VOVEL = new Tuple<string, string>[] { 
+            Tuple.Create("a", "a"), Tuple.Create("e", "e"), Tuple.Create("o", "o"),
+            Tuple.Create("iu", "u"), Tuple.Create("i", "i"), Tuple.Create("u", "u"),
+            Tuple.Create("m", "m") };  // 呣 呣 [m4] /interjection expressing consent/um/
 
         public static string TakeFirst( this string s, int count = 1 ) {
             if (s == "" || count == 0) {

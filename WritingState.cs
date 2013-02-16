@@ -16,11 +16,13 @@ namespace ChineseWriter {
         private Word[] _words;
         private Word[] _suggestions;
         private bool _english;
+        private bool _suggestAll;
         private string _pinyinInput = "";
 
         // Observables
         public Subject<string> PinyinChanges = new Subject<string>( );
         public Subject<bool> EnglishChanges = new Subject<bool>( );
+        public Subject<bool> SuggestAllChanges = new Subject<bool>( );
         public Subject<Word[]> SuggestionsChanges = new Subject<Word[]>( );
         public Subject<Word[]> WordsChanges = new Subject<Word[]>( );
         public Subject<int> CursorPosChanges = new Subject<int>( );
@@ -29,6 +31,10 @@ namespace ChineseWriter {
         public bool English {
             get { return _english;  }
             set { _english = value;  EnglishChanges.OnNext( value ); }
+        }
+        public bool SuggestAllWords {
+            get { return _suggestAll; }
+            set { _suggestAll = value; SuggestAllChanges.OnNext( value ); }
         }
         public string PinyinInput {
             get { return _pinyinInput;  }
@@ -51,13 +57,14 @@ namespace ChineseWriter {
         public WritingState( WordDatabase wordDatabase ) {
             _hanyuDb = wordDatabase;
             PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => 0 ).
+                CombineLatest( SuggestAllChanges, ( a, b ) => 0 ).
                 Subscribe( value => UpdateSuggestions( ) );
         }
 
         private void UpdateSuggestions( ) {
             _suggestions = PinyinInput == "" ?
                 new Word[] {} :
-                _hanyuDb.MatchingSuggestions( PinyinInput, _english ).Take( 100 ).ToArray();
+                _hanyuDb.MatchingSuggestions( PinyinInput, English, SuggestAllWords ).Take( 20 ).ToArray();
             SuggestionsChanges.OnNext( _suggestions );
         }
 

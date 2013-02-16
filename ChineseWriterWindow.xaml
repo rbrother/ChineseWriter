@@ -24,8 +24,10 @@
             <Button Style="{StaticResource ButtonStyle}" 
                     Click="Clear_Text_Click">C_lear text</Button>
             <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">_Copy Chinese</Button>
-            <CheckBox Grid.Row="0" Grid.Column="0" Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+            <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}">_English</CheckBox>
+            <CheckBox Name="AllWords" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+                      Style="{StaticResource WidgetStyle}">Show _All words</CheckBox>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
         <!--                   -->

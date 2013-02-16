@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -65,12 +66,13 @@ namespace ChineseWriter {
         private string SimplePinyin { get { return _simplePinyin; } }
         private string[] EnglishParts { get { return _englishParts; } }
 
-        public HanyuWord( string hanyu, string pinyin, string english, bool suggest) {
+        public HanyuWord( string hanyu, string pinyin, string english, XElement wordInfo) {
             _hanyu = hanyu;
             _pinyin = pinyin;
             _english = english;
-            _suggest = suggest;
-            _simplePinyin = pinyin.Replace( " ", "" ).ToLower(); 
+            _simplePinyin = pinyin.Replace( " ", "" ).ToLower();
+            _suggest = wordInfo != null &&
+                wordInfo.Attribute( "pinyin" ).Value.ToLower( ) == DisplayPinyin.ToLower();
             _englishParts = _english == null ?
                 new string[] { "" } :
                 _english.ToLower( )

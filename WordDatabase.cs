@@ -21,12 +21,12 @@ namespace ChineseWriter {
 
         private int _maxWordLength;
 
-        private string _filePath;
-
         private HanyuWord[] _words;
         private Dictionary<string /*hanyu*/, List<HanyuWord>> _wordsDict;
 
         private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
+
+        private readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
 
         private readonly SuggestionComparer _suggestionComparer = new SuggestionComparer( );
 
@@ -39,15 +39,8 @@ namespace ChineseWriter {
             }
         }
 
-        private string FileName { get { return "cedict_ts.u8"; } }
-
-        private string FilePath { 
-            get {
-                if (_filePath == null) {
-                    _filePath = SearchUpwardFile( ExeDir );
-                }
-                return _filePath; 
-            } 
+        private string FilePath(string fileName) {
+            return SearchUpwardFile( ExeDir, fileName );
         }
 
         private static DirectoryInfo ExeDir {
@@ -58,10 +51,10 @@ namespace ChineseWriter {
             }
         }
 
-        private string SearchUpwardFile( DirectoryInfo startDir ) {
-            var theFile = startDir.GetFiles( ).FirstOrDefault( file => file.Name == FileName );
+        private string SearchUpwardFile( DirectoryInfo startDir, string fileName ) {
+            var theFile = startDir.GetFiles( ).FirstOrDefault( file => file.Name == fileName );
             if (theFile != null) return theFile.FullName;
-            return SearchUpwardFile( startDir.Parent );            
+            return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
         public HanyuWord[] Words {
@@ -71,9 +64,6 @@ namespace ChineseWriter {
                     _wordsChanged.OnNext( _words.Length );
                 }
                 return _words;
-            }
-            set {
-                _words = value;
             }
         }
 
@@ -95,21 +85,23 @@ namespace ChineseWriter {
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
         public HanyuWord[] LoadWords( ) {
-            return File.ReadAllLines( FilePath, Encoding.UTF8 ).
+            var infoDict = XElement.Load( FilePath( "words.xml" ) ).
+                XPathSelectElements( "//Word" ).
+                ToDictionary( element => element.Attribute( "hanyu" ).Value );
+            return File.ReadAllLines( FilePath("cedict_ts.u8"), Encoding.UTF8 ).
                 Where( line => !line.StartsWith( "#" ) ).
-                Select( line => LineToWord( line ) ).
+                Select( line => CC_LINE.Match( line ).Groups ).
+                Select( groups => LineToWord( groups, infoDict ) ).
                 ToArray();
         }
 
-        private readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
-
-        private HanyuWord LineToWord( string line ) {
-            var match = CC_LINE.Match( line );
-            var traditional = match.Groups[1].Value;
-            var simplified = match.Groups[2].Value;
-            var pinyin = match.Groups[3].Value;
-            var english = match.Groups[4].Value;
-            return new HanyuWord( simplified, pinyin, english.Replace("/", ", "), suggest: true);
+        private HanyuWord LineToWord( GroupCollection groups, Dictionary<string, XElement> info ) {
+            var traditional = groups[1].Value;
+            var simplified = groups[2].Value;
+            var pinyin = groups[3].Value;
+            var english = groups[4].Value;
+            var wordInfo = info.ContainsKey(simplified) ? info[simplified] : null;
+            return new HanyuWord( simplified, pinyin, english.Replace( "/", ", " ), wordInfo );
         }
 
         /// <summary>
@@ -155,12 +147,13 @@ namespace ChineseWriter {
             }
         }
 
-        public IEnumerable<Word> MatchingSuggestions( string pinyinInput, bool english ) {
+        public Word[] MatchingSuggestions( string pinyinInput, bool english, bool allWords ) {
             // Is it possible to make this faster with some dictionary-speedups?
             // eg. dictionary keyed by first and/or first+second chars.
-            return Words
-                .Where( word => word.MatchesPinyin( pinyinInput, english ) )
-                .OrderBy( word => word, _suggestionComparer );
+            return (allWords ? Words : Words.Where( word => word.Suggest )).
+                Where( word => word.MatchesPinyin( pinyinInput, english ) ).
+                OrderBy( word => word, _suggestionComparer ).
+                ToArray();
         }
 
         internal Word WordForHanyu( string hanyu ) {

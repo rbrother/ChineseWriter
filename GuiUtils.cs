@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Reactive.Linq;
 
 namespace ChineseWriter {
 
@@ -25,6 +26,18 @@ namespace ChineseWriter {
                 style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily("Times New Roman")));
                 return style;
             }
+        }
+
+        public static IObservable<bool> CheckBoxChangeObservable(CheckBox box) {
+            var boxChecked = Observable
+                .FromEventPattern<RoutedEventArgs>( box, "Checked" )
+                .Select( args => true );
+            var boxUnchecked = Observable
+                .FromEventPattern<RoutedEventArgs>( box, "Unchecked" )
+                .Select( args => false );
+            return new bool[] { false }.ToObservable( )
+                .Merge( boxChecked )
+                .Merge( boxUnchecked );
         }
 
     } // class

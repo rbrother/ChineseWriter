@@ -51,16 +51,10 @@ namespace ChineseWriter {
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
                     Subscribe( pinyinIndex => _writingState.SelectPinyin( pinyinIndex ) );
 
-                var EnglishChecked = Observable
-                    .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Checked" )
-                    .Select( args => true );
-                var EnglishUnchecked = Observable
-                    .FromEventPattern<RoutedEventArgs>( ShowEnglish, "Unchecked" )
-                    .Select( args => false );
-                var EnglishChechedChanged = new bool[] { false }.ToObservable( )
-                    .Merge( EnglishChecked )
-                    .Merge( EnglishUnchecked );
-                EnglishChechedChanged.Subscribe( value => _writingState.English = value );
+                GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
+                    Subscribe( value => _writingState.English = value );
+                GuiUtils.CheckBoxChangeObservable( AllWords ).
+                    Subscribe( value => _writingState.SuggestAllWords = value );
 
                 var WordsDatabaseChanged = new int[] { 0 }.ToObservable( ).
                     Concat( _wordDatabase.WordsChanged );
@@ -122,7 +116,10 @@ namespace ChineseWriter {
         }
 
         private void Suggestions_LoadingRow( object sender, DataGridRowEventArgs e ) {
-            e.Row.Header = ( e.Row.GetIndex( ) + 1 ).ToString( );
+            int n = e.Row.GetIndex( ) + 1;
+            if (n <= 9) {
+                e.Row.Header = string.Format( "CTRL+{0}", n );
+            }
         }
 
     } // class
