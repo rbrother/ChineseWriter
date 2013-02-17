@@ -113,6 +113,8 @@ namespace ChineseWriter {
             int n = e.Row.GetIndex( ) + 1;
             if (n <= 9) {
                 e.Row.Header = string.Format( "CTRL+{0}", n );
+            } else {
+                e.Row.Header = "<click>";
             }
         }
 
