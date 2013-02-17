@@ -15,7 +15,7 @@ using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
 
-    class WordDatabase {
+    public class WordDatabase {
 
         Subject<int> _wordsChanged = new Subject<int>();
 
@@ -24,11 +24,16 @@ namespace ChineseWriter {
         private HanyuWord[] _words;
         private Dictionary<string /*hanyu*/, List<HanyuWord>> _wordsDict;
 
-        private readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
+        private static readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
-        private readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
+        private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
 
-        private readonly SuggestionComparer _suggestionComparer = new SuggestionComparer( );
+        private static readonly SuggestionComparer _suggestionComparer = new SuggestionComparer( );
+
+        public WordDatabase( ) {
+            _words = LoadWords( );
+            _wordsChanged.OnNext( _words.Length );
+        }
 
         private int MaxWordLength {
             get {
@@ -57,15 +62,7 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
-        public HanyuWord[] Words {
-            get {
-                if (_words == null) {
-                    _words = LoadWords( );
-                    _wordsChanged.OnNext( _words.Length );
-                }
-                return _words;
-            }
-        }
+        public HanyuWord[] Words { get { return _words; } }
 
         private Dictionary<string /*hanyu*/, List<HanyuWord>> WordsDict {
             get {
@@ -84,23 +81,39 @@ namespace ChineseWriter {
 
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
+        public static Dictionary<string /*hanyu + displaypinyin*/, XElement> ParseInfoDict( XElement infoFile ) {
+            var infoWords = infoFile.XPathSelectElements( "//Word" );
+            var infoDict = new Dictionary<string /*hanyu + displaypinyin*/, XElement>( );
+            foreach (XElement infoWord in infoWords) {
+                var key = infoWord.Attribute( "hanyu" ).Value + infoWord.Attribute( "pinyin" ).Value;
+                infoDict[key.ToLower( ).Replace( " ", "" )] = infoWord;
+            }
+            return infoDict;
+        }
+
         public HanyuWord[] LoadWords( ) {
-            var infoDict = XElement.Load( FilePath( "words.xml" ) ).
-                XPathSelectElements( "//Word" ).
-                ToDictionary( element => element.Attribute( "hanyu" ).Value );
-            return File.ReadAllLines( FilePath("cedict_ts.u8"), Encoding.UTF8 ).
+            var infoDict = ParseInfoDict( XElement.Load( FilePath( "words.xml" ) ) );
+            return ParseCCLines( 
+                File.ReadAllLines( FilePath( "cedict_ts.u8" ), Encoding.UTF8 ),
+                infoDict);
+        }
+
+        public static HanyuWord[] ParseCCLines( string[] lines, Dictionary<string /*hanyu + displaypinyin*/, XElement> infoDict ) {
+            return lines.
                 Where( line => !line.StartsWith( "#" ) ).
                 Select( line => CC_LINE.Match( line ).Groups ).
                 Select( groups => LineToWord( groups, infoDict ) ).
-                ToArray();
+                ToArray( );
         }
 
-        private HanyuWord LineToWord( GroupCollection groups, Dictionary<string, XElement> info ) {
+        private static HanyuWord LineToWord( GroupCollection groups, Dictionary<string, XElement> info ) {
             var traditional = groups[1].Value;
             var simplified = groups[2].Value;
             var pinyin = groups[3].Value;
             var english = groups[4].Value;
-            var wordInfo = info.ContainsKey(simplified) ? info[simplified] : null;
+            // TODO: Make the words.xml use same simple pinyin format with tone numbers as CCDICT
+            var infoKey = ( simplified + pinyin.AddToneDiacritics( ) ).ToLower( ).Replace( " ", "" );
+            var wordInfo = info.ContainsKey( infoKey ) ? info[infoKey] : null;
             return new HanyuWord( simplified, pinyin, english.Replace( "/", ", " ), wordInfo );
         }
 
@@ -163,6 +176,18 @@ namespace ChineseWriter {
             } else {
                 return new MultiMeaningWord(entries);
             }
+        }
+
+        internal void SaveWordsInfo( ) {
+            new XElement( "Chinese",
+                new XElement( "Words",
+                    Words.Where( word => word.Suggest ).
+                        OrderBy( word => word.Pinyin). 
+                        Select( word => new XElement( "Word",
+                            new XAttribute( "pinyin", word.DisplayPinyin ),
+                            new XAttribute( "hanyu", word.Hanyu ) ) ) ) ).
+                Save( FilePath( "words.xml" ) );
+
         }
     } // class
 

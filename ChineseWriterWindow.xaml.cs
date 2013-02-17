@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Concurrency;
@@ -120,6 +121,10 @@ namespace ChineseWriter {
             if (n <= 9) {
                 e.Row.Header = string.Format( "CTRL+{0}", n );
             }
+        }
+
+        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
+            _wordDatabase.SaveWordsInfo( );
         }
 
     } // class

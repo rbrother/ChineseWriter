@@ -47,20 +47,22 @@ namespace ChineseWriter {
         override public string Pinyin { get { return _pinyin; } }
         override public string ShortEnglish { get { return EnglishParts.First( ); } }
 
-        public bool Suggest { get { return _suggest; } }
+        public bool Suggest { 
+            get { 
+                return _suggest; 
+            }
+            set {
+                _suggest = value;
+                // TODO: Save words.xml here
+            }
+        }
 
         public override string ToString( ) {
             return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _simplePinyin, _displayPinyin, English );
         }
 
         override public string DisplayPinyin {
-            get {
-                if (_displayPinyin == null) {
-                    _displayPinyin = string.Join(" ", _pinyin.Split( ' ' ).
-                        Select( syllable => syllable.AddToneDiacritic( ) ).ToArray( ));
-                }
-                return _displayPinyin;
-            }
+            get { return _displayPinyin; }
         }
 
         private string SimplePinyin { get { return _simplePinyin; } }
@@ -71,6 +73,7 @@ namespace ChineseWriter {
             _pinyin = pinyin;
             _english = english;
             _simplePinyin = pinyin.Replace( " ", "" ).ToLower();
+            _displayPinyin = _pinyin.AddToneDiacritics( );
             _suggest = wordInfo != null &&
                 wordInfo.Attribute( "pinyin" ).Value.ToLower( ) == DisplayPinyin.ToLower();
             _englishParts = _english == null ?

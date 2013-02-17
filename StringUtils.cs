@@ -13,13 +13,18 @@ namespace ChineseWriter {
 
         private static readonly int[] TONE_DIACRITICS = new int[] { 772, 769, 780, 768 };
 
+        public static string AddToneDiacritics( this string pinyin ) {
+            return string.Join( " ", pinyin.Split( ' ' ).
+                Select( syllable => syllable.AddToneDiacritic( ) ).ToArray( ) );
+        }
+
         /// <summary>
         /// Convert Ba4 -> Bà
         /// </summary>
         /// <param name="pinyinSyllable">Eg. Ba4</param>
         /// <param name="tone"></param>
         /// <returns>Eg. Bà</returns>
-        public static string AddToneDiacritic( this string pinyinSyllable ) {
+        private static string AddToneDiacritic( this string pinyinSyllable ) {
             var lastChar = pinyinSyllable.TakeLast( );
             int tone;
             if ( !int.TryParse( lastChar, out tone ) ) return pinyinSyllable; // No tone mark: literal
