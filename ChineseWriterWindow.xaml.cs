@@ -122,6 +122,12 @@ namespace ChineseWriter {
             _wordDatabase.SaveWordsInfo( );
         }
 
+        private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
+            if (e.AddedCells.Count( ) > 0) {
+                _writingState.SelectWord( (HanyuWord)e.AddedCells.First( ).Item );
+            }
+        }
+
     } // class
 
 } // namespace

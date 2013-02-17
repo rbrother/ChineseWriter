@@ -31,7 +31,8 @@
         <!--                   -->
         <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
             <DataGrid Name="Suggestions" AutoGenerateColumns="False" LoadingRow="Suggestions_LoadingRow"
-                      AlternatingRowBackground="Gainsboro" AlternationCount="2">
+                      AlternatingRowBackground="Gainsboro" AlternationCount="2"
+                      SelectedCellsChanged="Suggestions_SelectedCellsChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=DisplayPinyin}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />

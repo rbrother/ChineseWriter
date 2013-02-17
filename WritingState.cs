@@ -104,6 +104,11 @@ namespace ChineseWriter {
             PinyinInput = "";
         }
 
+        internal void SelectWord( HanyuWord word ) {
+            InsertWords( new Word[] { word } );
+            PinyinInput = "";
+        }
+
         private void InsertWords( IEnumerable<Word> newWords ) {
             Words = Words.Take( CursorPos ).
                 Concat( newWords ).
