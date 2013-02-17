@@ -56,8 +56,8 @@ namespace ChineseWriter {
                 var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
                 panel.Children.Add( detailsPanel );
                 foreach (FrameworkElement childPanel in
-                    word.Hanyu.ToCharArray( ).
-                        Select( c => _wordsDb.WordForHanyu( c.ToString( ) ) ).
+                    word.Characters.
+                        Select( c => _wordsDb.WordForHanyuPinyin( c.Item1, c.Item2 ) ).
                         Select( w => new WordPanel( w, _wordsDb, big: true ) ))
                     detailsPanel.Children.Add( childPanel );
                 return panel;

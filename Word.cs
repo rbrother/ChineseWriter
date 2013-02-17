@@ -37,47 +37,42 @@ namespace ChineseWriter {
     public class HanyuWord : Word {
         private readonly string _hanyu, _english;
         private readonly string _pinyin; // eg. "ma3 pa2"
-        private readonly string _simplePinyin; // with spaces removed eg. "ma3pa2"
-        private string _displayPinyin; // with diacritics added eg. "má pà"
+        private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
+        private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
+        private string _pinyinDiacritics; // with diacritics added eg. "má pà"
         private readonly string[] _englishParts;
         private bool _suggest = false; // Use this word in suggestions
 
         override public string English { get { return _english; } }
         override public string Hanyu { get { return _hanyu; } }
         override public string Pinyin { get { return _pinyin; } }
-        override public string ShortEnglish { get { return EnglishParts.First( ); } }
+        override public string ShortEnglish { get { return _englishParts.First( ); } }
 
         public bool Suggest { 
-            get { 
-                return _suggest; 
-            }
-            set {
-                _suggest = value;
-                // TODO: Save words.xml here
-            }
+            get { return _suggest; }
+            set { _suggest = value; }
         }
 
         public override string ToString( ) {
-            return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _simplePinyin, _displayPinyin, English );
+            return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _pinyinNoSpaces, _pinyinDiacritics, English );
         }
 
         override public string DisplayPinyin {
-            get { return _displayPinyin; }
+            get { return _pinyinDiacritics; }
         }
 
-        private string SimplePinyin { get { return _simplePinyin; } }
-        private string[] EnglishParts { get { return _englishParts; } }
+        private static Regex NUMBERS = new Regex( @"\d", RegexOptions.Compiled );
 
         public HanyuWord( string hanyu, string pinyin, string english, XElement wordInfo) {
             _hanyu = hanyu;
             _pinyin = pinyin;
             _english = english;
-            _simplePinyin = pinyin.Replace( " ", "" ).ToLower();
-            _displayPinyin = _pinyin.AddToneDiacritics( );
+            _pinyinNoSpaces = pinyin.Replace( " ", "" ).ToLower();
+            _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
+            _pinyinDiacritics = _pinyin.AddToneDiacritics( );
             _suggest = wordInfo != null &&
                 wordInfo.Attribute( "pinyin" ).Value.ToLower( ) == DisplayPinyin.ToLower();
-            _englishParts = _english == null ?
-                new string[] { "" } :
+            _englishParts = 
                 _english.ToLower( )
                     .Split( ',' )
                     .Select( word => word.Trim( ) )
@@ -86,9 +81,20 @@ namespace ChineseWriter {
 
         public bool MatchesPinyin( string pinyinInput, bool useEnglish ) {
             if (useEnglish) {
-                return EnglishParts.Any( part => part.StartsWith( pinyinInput ));
+                return _englishParts.Any( part => part.StartsWith( pinyinInput ));
             } else {
-                return SimplePinyin.StartsWith( pinyinInput );
+                return _pinyinNoSpaces.StartsWith( pinyinInput ) ||
+                    _pinyinNoSpacesNoTones.StartsWith( pinyinInput );
+            }
+        }
+
+        public Tuple<string, string>[] Characters {
+            get {
+                return _hanyu.
+                    ToCharArray( ).
+                    Select( c => c.ToString() ).
+                    Zip( _pinyin.Split( ' ' ), (hanyu, pinyin) => Tuple.Create(hanyu, pinyin) ).
+                    ToArray();
             }
         }
 

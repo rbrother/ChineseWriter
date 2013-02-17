@@ -28,8 +28,6 @@ namespace ChineseWriter {
 
         private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
 
-        private static readonly SuggestionComparer _suggestionComparer = new SuggestionComparer( );
-
         public WordDatabase( ) {
             _words = LoadWords( );
             _wordsChanged.OnNext( _words.Length );
@@ -160,12 +158,12 @@ namespace ChineseWriter {
             }
         }
 
-        public Word[] MatchingSuggestions( string pinyinInput, bool english, bool allWords ) {
+        public Word[] MatchingSuggestions( string pinyinInput, bool english ) {
             // Is it possible to make this faster with some dictionary-speedups?
             // eg. dictionary keyed by first and/or first+second chars.
-            return (allWords ? Words : Words.Where( word => word.Suggest )).
+            return Words.
                 Where( word => word.MatchesPinyin( pinyinInput, english ) ).
-                OrderBy( word => word, _suggestionComparer ).
+                OrderBy( word => word, new SuggestionComparer() ).
                 ToArray();
         }
 
@@ -176,6 +174,15 @@ namespace ChineseWriter {
             } else {
                 return new MultiMeaningWord(entries);
             }
+        }
+
+        internal Word WordForHanyuPinyin( string hanyu, string pinyin ) {
+            var matching = WordsDict[hanyu];
+            var exactMatches = matching.Where( word => word.Pinyin == pinyin );
+            if (exactMatches.Count() > 0) return exactMatches.First();
+            var caselessMatches = matching.Where( word => word.Pinyin.ToLower() == pinyin.ToLower() );
+            if (caselessMatches.Count( ) == 0) throw new ApplicationException( string.Format( "No dictionary match found for {0}/{1}", hanyu, pinyin) );
+            return caselessMatches.First( );
         }
 
         internal void SaveWordsInfo( ) {
@@ -193,7 +200,9 @@ namespace ChineseWriter {
 
     class SuggestionComparer : IComparer<HanyuWord> {
         int IComparer<HanyuWord>.Compare( HanyuWord x, HanyuWord y ) {
-            if (x.Hanyu.Length != y.Hanyu.Length) {
+            if (x.Suggest != y.Suggest) {
+                return x.Suggest ? -1 : 1;
+            } else if (x.Hanyu.Length != y.Hanyu.Length) {
                 return x.Hanyu.Length < y.Hanyu.Length ? -1 : 1;
             } else {
                 return StringComparer.InvariantCulture.Compare( x.Pinyin, y.Pinyin );

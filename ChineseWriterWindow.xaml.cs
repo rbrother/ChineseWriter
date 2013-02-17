@@ -14,16 +14,12 @@ using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class ChineseWriterWindow : Window {
 
         private WordDatabase _wordDatabase;
         private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
-        private bool _dragging = false;
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
@@ -54,8 +50,6 @@ namespace ChineseWriter {
 
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     Subscribe( value => _writingState.English = value );
-                GuiUtils.CheckBoxChangeObservable( AllWords ).
-                    Subscribe( value => _writingState.SuggestAllWords = value );
 
                 var WordsDatabaseChanged = new int[] { 0 }.ToObservable( ).
                     Concat( _wordDatabase.WordsChanged );
@@ -71,7 +65,6 @@ namespace ChineseWriter {
                     CombineLatest(_writingState.CursorPosChanges, (words,cursor) => Tuple.Create(words,cursor)).                    
                     ObserveOnDispatcher( ).
                     Subscribe( value => PopulateCharGrid( value.Item1, value.Item2 ) );
-
                 _writingState.Clear( );
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
