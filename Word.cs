@@ -70,8 +70,7 @@ namespace ChineseWriter {
             _pinyinNoSpaces = pinyin.Replace( " ", "" ).ToLower();
             _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
             _pinyinDiacritics = _pinyin.AddToneDiacritics( );
-            _suggest = wordInfo != null &&
-                wordInfo.Attribute( "pinyin" ).Value.ToLower( ) == DisplayPinyin.ToLower();
+            _suggest = wordInfo != null;
             _englishParts = 
                 _english.ToLower( )
                     .Split( ',' )

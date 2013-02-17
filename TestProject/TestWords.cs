@@ -13,11 +13,11 @@ namespace ChineseWriter {
             <Chinese>
               <Words>
                 <Word pinyin='A' hanyu='啊' />
-                <Word pinyin='Ài' hanyu='爱' />
-                <Word pinyin='Ài ren' hanyu='爱人' />
-                <Word pinyin='Ān' hanyu='安' />
-                <Word pinyin='Wǒ' hanyu='我' />
-                <Word pinyin='Wǒ men' hanyu='我们' />
+                <Word pinyin='ai4' hanyu='爱' />
+                <Word pinyin='ai4 ren5' hanyu='爱人' />
+                <Word pinyin='an1' hanyu='安' />
+                <Word pinyin='wo3' hanyu='我' />
+                <Word pinyin='wo3 men5' hanyu='我们' />
               </Words>
             </Chinese>
             ";
@@ -29,14 +29,14 @@ namespace ChineseWriter {
             "戒刀 戒刀 [jie4 dao1] /Buddhist monk's knife (not used for killing)/"
         };
 
-        private static Dictionary<string /*hanyu + displaypinyin*/, XElement> INFO_DICT =
+        private static Dictionary<Tuple<string,string>, XElement> INFO_DICT =
             WordDatabase.ParseInfoDict( XElement.Parse( INFO_STRING ) );
 
         [TestMethod]
         public void TestParseInfo( ) {
             Assert.AreEqual<int>( 6, INFO_DICT.Count );
-            Assert.AreEqual( typeof( XElement ), INFO_DICT["我wǒ"].GetType( ) );
-            Assert.AreEqual( typeof( XElement ), INFO_DICT["我们wǒmen"].GetType( ) ); 
+            Assert.AreEqual( typeof( XElement ), INFO_DICT[Tuple.Create("我","wo3")].GetType( ) );
+            Assert.AreEqual( typeof( XElement ), INFO_DICT[Tuple.Create("我们","wo3 men5")].GetType( ) ); 
         }
 
         [TestMethod]

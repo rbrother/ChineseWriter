@@ -79,12 +79,14 @@ namespace ChineseWriter {
 
         public IObservable<int> WordsChanged { get { return _wordsChanged; } }
 
-        public static Dictionary<string /*hanyu + displaypinyin*/, XElement> ParseInfoDict( XElement infoFile ) {
+        public static Dictionary<Tuple<string, string>, XElement> ParseInfoDict( XElement infoFile ) {
             var infoWords = infoFile.XPathSelectElements( "//Word" );
-            var infoDict = new Dictionary<string /*hanyu + displaypinyin*/, XElement>( );
+            var infoDict = new Dictionary<Tuple<string,string> , XElement>( );
             foreach (XElement infoWord in infoWords) {
-                var key = infoWord.Attribute( "hanyu" ).Value + infoWord.Attribute( "pinyin" ).Value;
-                infoDict[key.ToLower( ).Replace( " ", "" )] = infoWord;
+                var key = Tuple.Create( 
+                    infoWord.Attribute( "hanyu" ).Value, 
+                    infoWord.Attribute( "pinyin" ).Value );
+                infoDict[key] = infoWord;
             }
             return infoDict;
         }
@@ -96,7 +98,7 @@ namespace ChineseWriter {
                 infoDict);
         }
 
-        public static HanyuWord[] ParseCCLines( string[] lines, Dictionary<string /*hanyu + displaypinyin*/, XElement> infoDict ) {
+        public static HanyuWord[] ParseCCLines( string[] lines, Dictionary<Tuple<string,string>, XElement> infoDict ) {
             return lines.
                 Where( line => !line.StartsWith( "#" ) ).
                 Select( line => CC_LINE.Match( line ).Groups ).
@@ -104,13 +106,12 @@ namespace ChineseWriter {
                 ToArray( );
         }
 
-        private static HanyuWord LineToWord( GroupCollection groups, Dictionary<string, XElement> info ) {
+        private static HanyuWord LineToWord( GroupCollection groups, Dictionary<Tuple<string,string>, XElement> info ) {
             var traditional = groups[1].Value;
             var simplified = groups[2].Value;
             var pinyin = groups[3].Value;
             var english = groups[4].Value;
-            // TODO: Make the words.xml use same simple pinyin format with tone numbers as CCDICT
-            var infoKey = ( simplified + pinyin.AddToneDiacritics( ) ).ToLower( ).Replace( " ", "" );
+            var infoKey = Tuple.Create( simplified, pinyin );
             var wordInfo = info.ContainsKey( infoKey ) ? info[infoKey] : null;
             return new HanyuWord( simplified, pinyin, english.Replace( "/", ", " ), wordInfo );
         }
@@ -191,7 +192,7 @@ namespace ChineseWriter {
                     Words.Where( word => word.Suggest ).
                         OrderBy( word => word.Pinyin). 
                         Select( word => new XElement( "Word",
-                            new XAttribute( "pinyin", word.DisplayPinyin ),
+                            new XAttribute( "pinyin", word.Pinyin ),
                             new XAttribute( "hanyu", word.Hanyu ) ) ) ) ).
                 Save( FilePath( "words.xml" ) );
 
