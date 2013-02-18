@@ -12,7 +12,7 @@ namespace ChineseWriter {
         private static string INFO_STRING = @"
             <Chinese>
               <Words>
-                <Word pinyin='A' hanyu='啊' />
+                <Word pinyin='a1' hanyu='啊' />
                 <Word pinyin='ai4' hanyu='爱' />
                 <Word pinyin='ai4 ren5' hanyu='爱人' />
                 <Word pinyin='an1' hanyu='安' />
@@ -23,6 +23,8 @@ namespace ChineseWriter {
             ";
 
         private static string[] CC_LINES = new string[] {
+            "啊 啊 [a1] /interjection of surprise/Ah!/Oh!/",
+            "啊 啊 [a2] /interjection expressing doubt or requiring answer/Eh?/what?/to show realization/to stress/",
             "婐 婐 [wo3] /maid/",
             "我 我 [wo3] /I/me/my/",
             "我們 我们 [wo3 men5] /we/us/ourselves/our/",
@@ -42,8 +44,10 @@ namespace ChineseWriter {
         [TestMethod]
         public void TestParseCC( ) {
             var words = WordDatabase.ParseCCLines( CC_LINES, INFO_DICT );
-            Assert.AreEqual<int>( 4, words.Length );
-            Assert.AreEqual<int>( 2, words.Where( word => word.Suggest ).Count( ) );
+            Assert.AreEqual<int>( 6, words.Length );
+            Assert.AreEqual<int>( 3, words.Where( word => word.Suggest ).Count( ) );
+            Assert.AreEqual<int>( 2, words.Where( word => word.Hanyu == "啊" ).Count( ) );
+            Assert.AreEqual<int>( 1, words.Where( word => word.Hanyu == "啊" && word.Pinyin == "a1" ).Count( ) );
         }
     }
 }

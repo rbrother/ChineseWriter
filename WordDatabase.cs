@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.IO;
 using System.Reflection;
@@ -10,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-
 using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
@@ -111,9 +111,8 @@ namespace ChineseWriter {
             var simplified = groups[2].Value;
             var pinyin = groups[3].Value;
             var english = groups[4].Value;
-            var infoKey = Tuple.Create( simplified, pinyin );
-            var wordInfo = info.ContainsKey( infoKey ) ? info[infoKey] : null;
-            return new HanyuWord( simplified, pinyin, english.Replace( "/", ", " ), wordInfo );
+            var suggest = info.ContainsKey( Tuple.Create( simplified, pinyin ) );
+            return new HanyuWord( simplified, pinyin, english.Replace( "/", ", " ), suggest );
         }
 
         /// <summary>
@@ -151,7 +150,16 @@ namespace ChineseWriter {
                 for ( int wordLength = MaxWordLength; wordLength >= 1; wordLength--) {
                     var part = chinese.TakeFirst( wordLength );
                     if (WordsDict.ContainsKey( part )) {
-                        return WordForHanyu( part );
+                        var word = WordForHanyu( part );
+                        if (word is HanyuWord) {
+                            return word;
+                        } else {
+                            var multiWord = word as MultiMeaningWord;
+                            Debug.Assert( word != null );
+                            var suggested = multiWord.Words.Where( w => w.Suggest );
+                            if (suggested.Count() > 0) return suggested.First( );
+                            return multiWord;
+                        }
                     }
                 }
                 // not found
@@ -159,11 +167,13 @@ namespace ChineseWriter {
             }
         }
 
-        public Word[] MatchingSuggestions( string pinyinInput, bool english ) {
+        // string pinyinInput, bool english
+        // word => word.MatchesPinyin( pinyinInput )
+        public Word[] MatchingSuggestions( Func<HanyuWord,bool> matcher ) {
             // Is it possible to make this faster with some dictionary-speedups?
             // eg. dictionary keyed by first and/or first+second chars.
             return Words.
-                Where( word => word.MatchesPinyin( pinyinInput, english ) ).
+                Where( matcher ).
                 OrderBy( word => word, new SuggestionComparer() ).
                 ToArray();
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -55,12 +56,20 @@ namespace ChineseWriter {
         }
 
         private void UpdateSuggestions( ) {
-            _suggestions = PinyinInput == "" ?
-                new Word[] {} :
+            _suggestions = PinyinInput == "" ? new Word[] {} :
                 _hanyuDb.
-                    MatchingSuggestions( PinyinInput, English ).
+                    MatchingSuggestions( WordSelector( PinyinInput, English ) ).
                     Take( 50 ).ToArray();
             SuggestionsChanges.OnNext( _suggestions );
+        }
+
+        private static Func<HanyuWord, bool> WordSelector( string textToFind, bool english ) {
+            if (english) {
+                var regex = new Regex( @"\b" + textToFind, RegexOptions.Compiled );
+                return word => regex.IsMatch( word.English );
+            } else {
+                return word => word.MatchesPinyin( textToFind );
+            }
         }
 
         public void TextEdit( Key key ) {

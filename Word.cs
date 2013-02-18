@@ -40,18 +40,13 @@ namespace ChineseWriter {
         private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
         private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
         private string _pinyinDiacritics; // with diacritics added eg. "má pà"
-        private readonly string[] _englishParts;
-        private bool _suggest = false; // Use this word in suggestions
 
         override public string English { get { return _english; } }
         override public string Hanyu { get { return _hanyu; } }
         override public string Pinyin { get { return _pinyin; } }
-        override public string ShortEnglish { get { return _englishParts.First( ); } }
+        override public string ShortEnglish { get { return English.Split(',').First(); } }
 
-        public bool Suggest { 
-            get { return _suggest; }
-            set { _suggest = value; }
-        }
+        public bool Suggest { get; set; }
 
         public override string ToString( ) {
             return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _pinyinNoSpaces, _pinyinDiacritics, English );
@@ -63,28 +58,19 @@ namespace ChineseWriter {
 
         private static Regex NUMBERS = new Regex( @"\d", RegexOptions.Compiled );
 
-        public HanyuWord( string hanyu, string pinyin, string english, XElement wordInfo) {
+        public HanyuWord( string hanyu, string pinyin, string english, bool suggest ) {
             _hanyu = hanyu;
             _pinyin = pinyin;
             _english = english;
             _pinyinNoSpaces = pinyin.Replace( " ", "" ).ToLower();
             _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
             _pinyinDiacritics = _pinyin.AddToneDiacritics( );
-            _suggest = wordInfo != null;
-            _englishParts = 
-                _english.ToLower( )
-                    .Split( ',' )
-                    .Select( word => word.Trim( ) )
-                    .ToArray( );
-            }
+            Suggest = suggest;
+        }
 
-        public bool MatchesPinyin( string pinyinInput, bool useEnglish ) {
-            if (useEnglish) {
-                return _englishParts.Any( part => part.StartsWith( pinyinInput ));
-            } else {
-                return _pinyinNoSpaces.StartsWith( pinyinInput ) ||
-                    _pinyinNoSpacesNoTones.StartsWith( pinyinInput );
-            }
+        public bool MatchesPinyin( string pinyinInput ) {
+            return _pinyinNoSpaces.StartsWith( pinyinInput ) ||
+                _pinyinNoSpacesNoTones.StartsWith( pinyinInput );
         }
 
         public Tuple<string, string>[] Characters {
@@ -113,6 +99,8 @@ namespace ChineseWriter {
         override public string English { get { return JoinBy( word => word.English ); } }
 
         override public string ShortEnglish { get { return JoinBy( word => word.ShortEnglish ); } }
+
+        public HanyuWord[] Words { get { return _words; } }
 
         private string JoinBy( Func<HanyuWord, string> selector ) {
             return string.Join( " / ", _words.Select( selector ).ToArray() );
