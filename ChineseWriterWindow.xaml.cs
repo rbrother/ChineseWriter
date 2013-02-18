@@ -55,8 +55,6 @@ namespace ChineseWriter {
                     Concat( _wordDatabase.WordsChanged );
 
                 // Update UI based on writing state changes
-                WordsDatabaseChanged.ObserveOnDispatcher( ).
-                    Subscribe( count => this.Title = string.Format("ChineseWriter ({0} words)", count ) );
                 _writingState.PinyinChanges.ObserveOnDispatcher( ).
                     Subscribe( pinyin => _pinyinInput.Text = pinyin );
                 _writingState.SuggestionsChanges.ObserveOnDispatcher( ).

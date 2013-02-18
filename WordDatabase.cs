@@ -189,11 +189,14 @@ namespace ChineseWriter {
 
         internal Word WordForHanyuPinyin( string hanyu, string pinyin ) {
             var matching = WordsDict[hanyu];
+            if (matching.Count( ) == 0) throw new ApplicationException( "No match for hany" );
             var exactMatches = matching.Where( word => word.Pinyin == pinyin );
             if (exactMatches.Count() > 0) return exactMatches.First();
             var caselessMatches = matching.Where( word => word.Pinyin.ToLower() == pinyin.ToLower() );
-            if (caselessMatches.Count( ) == 0) throw new ApplicationException( string.Format( "No dictionary match found for {0}/{1}", hanyu, pinyin) );
-            return caselessMatches.First( );
+            if (caselessMatches.Count( ) > 0) return caselessMatches.First( );
+            // Last result: match based on Hanyi alone. This can be necessary when
+            // eg. a character has changed from some tone to neutral tone when combined to a word.
+            return matching.First( ); 
         }
 
         internal void SaveWordsInfo( ) {
