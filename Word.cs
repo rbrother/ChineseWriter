@@ -14,7 +14,7 @@ namespace ChineseWriter {
         virtual public string DisplayPinyin { get { return Pinyin; } }
         virtual public string English { get { return ""; } }
         virtual public string ShortEnglish { get { return English; } }
-        virtual public Color Color { get { return Colors.White; } }
+        virtual public Color PanelColor { get { return Colors.White; } }
     }
 
     public class LiteralWord : Word {
@@ -27,7 +27,7 @@ namespace ChineseWriter {
         override public string Hanyu { get { return _text; } }
         override public string Pinyin { get { return _text; } }
         override public string English { get { return _text; } }
-        override public Color Color { get { return Color.FromRgb( 220, 220, 220 ); } }
+        override public Color PanelColor { get { return Color.FromRgb( 220, 220, 220 ); } }
 
         public override string ToString( ) {
             return string.Format("LiteralWord: {0}", _text);
@@ -73,6 +73,7 @@ namespace ChineseWriter {
                 _pinyinNoSpacesNoTones.StartsWith( pinyinInput );
         }
 
+        // TODO: Make word compose of character-objects (or sub-word objects)
         public Tuple<string, string>[] Characters {
             get {
                 return _hanyu.
@@ -88,7 +89,7 @@ namespace ChineseWriter {
     public class MultiMeaningWord : Word {
         private HanyuWord[] _words;
 
-        public override Color Color { get { return Colors.Yellow; } }
+        public override Color PanelColor { get { return Colors.Yellow; } }
 
         override public string Hanyu { get { return _words.First().Hanyu; } }
 
