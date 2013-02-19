@@ -56,16 +56,20 @@ namespace ChineseWriter {
             get { return _pinyinDiacritics; }
         }
 
-        private static Regex NUMBERS = new Regex( @"\d", RegexOptions.Compiled );
+        private static readonly Regex NUMBERS = new Regex( @"\d", RegexOptions.Compiled );
 
-        public HanyuWord( string hanyu, string pinyin, string english, bool suggest ) {
-            _hanyu = hanyu;
-            _pinyin = pinyin;
-            _english = english;
-            _pinyinNoSpaces = pinyin.Replace( " ", "" ).ToLower();
+        private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
+
+        public HanyuWord( string line, Dictionary<Tuple<string, string>, XElement> info ) {
+            var groups = CC_LINE.Match( line ).Groups;
+            //var traditional = groups[1].Value;
+            _hanyu = groups[2].Value;
+            _pinyin = groups[3].Value;
+            _english = groups[4].Value.Replace( "/", ", " );
+            _pinyinNoSpaces = _pinyin.Replace( " ", "" ).ToLower( );
             _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
             _pinyinDiacritics = _pinyin.AddToneDiacritics( );
-            Suggest = suggest;
+            Suggest = info.ContainsKey( Tuple.Create( _hanyu, _pinyin ) );
         }
 
         public bool MatchesPinyin( string pinyinInput ) {

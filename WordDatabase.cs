@@ -26,8 +26,6 @@ namespace ChineseWriter {
 
         private static readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
-        private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
-
         public WordDatabase( ) {
             _words = LoadWords( );
             _wordsChanged.OnNext( _words.Length );
@@ -101,18 +99,8 @@ namespace ChineseWriter {
         public static HanyuWord[] ParseCCLines( string[] lines, Dictionary<Tuple<string,string>, XElement> infoDict ) {
             return lines.
                 Where( line => !line.StartsWith( "#" ) ).
-                Select( line => CC_LINE.Match( line ).Groups ).
-                Select( groups => LineToWord( groups, infoDict ) ).
+                Select( line => new HanyuWord( line, infoDict )).
                 ToArray( );
-        }
-
-        private static HanyuWord LineToWord( GroupCollection groups, Dictionary<Tuple<string,string>, XElement> info ) {
-            var traditional = groups[1].Value;
-            var simplified = groups[2].Value;
-            var pinyin = groups[3].Value;
-            var english = groups[4].Value;
-            var suggest = info.ContainsKey( Tuple.Create( simplified, pinyin ) );
-            return new HanyuWord( simplified, pinyin, english.Replace( "/", ", " ), suggest );
         }
 
         /// <summary>
