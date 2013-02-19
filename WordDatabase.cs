@@ -157,7 +157,7 @@ namespace ChineseWriter {
 
         // string pinyinInput, bool english
         // word => word.MatchesPinyin( pinyinInput )
-        public Word[] MatchingSuggestions( Func<HanyuWord,bool> matcher ) {
+        public HanyuWord[] MatchingSuggestions( Func<HanyuWord,bool> matcher ) {
             // Is it possible to make this faster with some dictionary-speedups?
             // eg. dictionary keyed by first and/or first+second chars.
             return Words.

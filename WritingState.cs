@@ -15,7 +15,7 @@ namespace ChineseWriter {
         private WordDatabase _hanyuDb;
         private int _cursorPos;
         private Word[] _words;
-        private Word[] _suggestions;
+        private HanyuWord[] _suggestions;
         private bool _english;
         private string _pinyinInput = "";
 
@@ -56,7 +56,7 @@ namespace ChineseWriter {
         }
 
         private void UpdateSuggestions( ) {
-            _suggestions = PinyinInput == "" ? new Word[] {} :
+            _suggestions = PinyinInput == "" ? new HanyuWord[] {} :
                 _hanyuDb.
                     MatchingSuggestions( WordSelector( PinyinInput, English ) ).
                     Take( 50 ).ToArray();
@@ -108,6 +108,7 @@ namespace ChineseWriter {
             if (n == 0) {
                 InsertWords( _hanyuDb.HanyuToWords( PinyinInput ) );
             } else {
+                _suggestions[n - 1].Suggest = true; // Automatically add selected words for future suggestions
                 InsertWords( new Word[] { _suggestions[n - 1] } );
             }
             PinyinInput = "";
