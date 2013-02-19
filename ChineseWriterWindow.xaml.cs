@@ -33,6 +33,7 @@ namespace ChineseWriter {
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
+                _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
 
                 _cursorPanel = GuiUtils.WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
 
@@ -46,7 +47,7 @@ namespace ChineseWriter {
 
                 ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains(key) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
-                    Subscribe( pinyinIndex => _writingState.SelectPinyin( pinyinIndex ) );
+                    Subscribe( pinyinIndex => _writingState.SelectPinyin( pinyinIndex + 1 ) );
 
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     Subscribe( value => _writingState.English = value );
@@ -58,7 +59,7 @@ namespace ChineseWriter {
                 _writingState.PinyinChanges.ObserveOnDispatcher( ).
                     Subscribe( pinyin => _pinyinInput.Text = pinyin );
                 _writingState.SuggestionsChanges.ObserveOnDispatcher( ).
-                    Subscribe( suggestions => UpdateSuggestions( suggestions ) );
+                    Subscribe( suggestions => Suggestions.ItemsSource = suggestions );
                 _writingState.WordsChanges.
                     CombineLatest(_writingState.CursorPosChanges, (words,cursor) => Tuple.Create(words,cursor)).                    
                     ObserveOnDispatcher( ).
@@ -70,8 +71,17 @@ namespace ChineseWriter {
             }
         }
 
+        void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
+            if (e.Key == Key.Enter) {
+                _writingState.SelectPinyin( 1 );
+                e.Handled = true;
+            }
+        }
+
         void PinyinInput_TextChanged(object sender, TextChangedEventArgs e) {
-            _writingState.PinyinInput = _pinyinInput.Text;
+            if (_pinyinInput.Text != _writingState.PinyinInput) {
+                _writingState.PinyinInput = _pinyinInput.Text;
+            }
         }
 
         private void PopulateCharGrid( IEnumerable<Word> words, int cursorPos ) {
@@ -85,10 +95,6 @@ namespace ChineseWriter {
             }
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
-        }
-
-        private void UpdateSuggestions( IEnumerable<Word> suggestions ) {
-            Suggestions.ItemsSource = suggestions;
         }
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
@@ -109,11 +115,8 @@ namespace ChineseWriter {
 
         private void Suggestions_LoadingRow( object sender, DataGridRowEventArgs e ) {
             int n = e.Row.GetIndex( ) + 1;
-            if (n <= 9) {
-                e.Row.Header = string.Format( "CTRL+{0}", n );
-            } else {
-                e.Row.Header = "<click>";
-            }
+            e.Row.Header =  n == 1 ? "Enter" :
+                n <= 10 ? string.Format( "CTRL+{0}", n - 1 ) : "<click>";
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
