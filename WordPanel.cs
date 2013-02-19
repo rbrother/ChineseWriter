@@ -55,7 +55,7 @@ namespace ChineseWriter {
                 pinyinText.Inlines.AddRange(
                     ( word as HanyuWord ).Characters.
                     Select( c => new Run {
-                        Text = " " + c.Item2.AddToneDiacritics() + " ",
+                        Text = " " + c.Item2.AddDiacritics() + " ",
                         Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
                     } ) );
             } else {

@@ -58,7 +58,7 @@ namespace ChineseWriter {
 
         private static readonly Regex NUMBERS = new Regex( @"\d", RegexOptions.Compiled );
 
-        private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\s]+)\]\s+\/(.+)\/" );
+        private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\:\s]+)\]\s+\/(.+)\/" );
 
         public HanyuWord( string line, Dictionary<Tuple<string, string>, XElement> info ) {
             var groups = CC_LINE.Match( line ).Groups;
@@ -66,9 +66,9 @@ namespace ChineseWriter {
             _hanyu = groups[2].Value;
             _pinyin = groups[3].Value;
             _english = groups[4].Value.Replace( "/", ", " );
-            _pinyinNoSpaces = _pinyin.Replace( " ", "" ).ToLower( );
+            _pinyinNoSpaces = _pinyin.Replace( " ", "" ).Replace( ":", "" ).ToLower( );
             _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
-            _pinyinDiacritics = _pinyin.AddToneDiacritics( );
+            _pinyinDiacritics = _pinyin.AddDiacritics( );
             Suggest = info.ContainsKey( Tuple.Create( _hanyu, _pinyin ) );
         }
 

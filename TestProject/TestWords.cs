@@ -28,7 +28,8 @@ namespace ChineseWriter {
             "婐 婐 [wo3] /maid/",
             "我 我 [wo3] /I/me/my/",
             "我們 我们 [wo3 men5] /we/us/ourselves/our/",
-            "戒刀 戒刀 [jie4 dao1] /Buddhist monk's knife (not used for killing)/"
+            "戒刀 戒刀 [jie4 dao1] /Buddhist monk's knife (not used for killing)/",
+            "女友 女友 [nu:3 you3] /girlfriend/"
         };
 
         private static Dictionary<Tuple<string,string>, XElement> INFO_DICT =
@@ -44,10 +45,13 @@ namespace ChineseWriter {
         [TestMethod]
         public void TestParseCC( ) {
             var words = WordDatabase.ParseCCLines( CC_LINES, INFO_DICT );
-            Assert.AreEqual<int>( 6, words.Length );
+            Assert.AreEqual<int>( 7, words.Length );
             Assert.AreEqual<int>( 3, words.Where( word => word.Suggest ).Count( ) );
             Assert.AreEqual<int>( 2, words.Where( word => word.Hanyu == "啊" ).Count( ) );
             Assert.AreEqual<int>( 1, words.Where( word => word.Hanyu == "啊" && word.Pinyin == "a1" ).Count( ) );
+            var girlfriend = words.Where( word => word.Hanyu == "女友" ).First();
+            Assert.AreEqual( "nu:3 you3", girlfriend.Pinyin );
+            Assert.AreEqual( "nǚ yǒu", girlfriend.DisplayPinyin );
         }
     }
 }

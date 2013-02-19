@@ -13,8 +13,8 @@ namespace ChineseWriter {
 
         private static readonly int[] TONE_DIACRITICS = new int[] { 772, 769, 780, 768 };
 
-        public static string AddToneDiacritics( this string pinyin ) {
-            return string.Join( " ", pinyin.Split( ' ' ).
+        public static string AddDiacritics( this string pinyin ) {
+            return string.Join( " ", pinyin.Replace( "u:", "ü" ).Split( ' ' ).
                 Select( syllable => syllable.AddToneDiacritic( ) ).ToArray( ) );
         }
 
@@ -58,7 +58,7 @@ namespace ChineseWriter {
         private static Tuple<string, string>[] DIACRITIC_VOVEL = new Tuple<string, string>[] { 
             Tuple.Create("a", "a"), Tuple.Create("e", "e"), Tuple.Create("o", "o"),
             Tuple.Create("iu", "u"), Tuple.Create("i", "i"), Tuple.Create("u", "u"),
-            Tuple.Create("m", "m") };  // 呣 呣 [m4] /interjection expressing consent/um/
+            Tuple.Create("ü", "ü"), Tuple.Create("m", "m") };  // 呣 呣 [m4] /interjection expressing consent/um/
 
         public static string TakeFirst( this string s, int count = 1 ) {
             if (s == "" || count == 0) {
