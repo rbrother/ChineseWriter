@@ -104,9 +104,11 @@ namespace ChineseWriter {
         }
 
         internal void SelectPinyin( int n ) {
-            if (n > _suggestions.Length) return;
-            if (n == 0) {
+            if (n == 1 && _suggestions.Length == 0 ) {
+                // Literal input
                 InsertWords( _hanyuDb.HanyuToWords( PinyinInput ) );
+            } else if (n > _suggestions.Length) {
+                return; 
             } else {
                 _suggestions[n - 1].Suggest = true; // Automatically add selected words for future suggestions
                 InsertWords( new Word[] { _suggestions[n - 1] } );
