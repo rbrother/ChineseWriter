@@ -27,7 +27,9 @@
             <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}">_English</CheckBox>
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
+        <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
+        </ScrollViewer>
         <!--                   -->
         <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
             <DataGrid Name="Suggestions" AutoGenerateColumns="False" LoadingRow="Suggestions_LoadingRow"

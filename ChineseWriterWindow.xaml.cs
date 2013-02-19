@@ -35,7 +35,10 @@ namespace ChineseWriter {
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
 
-                _cursorPanel = GuiUtils.WrapToBorder(new Label { Content = _pinyinInput, VerticalContentAlignment = VerticalAlignment.Center });
+                _cursorPanel = GuiUtils.WrapToBorder(new Label { 
+                    Content = _pinyinInput, 
+                    VerticalContentAlignment = VerticalAlignment.Center,
+                    Background = new SolidColorBrush( Color.FromArgb(128,0,0,255) ) });
 
                 var ControlKeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
@@ -64,10 +67,28 @@ namespace ChineseWriter {
                     CombineLatest(_writingState.CursorPosChanges, (words,cursor) => Tuple.Create(words,cursor)).                    
                     ObserveOnDispatcher( ).
                     Subscribe( value => PopulateCharGrid( value.Item1, value.Item2 ) );
+                _writingState.CursorPosChanges.
+                    ObserveOnDispatcher().
+                    Subscribe( cursor => MakeInputVisible() );
                 _writingState.Clear( );
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
                 this.Close( );
+            }
+        }
+
+        void MakeInputVisible( ) {
+            try {
+                TextScrollView.UpdateLayout( );
+                var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
+                var scrollTo = TextScrollView.HorizontalOffset - 
+                    TextScrollView.TransformToVisual( _cursorPanel ).Transform( new Point( 0, 0 ) ).X -
+                    TextScrollView.ViewportWidth * 0.5;
+                if (scrollTo < 0) scrollTo = 0;
+                if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
+                TextScrollView.ScrollToHorizontalOffset( scrollTo );
+            } catch (InvalidOperationException op) {
+                // TextScrollView.TransformToVisual( _cursorPanel ) fails in startup, works then
             }
         }
 
