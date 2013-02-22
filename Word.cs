@@ -39,12 +39,18 @@ namespace ChineseWriter {
         private readonly string _pinyin; // eg. "ma3 pa2"
         private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
         private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
-        private string _pinyinDiacritics; // with diacritics added eg. "má pà"
+        private readonly string _pinyinDiacritics; // with diacritics added eg. "má pà"
+        private readonly string _shortEnglish; // explicit short english, replacing CCDICT first part
 
         override public string English { get { return _english; } }
         override public string Hanyu { get { return _hanyu; } }
         override public string Pinyin { get { return _pinyin; } }
-        override public string ShortEnglish { get { return English.Split(',').First(); } }
+        public bool ShortEnglishGiven { get { return _shortEnglish != null; } }
+        override public string ShortEnglish {
+            get {
+                return ShortEnglishGiven ? _shortEnglish : English.Split( ',' ).First( );
+            }
+        }
 
         public bool Suggest { get; set; }
 
@@ -69,7 +75,14 @@ namespace ChineseWriter {
             _pinyinNoSpaces = _pinyin.Replace( " ", "" ).Replace( ":", "" ).ToLower( );
             _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
             _pinyinDiacritics = _pinyin.AddDiacritics( );
-            Suggest = info.ContainsKey( Tuple.Create( _hanyu, _pinyin ) );
+            var infoKey = Tuple.Create( _hanyu, _pinyin );
+            if (info.ContainsKey( infoKey )) {
+                var wordInfo = info[infoKey];
+                Suggest = true;
+                if (wordInfo.Attribute( "short_english" ) != null) {
+                    _shortEnglish = wordInfo.Attribute( "short_english" ).Value;
+                }
+            }
         }
 
         public bool MatchesPinyin( string pinyinInput ) {

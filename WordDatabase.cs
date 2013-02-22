@@ -194,7 +194,8 @@ namespace ChineseWriter {
                         OrderBy( word => word.Pinyin). 
                         Select( word => new XElement( "Word",
                             new XAttribute( "pinyin", word.Pinyin ),
-                            new XAttribute( "hanyu", word.Hanyu ) ) ) ) ).
+                            new XAttribute( "hanyu", word.Hanyu ),
+                            word.ShortEnglishGiven ? new XAttribute("short_english",word.ShortEnglish) : null ) ) ) ).
                 Save( FilePath( "words.xml" ) );
 
         }

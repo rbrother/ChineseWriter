@@ -330,6 +330,7 @@
     <Word pinyin="hai1" hanyu="嗨" />
     <Word pinyin="hai2" hanyu="孩" />
     <Word pinyin="hai2" hanyu="还" />
+    <Word pinyin="hai2 shi5" hanyu="还是" />
     <Word pinyin="hai2 you3" hanyu="还有" />
     <Word pinyin="hai2 zi5" hanyu="孩子" />
     <Word pinyin="hai2 zi5 men5" hanyu="孩子们" />
@@ -356,7 +357,7 @@
     <Word pinyin="he2 ying3" hanyu="合影" />
     <Word pinyin="hei1" hanyu="黑" />
     <Word pinyin="Hei1" hanyu="黑" />
-    <Word pinyin="hen3" hanyu="很" />
+    <Word pinyin="hen3" hanyu="很" short_english="very" />
     <Word pinyin="hen4" hanyu="恨" />
     <Word pinyin="hong2" hanyu="宏" />
     <Word pinyin="hong2" hanyu="红" />
@@ -629,6 +630,7 @@
     <Word pinyin="miao4" hanyu="庙" />
     <Word pinyin="ming2" hanyu="明" />
     <Word pinyin="Ming2" hanyu="明" />
+    <Word pinyin="ming2 bai5" hanyu="明白" />
     <Word pinyin="ming2 nian2" hanyu="明年" />
     <Word pinyin="ming2 tian1" hanyu="明天" />
     <Word pinyin="mo2" hanyu="磨" />
@@ -923,7 +925,7 @@
     <Word pinyin="wen3" hanyu="吻" />
     <Word pinyin="wen4" hanyu="问" />
     <Word pinyin="wen4 ti2" hanyu="问题" />
-    <Word pinyin="wo3" hanyu="我" />
+    <Word pinyin="wo3" hanyu="我" short_english="I" />
     <Word pinyin="wo3 men5" hanyu="我们" />
     <Word pinyin="wo4 shi4" hanyu="卧室" />
     <Word pinyin="wu1 ran3" hanyu="污染" />
@@ -1134,6 +1136,7 @@
     <Word pinyin="zhao3 dao4" hanyu="找到" />
     <Word pinyin="zhao4" hanyu="照" />
     <Word pinyin="zhao4 pian4" hanyu="照片" />
+    <Word pinyin="zhao4 xiang4" hanyu="照相" />
     <Word pinyin="zhe4" hanyu="这" />
     <Word pinyin="zhe4 ge5" hanyu="这个" />
     <Word pinyin="zhe4 li3" hanyu="这里" />
