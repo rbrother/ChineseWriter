@@ -43,7 +43,7 @@ namespace ChineseWriter {
 
                 ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains(key) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
-                    Subscribe( pinyinIndex => _writingState.SelectPinyin( pinyinIndex + 1 ) );
+                    Subscribe( pinyinIndex => SelectPinyin( pinyinIndex + 1 ) );
 
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     Subscribe( value => _writingState.English = value );
@@ -104,9 +104,14 @@ namespace ChineseWriter {
 
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if (e.Key == Key.Enter) {
-                _writingState.SelectPinyin( 1 );
+                SelectPinyin(1);
                 e.Handled = true;
             }
+        }
+
+        private void SelectPinyin(int index) {
+            _writingState.SelectPinyin(index);
+            ShowEnglish.IsChecked = false;
         }
 
         void PinyinInput_TextChanged(object sender, TextChangedEventArgs e) {
