@@ -110,7 +110,10 @@ namespace ChineseWriter {
             int pos = 0;
             foreach (Word word in _writingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
-                var wordPanel = new WordPanel( word, _wordDatabase );
+                var wordPanel = 
+                    word is HanyuWord ? new WordPanel( word as HanyuWord, _wordDatabase ) :
+                    word is LiteralWord ? new WordPanel( word as LiteralWord, _wordDatabase ) :
+                    null;
                 Characters.Children.Add( wordPanel );
                 pos++;
             }

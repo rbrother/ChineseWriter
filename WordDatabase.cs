@@ -175,7 +175,7 @@ namespace ChineseWriter {
             }
         }
 
-        internal Word WordForHanyuPinyin( string hanyu, string pinyin ) {
+        internal HanyuWord WordForHanyuPinyin( string hanyu, string pinyin ) {
             var matching = WordsDict[hanyu];
             if (matching.Count( ) == 0) throw new ApplicationException( "No match for hany" );
             var exactMatches = matching.Where( word => word.Pinyin == pinyin );
@@ -198,7 +198,6 @@ namespace ChineseWriter {
                             word.ShortEnglishGiven ? new XAttribute("short_english",word.ShortEnglish) : null,
                             word.Known ? new XAttribute( "known", "true" ) : null ) ) ) ).
                 Save( FilePath( "words.xml" ) );
-
         }
     } // class
 

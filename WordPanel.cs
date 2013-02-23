@@ -21,30 +21,26 @@ namespace ChineseWriter {
 
         public Word Word { get { return _word; } }
 
-        // TODO: Make Word-class method CreatePanel(), less logic here...
-        public WordPanel( Word word, WordDatabase wordsDb, bool big = false ) {
-            var hanyuWord = word as HanyuWord;
+        public WordPanel( HanyuWord word, WordDatabase wordsDb, bool big = false ) {
             _word = word;
             _wordsDb = wordsDb;
             var panel = new StackPanel {
                 Orientation = Orientation.Vertical,
                 Background = new SolidColorBrush( word.PanelColor ),
-                MaxWidth = 150
+                MaxWidth = 150, 
+                Margin = new Thickness(2)
             };
             // Hanyu text
             var hanyuText = new TextBlock {
                 FontFamily = new FontFamily( "SimSun" ), FontSize = big ? 80 : 30,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             };
-            if (hanyuWord != null) {
-                hanyuText.Inlines.AddRange(
-                    hanyuWord.Characters.
-                        Select( c => new Run { 
-                            Text = c.Item1, 
-                            Foreground = new SolidColorBrush( ToneColor(c.Item2) ) } ) );
-            } else {
-                hanyuText.Text = word.Hanyu;
-            }
+            hanyuText.Inlines.AddRange(
+                word.Characters.
+                    Select( c => new Run {
+                        Text = c.Item1,
+                        Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                    } ) );
             panel.Children.Add( hanyuText );
             // Pinyin text
             var pinyinText = new TextBlock {
@@ -52,28 +48,40 @@ namespace ChineseWriter {
                 FontSize = 18,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            if (hanyuWord != null) {
-                pinyinText.Inlines.AddRange(
-                    hanyuWord.Characters.
-                        Select( c => new Run {
-                            Text = " " + c.Item2.AddDiacritics() + " ",
-                            Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
-                        } ) );
-            } else {
-                pinyinText.Text = word.DisplayPinyin;
-            }
+            pinyinText.Inlines.AddRange(
+                word.Characters.
+                    Select( c => new Run {
+                        Text = " " + c.Item2.AddDiacritics( ) + " ",
+                        Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                    } ) );
             panel.Children.Add( pinyinText );
             panel.Children.Add( new TextBlock {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = big ? word.English : 
-                    ( hanyuWord != null && hanyuWord.Known ) ? "" : word.ShortEnglish,
+                Text = big ? word.English : word.Known ? "" : word.ShortEnglish,
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             } );
             if (_word is HanyuWord) {
                 panel.ToolTip = CreateExplanationPanel( _word as HanyuWord );
             }
+            this.Content = GuiUtils.WrapToBorder( panel );
+        }
+
+        public WordPanel( LiteralWord word, WordDatabase wordsDb, bool big = false ) {
+            _word = word;
+            _wordsDb = wordsDb;
+            var panel = new StackPanel {
+                Orientation = Orientation.Vertical,
+                Background = new SolidColorBrush( word.PanelColor ),
+                MaxWidth = 150
+            };
+            var text = new TextBlock {
+                FontFamily = new FontFamily( "Times New Roman" ), FontSize = big ? 80 : 30,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                Text = word.Hanyu
+            };
+            panel.Children.Add( text );
             this.Content = GuiUtils.WrapToBorder( panel );
         }
 

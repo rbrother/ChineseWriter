@@ -15,7 +15,7 @@ namespace ChineseWriter {
         public static FrameworkElement WrapToBorder( FrameworkElement child ) {
             return new Border {
                 Child = child, BorderThickness = new Thickness( 1.0 ),
-                BorderBrush = new SolidColorBrush( Color.FromArgb( 50, 0, 0, 0 ) )
+                BorderBrush = new SolidColorBrush( Color.FromArgb( 50, 0, 0, 0 ) ),
             };
         }
 
