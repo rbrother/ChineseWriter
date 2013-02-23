@@ -41,6 +41,7 @@ namespace ChineseWriter {
         private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
         private readonly string _pinyinDiacritics; // with diacritics added eg. "má pà"
         private readonly string _shortEnglish; // explicit short english, replacing CCDICT first part
+        private bool _known; // true: hide english
 
         override public string English { get { return _english; } }
         override public string Hanyu { get { return _hanyu; } }
@@ -51,7 +52,7 @@ namespace ChineseWriter {
                 return ShortEnglishGiven ? _shortEnglish : English.Split( ',' ).First( );
             }
         }
-
+        public bool Known { get { return _known; } }
         public bool Suggest { get; set; }
 
         public override string ToString( ) {
@@ -81,6 +82,9 @@ namespace ChineseWriter {
                 Suggest = true;
                 if (wordInfo.Attribute( "short_english" ) != null) {
                     _shortEnglish = wordInfo.Attribute( "short_english" ).Value;
+                }
+                if (wordInfo.Attribute( "known" ) != null) {
+                    _known = Convert.ToBoolean( wordInfo.Attribute( "known" ).Value );
                 }
             }
         }

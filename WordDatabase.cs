@@ -195,7 +195,8 @@ namespace ChineseWriter {
                         Select( word => new XElement( "Word",
                             new XAttribute( "pinyin", word.Pinyin ),
                             new XAttribute( "hanyu", word.Hanyu ),
-                            word.ShortEnglishGiven ? new XAttribute("short_english",word.ShortEnglish) : null ) ) ) ).
+                            word.ShortEnglishGiven ? new XAttribute("short_english",word.ShortEnglish) : null,
+                            word.Known ? new XAttribute( "known", "true" ) : null ) ) ) ).
                 Save( FilePath( "words.xml" ) );
 
         }

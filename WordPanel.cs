@@ -23,6 +23,7 @@ namespace ChineseWriter {
 
         // TODO: Make Word-class method CreatePanel(), less logic here...
         public WordPanel( Word word, WordDatabase wordsDb, bool big = false ) {
+            var hanyuWord = word as HanyuWord;
             _word = word;
             _wordsDb = wordsDb;
             var panel = new StackPanel {
@@ -32,15 +33,15 @@ namespace ChineseWriter {
             };
             // Hanyu text
             var hanyuText = new TextBlock {
-                FontFamily = new FontFamily( "SimSun" ), FontSize = big ? 50 : 30,
+                FontFamily = new FontFamily( "SimSun" ), FontSize = big ? 80 : 30,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             };
-            if (word is HanyuWord) {
+            if (hanyuWord != null) {
                 hanyuText.Inlines.AddRange(
-                    ( word as HanyuWord ).Characters.
-                    Select( c => new Run { 
-                        Text = c.Item1, 
-                        Foreground = new SolidColorBrush( ToneColor(c.Item2) ) } ) );
+                    hanyuWord.Characters.
+                        Select( c => new Run { 
+                            Text = c.Item1, 
+                            Foreground = new SolidColorBrush( ToneColor(c.Item2) ) } ) );
             } else {
                 hanyuText.Text = word.Hanyu;
             }
@@ -51,13 +52,13 @@ namespace ChineseWriter {
                 FontSize = 18,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            if (word is HanyuWord) {
+            if (hanyuWord != null) {
                 pinyinText.Inlines.AddRange(
-                    ( word as HanyuWord ).Characters.
-                    Select( c => new Run {
-                        Text = " " + c.Item2.AddDiacritics() + " ",
-                        Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
-                    } ) );
+                    hanyuWord.Characters.
+                        Select( c => new Run {
+                            Text = " " + c.Item2.AddDiacritics() + " ",
+                            Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                        } ) );
             } else {
                 pinyinText.Text = word.DisplayPinyin;
             }
@@ -66,7 +67,8 @@ namespace ChineseWriter {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = big ? word.English : word.ShortEnglish,
+                Text = big ? word.English : 
+                    ( hanyuWord != null && hanyuWord.Known ) ? "" : word.ShortEnglish,
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             } );
             if (_word is HanyuWord) {
