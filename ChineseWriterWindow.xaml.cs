@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using System.Reactive;
+using System.Windows.Media.Animation;
 using System.Reactive.Linq;
-using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
 
@@ -35,10 +31,7 @@ namespace ChineseWriter {
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
 
-                _cursorPanel = GuiUtils.WrapToBorder(new Label { 
-                    Content = _pinyinInput, 
-                    VerticalContentAlignment = VerticalAlignment.Center,
-                    Background = new SolidColorBrush( Color.FromArgb(128,0,0,255) ) });
+                _cursorPanel = CreateCursorPanel( );
 
                 var ControlKeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
@@ -75,6 +68,23 @@ namespace ChineseWriter {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
                 this.Close( );
             }
+        }
+
+        private FrameworkElement CreateCursorPanel( ) {
+            var cursorBrush = new SolidColorBrush( );
+            var panel = GuiUtils.WrapToBorder( new Label {
+                Content = _pinyinInput,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Background = cursorBrush
+            } );
+            var cursorAnimation = new ColorAnimation( Color.FromRgb( 192, 192, 255 ), Colors.White,
+                new Duration( TimeSpan.FromSeconds( 0.5 ) ),
+                FillBehavior.HoldEnd ) {
+                    AutoReverse = true,
+                    RepeatBehavior = RepeatBehavior.Forever
+                };
+            cursorBrush.BeginAnimation( SolidColorBrush.ColorProperty, cursorAnimation );
+            return panel;
         }
 
         void MakeInputVisible( ) {
