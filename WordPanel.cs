@@ -89,7 +89,7 @@ namespace ChineseWriter {
                             Text = " " + c.Item2.AddDiacritics( ) + " ",
                             Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
                         } ) ), 
-                CreateEnglishPanel(word) } );
+                word.Known ? new TextBlock() : CreateEnglishPanel(word ) } );
             if (!breakDown) panel.ToolTip = CreateExplanationPanel( word, wordsDb );
             return GuiUtils.WrapToBorder( panel );
         }
