@@ -54,6 +54,7 @@ namespace ChineseWriter {
         }
         public bool Known { get { return _known; } }
         public bool Suggest { get; set; }
+        public int UsageCount;
 
         public override string ToString( ) {
             return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _pinyinNoSpaces, _pinyinDiacritics, English );
@@ -85,6 +86,9 @@ namespace ChineseWriter {
                 }
                 if (wordInfo.Attribute( "known" ) != null) {
                     _known = Convert.ToBoolean( wordInfo.Attribute( "known" ).Value );
+                }
+                if (wordInfo.Attribute( "usage_count" ) != null) {
+                    UsageCount = Convert.ToInt32( wordInfo.Attribute( "usage_count" ).Value );
                 }
             }
         }

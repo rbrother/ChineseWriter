@@ -39,6 +39,7 @@
                     <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=DisplayPinyin}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
                     <DataGridCheckBoxColumn Header="Suggest" Binding="{Binding Path=Suggest}"/>
+                    <DataGridTextColumn Header="Usage" Binding="{Binding Path=UsageCount}"/>
                     <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" IsReadOnly="True" MaxWidth="600" />
                 </DataGrid.Columns>
             </DataGrid>

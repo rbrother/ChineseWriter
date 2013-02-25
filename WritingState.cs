@@ -110,8 +110,10 @@ namespace ChineseWriter {
             } else if (n > _suggestions.Length) {
                 return; 
             } else {
-                _suggestions[n - 1].Suggest = true; // Automatically add selected words for future suggestions
-                InsertWords( new Word[] { _suggestions[n - 1] } );
+                var word = _suggestions[n - 1];
+                word.Suggest = true; // Automatically add selected words for future suggestions to words.xml
+                word.UsageCount++;
+                InsertWords( new Word[] { word } );
             }
             PinyinInput = "";
         }

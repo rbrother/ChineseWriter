@@ -196,7 +196,8 @@ namespace ChineseWriter {
                             new XAttribute( "pinyin", word.Pinyin ),
                             new XAttribute( "hanyu", word.Hanyu ),
                             word.ShortEnglishGiven ? new XAttribute("short_english",word.ShortEnglish) : null,
-                            word.Known ? new XAttribute( "known", "true" ) : null ) ) ) ).
+                            word.Known ? new XAttribute( "known", "true" ) : null,
+                            word.UsageCount > 0 ? new XAttribute( "usage_count", word.UsageCount ) : null ) ) ) ).
                 Save( FilePath( "words.xml" ) );
         }
     } // class
@@ -205,6 +206,8 @@ namespace ChineseWriter {
         int IComparer<HanyuWord>.Compare( HanyuWord x, HanyuWord y ) {
             if (x.Suggest != y.Suggest) {
                 return x.Suggest ? -1 : 1;
+            } else if (x.UsageCount != y.UsageCount) {
+                return x.UsageCount > y.UsageCount ? -1 : 1;
             } else if (x.Hanyu.Length != y.Hanyu.Length) {
                 return x.Hanyu.Length < y.Hanyu.Length ? -1 : 1;
             } else {
