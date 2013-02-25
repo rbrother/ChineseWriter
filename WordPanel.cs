@@ -10,89 +10,57 @@ using System.Windows.Media;
 
 namespace ChineseWriter {
 
-    class WordPanel : UserControl {
+    static class WordPanel {
 
         private static readonly Color[] TONE_COLORS = { 
             Color.FromRgb(255,0,0), Color.FromRgb(160,160,0), Color.FromRgb(0,180,0), 
             Color.FromRgb(0,0,255), Colors.Black };
 
-        private Word _word;
-        private WordDatabase _wordsDb;
-
-        public Word Word { get { return _word; } }
-
-        public WordPanel( HanyuWord word, WordDatabase wordsDb, bool big = false ) {
-            _word = word;
-            _wordsDb = wordsDb;
+        private static StackPanel WordStackPanel( Color color, params FrameworkElement[] content ) {
             var panel = new StackPanel {
                 Orientation = Orientation.Vertical,
-                Background = new SolidColorBrush( word.PanelColor ),
-                MaxWidth = 150, 
-                Margin = new Thickness(2)
+                Background = new SolidColorBrush( color ),
+                MaxWidth = 150,
+                Margin = new Thickness( 2 )
             };
-            // Hanyu text
-            var hanyuText = new TextBlock {
-                FontFamily = new FontFamily( "SimSun" ), FontSize = big ? 80 : 30,
+            foreach (FrameworkElement item in content) {
+                panel.Children.Add( item );
+            }
+            return panel;
+        }
+
+        private static TextBlock CreateTextBlock( string fontName, int fontSize, string content ) {
+            return CreateTextBlock( fontName, fontSize, new Inline[] { new Run( content ) } );
+        }
+
+        private static TextBlock CreateTextBlock( string fontName, int fontSize, IEnumerable<Inline> inlines ) {
+            var textBlock = new TextBlock { 
+                FontFamily = new FontFamily(fontName),
+                FontSize = fontSize,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             };
-            hanyuText.Inlines.AddRange(
-                word.Characters.
-                    Select( c => new Run {
-                        Text = c.Item1,
-                        Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
-                    } ) );
-            panel.Children.Add( hanyuText );
-            // Pinyin text
-            var pinyinText = new TextBlock {
-                FontFamily = new FontFamily( "Times New Roman" ), 
-                FontSize = 18,
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-            pinyinText.Inlines.AddRange(
-                word.Characters.
-                    Select( c => new Run {
-                        Text = " " + c.Item2.AddDiacritics( ) + " ",
-                        Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
-                    } ) );
-            panel.Children.Add( pinyinText );
-            panel.Children.Add( new TextBlock {
+            textBlock.Inlines.AddRange(inlines);
+            return textBlock;
+        }
+
+        private static TextBlock CreateEnglishPanel( Word word ) {
+            return new TextBlock {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = big ? word.English : word.Known ? "" : word.ShortEnglish,
+                Text = word.ShortEnglish,
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
-            } );
-            if (_word is HanyuWord) {
-                panel.ToolTip = CreateExplanationPanel( _word as HanyuWord );
-            }
-            this.Content = GuiUtils.WrapToBorder( panel );
-        }
-
-        public WordPanel( LiteralWord word, WordDatabase wordsDb, bool big = false ) {
-            _word = word;
-            _wordsDb = wordsDb;
-            var panel = new StackPanel {
-                Orientation = Orientation.Vertical,
-                Background = new SolidColorBrush( word.PanelColor ),
-                MaxWidth = 150
             };
-            var text = new TextBlock {
-                FontFamily = new FontFamily( "Times New Roman" ), FontSize = big ? 80 : 30,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                Text = word.Hanyu
-            };
-            panel.Children.Add( text );
-            this.Content = GuiUtils.WrapToBorder( panel );
         }
 
         private static Color ToneColor( string pinyin ) {
             var lastChar = pinyin.TakeLast( );
             int tone;
             if (!int.TryParse( lastChar, out tone )) return Colors.Gray;
-            return TONE_COLORS[tone - 1];            
+            return TONE_COLORS[tone - 1];
         }
 
-        private object CreateExplanationPanel( HanyuWord word ) {
+        private static object CreateExplanationPanel( HanyuWord word, WordDatabase wordsDb ) {
             if (word.Hanyu.Length == 1) {
                 return word.English;
             } else {
@@ -102,11 +70,47 @@ namespace ChineseWriter {
                 panel.Children.Add( detailsPanel );
                 foreach (FrameworkElement childPanel in
                     word.Characters.
-                        Select( c => _wordsDb.WordForHanyuPinyin( c.Item1, c.Item2 ) ).
-                        Select( w => new WordPanel( w, _wordsDb, big: true ) ))
+                        Select( c => wordsDb.WordForHanyuPinyin( c.Item1, c.Item2 ) ).
+                        Select( w => Create( w, wordsDb, big: true ) ))
                     detailsPanel.Children.Add( childPanel );
                 return panel;
             }
+        }
+
+        // Constructors
+
+        public static FrameworkElement Create( HanyuWord word, WordDatabase wordsDb, bool big = false ) {
+            var panel = WordStackPanel( word.PanelColor, new FrameworkElement[] { 
+                CreateTextBlock( "SimSun", big ? 80 : 30,
+                    word.Characters.
+                        Select( c => new Run {
+                            Text = c.Item1,
+                            Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                        } ) ), 
+                CreateTextBlock( "Times New Roman", 18,
+                    word.Characters.
+                        Select( c => new Run {
+                            Text = " " + c.Item2.AddDiacritics( ) + " ",
+                            Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                        } ) ), 
+                CreateEnglishPanel(word) } );
+
+            panel.ToolTip = CreateExplanationPanel( word, wordsDb );
+            return GuiUtils.WrapToBorder( panel );
+        }
+
+        public static FrameworkElement Create( MultiMeaningWord word, WordDatabase wordsDb ) {
+            return GuiUtils.WrapToBorder( 
+                WordStackPanel( word.PanelColor, 
+                    CreateTextBlock( "SimSun", 30, word.Hanyu ),
+                    CreateTextBlock( "Times New Roman", 18, word.DisplayPinyin ),
+                    CreateEnglishPanel( word ) ) );
+        }
+
+        public static FrameworkElement Create( LiteralWord word, WordDatabase wordsDb ) {
+            return  GuiUtils.WrapToBorder(
+                    WordStackPanel( word.PanelColor,
+                    CreateTextBlock( "Times New Roman", 30, word.Hanyu ) ) );
         }
 
     }
