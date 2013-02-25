@@ -96,6 +96,7 @@
     <Word pinyin="Chang2 cheng2" hanyu="长城" />
     <Word pinyin="chang2 shi4" hanyu="尝试" />
     <Word pinyin="chang2 tu2" hanyu="长途" />
+    <Word pinyin="chang4 yi4" hanyu="倡议" />
     <Word pinyin="chao2 xiao4" hanyu="嘲笑" />
     <Word pinyin="chao3" hanyu="炒" />
     <Word pinyin="che1" hanyu="车" />
@@ -532,7 +533,7 @@
     <Word pinyin="lao3 shi1" hanyu="老师" />
     <Word pinyin="le4" hanyu="乐" />
     <Word pinyin="Le4" hanyu="乐" />
-    <Word pinyin="le5" hanyu="了" known="true" />
+    <Word pinyin="le5" hanyu="了" short_english="(past)" known="true" />
     <Word pinyin="lei4" hanyu="累" />
     <Word pinyin="lei4 si4" hanyu="类似" />
     <Word pinyin="leng3" hanyu="冷" />

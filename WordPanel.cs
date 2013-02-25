@@ -61,27 +61,23 @@ namespace ChineseWriter {
         }
 
         private static object CreateExplanationPanel( HanyuWord word, WordDatabase wordsDb ) {
-            if (word.Hanyu.Length == 1) {
-                return word.English;
-            } else {
-                var panel = new StackPanel { Orientation = Orientation.Vertical };
-                panel.Children.Add( new Label { Content = word.English } );
-                var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
-                panel.Children.Add( detailsPanel );
-                foreach (FrameworkElement childPanel in
-                    word.Characters.
-                        Select( c => wordsDb.WordForHanyuPinyin( c.Item1, c.Item2 ) ).
-                        Select( w => Create( w, wordsDb, big: true ) ))
-                    detailsPanel.Children.Add( childPanel );
-                return panel;
-            }
+            var panel = new StackPanel { Orientation = Orientation.Vertical };
+            panel.Children.Add( new Label { Content = word.English } );
+            var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
+            panel.Children.Add( detailsPanel );
+            foreach (FrameworkElement childPanel in
+                word.Characters.
+                    Select( c => wordsDb.WordForHanyuPinyin( c.Item1, c.Item2 ) ).
+                    Select( w => Create( w, wordsDb, breakDown: true ) ))
+                detailsPanel.Children.Add( childPanel );
+            return panel;
         }
 
         // Constructors
 
-        public static FrameworkElement Create( HanyuWord word, WordDatabase wordsDb, bool big = false ) {
+        public static FrameworkElement Create( HanyuWord word, WordDatabase wordsDb, bool breakDown = false ) {
             var panel = WordStackPanel( word.PanelColor, new FrameworkElement[] { 
-                CreateTextBlock( "SimSun", big ? 80 : 30,
+                CreateTextBlock( "SimSun", breakDown ? 80 : 30,
                     word.Characters.
                         Select( c => new Run {
                             Text = c.Item1,
@@ -94,8 +90,7 @@ namespace ChineseWriter {
                             Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
                         } ) ), 
                 CreateEnglishPanel(word) } );
-
-            panel.ToolTip = CreateExplanationPanel( word, wordsDb );
+            if (!breakDown) panel.ToolTip = CreateExplanationPanel( word, wordsDb );
             return GuiUtils.WrapToBorder( panel );
         }
 
