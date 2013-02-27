@@ -930,7 +930,7 @@
     <Word pinyin="wen3" hanyu="吻" />
     <Word pinyin="wen4" hanyu="问" />
     <Word pinyin="wen4 ti2" hanyu="问题" />
-    <Word pinyin="wo3" hanyu="我" short_english="I" known="true" usage_count="10" />
+    <Word pinyin="wo3" hanyu="我" short_english="I" known="true" usage_count="12" />
     <Word pinyin="wo3 men5" hanyu="我们" known="true" usage_count="1" />
     <Word pinyin="wo4 shi4" hanyu="卧室" />
     <Word pinyin="wu1 ran3" hanyu="污染" />
@@ -1121,7 +1121,7 @@
     <Word pinyin="Yun2 nan2" hanyu="云南" />
     <Word pinyin="yun4 dong4" hanyu="运动" />
     <Word pinyin="zai4" hanyu="再" />
-    <Word pinyin="zai4" hanyu="在" usage_count="2" />
+    <Word pinyin="zai4" hanyu="在" short_english="at" usage_count="2" />
     <Word pinyin="zai4 ci4" hanyu="再次" />
     <Word pinyin="zai4 jian4" hanyu="再见" />
     <Word pinyin="zai4 xia4" hanyu="在下" />

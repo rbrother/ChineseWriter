@@ -96,7 +96,20 @@ namespace ChineseWriter {
                 panel.ToolTip = CreateExplanationPanel( word, wordsDb );
                 panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             }
+            panel.MouseUp += new MouseButtonEventHandler( HanyuPanelMouseUp );
+            panel.Tag = word;
             return GuiUtils.WrapToBorder( panel );
+        }
+
+        static void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
+            var widget = (FrameworkElement)sender;
+            var word = (HanyuWord)widget.Tag;
+            var editWord = new EditWord( word );
+            var result = editWord.ShowDialog( );
+            if (result.HasValue && result.Value) {
+                word.ShortEnglish = editWord.ShortEnglishBox.Text;
+
+            }
         }
 
         public static FrameworkElement Create( MultiMeaningWord word, WordDatabase wordsDb ) {

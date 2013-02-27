@@ -13,7 +13,7 @@ namespace ChineseWriter {
         virtual public string Pinyin { get { return ""; } }
         virtual public string DisplayPinyin { get { return Pinyin; } }
         virtual public string English { get { return ""; } }
-        virtual public string ShortEnglish { get { return English; } }
+        virtual public string ShortEnglish { get { return English; } set { } }
         virtual public Color PanelColor { get { return Colors.White; } }
     }
 
@@ -40,7 +40,7 @@ namespace ChineseWriter {
         private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
         private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
         private readonly string _pinyinDiacritics; // with diacritics added eg. "má pà"
-        private readonly string _shortEnglish; // explicit short english, replacing CCDICT first part
+        private string _shortEnglish; // explicit short english, replacing CCDICT first part
         private bool _known; // true: hide english
 
         override public string English { get { return _english; } }
@@ -50,6 +50,9 @@ namespace ChineseWriter {
         override public string ShortEnglish {
             get {
                 return ShortEnglishGiven ? _shortEnglish : English.Split( ',' ).First( );
+            }
+            set {
+                _shortEnglish = value;
             }
         }
         public bool Known { get { return _known; } }

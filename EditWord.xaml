@@ -1,0 +1,19 @@
+﻿<Window x:Class="ChineseWriter.EditWord"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EditWord" SizeToContent="WidthAndHeight">
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label>Short English</Label>
+        <TextBox Name="ShortEnglishBox" Grid.Column="1" MinWidth="150"/>
+        <Button Grid.Row="1" IsDefault="True" Click="OkClick">Ok</Button>
+        <Button Grid.Row="1" Grid.Column="1" IsCancel="True">Cancel</Button>
+    </Grid>
+</Window>
