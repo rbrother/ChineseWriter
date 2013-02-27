@@ -8,10 +8,7 @@ using System.Linq;
 using System.Xml.XPath;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
-using System.Reactive;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reactive.Concurrency;
 
 namespace ChineseWriter {
 
@@ -96,10 +93,13 @@ namespace ChineseWriter {
                 infoDict);
         }
 
+        private static readonly Regex VARIANT_REGEX = new Regex( "^(variant of|old variant of|archaic variant of|Japanese variant of)", RegexOptions.Compiled );
+
         public static HanyuWord[] ParseCCLines( string[] lines, Dictionary<Tuple<string,string>, XElement> infoDict ) {
             return lines.
                 Where( line => !line.StartsWith( "#" ) ).
                 Select( line => new HanyuWord( line, infoDict )).
+                Where( word => !VARIANT_REGEX.IsMatch( word.English )).
                 ToArray( );
         }
 
