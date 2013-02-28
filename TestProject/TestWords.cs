@@ -16,8 +16,8 @@ namespace ChineseWriter {
                 <Word pinyin='ai4' hanyu='爱' />
                 <Word pinyin='ai4 ren5' hanyu='爱人' />
                 <Word pinyin='an1' hanyu='安' />
-                <Word pinyin='wo3' hanyu='我' />
-                <Word pinyin='wo3 men5' hanyu='我们' />
+                <Word pinyin='wo3' hanyu='我' usage_count='5' />
+                <Word pinyin='wo3 men5' hanyu='我们' known='true' short_english='we' />
               </Words>
             </Chinese>
             ";
@@ -52,6 +52,30 @@ namespace ChineseWriter {
             var girlfriend = words.Where( word => word.Hanyu == "女友" ).First();
             Assert.AreEqual( "nu:3 you3", girlfriend.Pinyin );
             Assert.AreEqual( "nǚ yǒu", girlfriend.DisplayPinyin );
+            Assert.AreEqual("girlfriend", girlfriend.ShortEnglish);
+            Assert.AreEqual(3, words.Where(word => word.MatchesPinyin("wo")).Count());
+            Assert.AreEqual(3, words.Where(word => word.MatchesPinyin("wo3")).Count());
+            Assert.AreEqual(1, words.Where(word => word.MatchesPinyin("women")).Count());
+            Assert.AreEqual(1, words.Where(word => word.MatchesPinyin("wo3men5")).Count());
+            Assert.AreEqual(1, words.Where(word => word.Known).Count());
+            var wo3men5 = words.Where(word => word.MatchesPinyin("wo3men5")).First();
+            var a2 = words.Where(word => word.MatchesPinyin("a2")).First();
+            Assert.AreEqual(false, a2.ShortEnglishGiven);
+            Assert.AreEqual("interjection expressing doubt or requiring answer", a2.ShortEnglish);
+            Assert.AreEqual(true, wo3men5.ShortEnglishGiven);
+            Assert.AreEqual("we", wo3men5.ShortEnglish);
+            a2.SetShortEnglish( "eh" );
+            Assert.AreEqual(true, a2.ShortEnglishGiven);
+            Assert.AreEqual("eh", a2.ShortEnglish);
+            Assert.AreEqual(2, wo3men5.Characters.Length);
+            Assert.AreEqual("wo3", wo3men5.Characters.First().Item2);
+        }
+
+        [TestMethod]
+        public void TestParseSentence() {
+            var db = new WordDatabase(WordDatabase.ParseCCLines(CC_LINES, INFO_DICT) );
+            var words = db.HanyuToWords("啊 我女友QQ戒刀");
+            Assert.AreEqual(5, words.Length);
         }
     }
 }

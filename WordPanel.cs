@@ -43,7 +43,7 @@ namespace ChineseWriter {
             return textBlock;
         }
 
-        private static TextBlock CreateEnglishPanel( Word word, bool breakDown ) {
+        private static TextBlock CreateEnglishPanel( ChineseEnglishWord word, bool breakDown ) {
             return new TextBlock {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
@@ -78,7 +78,7 @@ namespace ChineseWriter {
         // Constructors
 
         public static FrameworkElement Create( HanyuWord word, WordDatabase wordsDb, bool breakDown = false ) {
-            var panel = WordStackPanel( word.PanelColor, new FrameworkElement[] { 
+            var panel = WordStackPanel(Colors.White, new FrameworkElement[] { 
                 CreateTextBlock( "SimSun", breakDown ? 80 : 30,
                     word.Characters.
                         Select( c => new Run {
@@ -107,14 +107,13 @@ namespace ChineseWriter {
             var editWord = new EditWord( word );
             var result = editWord.ShowDialog( );
             if (result.HasValue && result.Value) {
-                word.ShortEnglish = editWord.ShortEnglishBox.Text;
-
+                word.SetShortEnglish( editWord.ShortEnglishBox.Text );
             }
         }
 
         public static FrameworkElement Create( MultiMeaningWord word, WordDatabase wordsDb ) {
-            return GuiUtils.WrapToBorder( 
-                WordStackPanel( word.PanelColor, 
+            return GuiUtils.WrapToBorder(
+                WordStackPanel(Colors.Yellow, 
                     CreateTextBlock( "SimSun", 30, word.Hanyu ),
                     CreateTextBlock( "Times New Roman", 18, word.DisplayPinyin ),
                     CreateEnglishPanel( word, false ) ) );
@@ -122,8 +121,8 @@ namespace ChineseWriter {
 
         public static FrameworkElement Create( LiteralWord word, WordDatabase wordsDb ) {
             return  GuiUtils.WrapToBorder(
-                    WordStackPanel( word.PanelColor,
-                    CreateTextBlock( "Times New Roman", 30, word.Hanyu ) ) );
+                    WordStackPanel(Color.FromRgb(220, 220, 220),
+                    CreateTextBlock( "Times New Roman", 30, word.Text ) ) );
         }
 
     }

@@ -23,8 +23,8 @@ namespace ChineseWriter {
 
         private static readonly Regex NON_HANYI = new Regex( @"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=""]+" );
 
-        public WordDatabase( ) {
-            _words = LoadWords( );
+        public WordDatabase( HanyuWord[] words = null) {
+            _words = words == null ? LoadWords( ) : words;
             _wordsChanged.OnNext( _words.Length );
         }
 
@@ -37,7 +37,7 @@ namespace ChineseWriter {
             }
         }
 
-        private string FilePath(string fileName) {
+        private static string FilePath(string fileName) {
             return SearchUpwardFile( ExeDir, fileName );
         }
 
@@ -49,7 +49,7 @@ namespace ChineseWriter {
             }
         }
 
-        private string SearchUpwardFile( DirectoryInfo startDir, string fileName ) {
+        private static string SearchUpwardFile( DirectoryInfo startDir, string fileName ) {
             var theFile = startDir.GetFiles( ).FirstOrDefault( file => file.Name == fileName );
             if (theFile != null) return theFile.FullName;
             return SearchUpwardFile( startDir.Parent, fileName );            
@@ -86,7 +86,7 @@ namespace ChineseWriter {
             return infoDict;
         }
 
-        public HanyuWord[] LoadWords( ) {
+        public static HanyuWord[] LoadWords( ) {
             var infoDict = ParseInfoDict( XElement.Load( FilePath( "words.xml" ) ) );
             return ParseCCLines( 
                 File.ReadAllLines( FilePath( "cedict_ts.u8" ), Encoding.UTF8 ),
@@ -117,7 +117,7 @@ namespace ChineseWriter {
                 return HanyuToWords( chinese.Substring( 1 ) ); // skip spaces
             } else {
                 var firstWord = FirstWord( chinese );
-                var rest = HanyuToWords( chinese.Substring( firstWord.Hanyu.Length ) );
+                var rest = HanyuToWords( chinese.Substring( firstWord.Text.Length ) );
                 return ( new Word[] { firstWord } ).Concat( rest ).ToArray( );
             }
         }
@@ -150,8 +150,8 @@ namespace ChineseWriter {
                         }
                     }
                 }
-                // not found
-                throw new ApplicationException( "Unknown chinese: " + chinese );
+                // not found: take first char
+                return new LiteralWord(chinese.TakeFirst());
             }
         }
 

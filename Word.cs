@@ -8,13 +8,9 @@ using System.Windows.Media;
 
 namespace ChineseWriter {
 
-    public class Word {
-        virtual public string Hanyu { get { return ""; } }
-        virtual public string Pinyin { get { return ""; } }
-        virtual public string DisplayPinyin { get { return Pinyin; } }
-        virtual public string English { get { return ""; } }
-        virtual public string ShortEnglish { get { return English; } set { } }
-        virtual public Color PanelColor { get { return Colors.White; } }
+    public abstract class Word {
+        abstract public string Text { get; }
+        abstract public string DisplayPinyin { get; }
     }
 
     public class LiteralWord : Word {
@@ -24,17 +20,21 @@ namespace ChineseWriter {
             _text = text;
         }
 
-        override public string Hanyu { get { return _text; } }
-        override public string Pinyin { get { return _text; } }
-        override public string English { get { return _text; } }
-        override public Color PanelColor { get { return Color.FromRgb( 220, 220, 220 ); } }
+        public override string Text { get { return _text; } }
 
-        public override string ToString( ) {
-            return string.Format("LiteralWord: {0}", _text);
-        }
+        public override string DisplayPinyin { get { return Text; } }
+
     }
 
-    public class HanyuWord : Word {
+    public abstract class ChineseEnglishWord : Word {
+        public override string Text { get { return Hanyu; } }
+        abstract public string Hanyu { get; }
+        abstract public string Pinyin { get; }
+        abstract public string English { get; }
+        abstract public string ShortEnglish { get; }
+    }
+
+    public class HanyuWord : ChineseEnglishWord {
         private readonly string _hanyu, _english;
         private readonly string _pinyin; // eg. "ma3 pa2"
         private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
@@ -51,17 +51,13 @@ namespace ChineseWriter {
             get {
                 return ShortEnglishGiven ? _shortEnglish : English.Split( ',' ).First( );
             }
-            set {
-                _shortEnglish = value;
-            }
+        }
+        public void SetShortEnglish(string value) {
+            _shortEnglish = value;
         }
         public bool Known { get { return _known; } }
         public bool Suggest { get; set; }
         public int UsageCount;
-
-        public override string ToString( ) {
-            return string.Format( "<{0}> <{1}:{2}:{3}> <{4}>", _hanyu, _pinyin, _pinyinNoSpaces, _pinyinDiacritics, English );
-        }
 
         override public string DisplayPinyin {
             get { return _pinyinDiacritics; }
@@ -114,10 +110,8 @@ namespace ChineseWriter {
 
     }
 
-    public class MultiMeaningWord : Word {
+    public class MultiMeaningWord : ChineseEnglishWord {
         private HanyuWord[] _words;
-
-        public override Color PanelColor { get { return Colors.Yellow; } }
 
         override public string Hanyu { get { return _words.First().Hanyu; } }
 

@@ -97,7 +97,7 @@ namespace ChineseWriter {
                 if (scrollTo < 0) scrollTo = 0;
                 if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
                 TextScrollView.ScrollToHorizontalOffset( scrollTo );
-            } catch (InvalidOperationException op) {
+            } catch (InvalidOperationException) {
                 // TextScrollView.TransformToVisual( _cursorPanel ) fails in startup, works then
             }
         }

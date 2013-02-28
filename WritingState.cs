@@ -110,16 +110,15 @@ namespace ChineseWriter {
             } else if (n > _suggestions.Length) {
                 return; 
             } else {
-                var word = _suggestions[n - 1];
-                word.Suggest = true; // Automatically add selected words for future suggestions to words.xml
-                word.UsageCount++;
-                InsertWords( new Word[] { word } );
+                SelectWord( _suggestions[n - 1] );
             }
             PinyinInput = "";
         }
 
         internal void SelectWord( HanyuWord word ) {
             InsertWords( new Word[] { word } );
+            word.Suggest = true; // Automatically add selected words for future suggestions to words.xml
+            word.UsageCount++;
             PinyinInput = "";
         }
 
@@ -136,7 +135,7 @@ namespace ChineseWriter {
                 var pinyinLine = string.Join( "  ", Words
                     .Select( word => word.DisplayPinyin ).ToArray( ) );
                 var hanyiLine = string.Join( " ", Words
-                    .Select( word => word.Hanyu ).ToArray( ) );
+                    .Select( word => word.Text ).ToArray( ) );
                 return hanyiLine + "\n" + pinyinLine;
             } 
         }
@@ -148,7 +147,7 @@ namespace ChineseWriter {
         }
 
         internal string Hanyu {
-            get { return string.Join( "", Words.Select( word => word.Hanyu ).ToArray( ) ); }
+            get { return string.Join( "", Words.Select( word => word.Text ).ToArray( ) ); }
         }
 
         internal void Reparse( ) {
