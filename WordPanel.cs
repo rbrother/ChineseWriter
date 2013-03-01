@@ -53,7 +53,7 @@ namespace ChineseWriter {
             };
         }
 
-        private static Color ToneColor( string pinyin ) {
+        public static Color ToneColor( string pinyin ) {
             var lastChar = pinyin.TakeLast( );
             int tone;
             if (!int.TryParse( lastChar, out tone )) return Colors.Gray;
@@ -108,6 +108,9 @@ namespace ChineseWriter {
             var result = editWord.ShowDialog( );
             if (result.HasValue && result.Value) {
                 word.SetShortEnglish( editWord.ShortEnglishBox.Text );
+                if ( editWord.Known.IsChecked.HasValue ) {
+                    word.Known = editWord.Known.IsChecked.Value;
+                }
             }
         }
 

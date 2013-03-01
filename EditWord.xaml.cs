@@ -17,6 +17,7 @@ namespace ChineseWriter {
         public EditWord( HanyuWord word ) {
             InitializeComponent( );
             this.ShortEnglishBox.Text = word.ShortEnglish;
+            this.Known.IsChecked = word.Known;
             this.ShortEnglishBox.Focus( );
         }
 

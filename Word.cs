@@ -10,6 +10,7 @@ namespace ChineseWriter {
 
     public abstract class Word {
         abstract public string Text { get; }
+        virtual public string Html { get { return Text; } }
         abstract public string DisplayPinyin { get; }
     }
 
@@ -41,7 +42,6 @@ namespace ChineseWriter {
         private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
         private readonly string _pinyinDiacritics; // with diacritics added eg. "má pà"
         private string _shortEnglish; // explicit short english, replacing CCDICT first part
-        private bool _known; // true: hide english
 
         override public string English { get { return _english; } }
         override public string Hanyu { get { return _hanyu; } }
@@ -55,7 +55,7 @@ namespace ChineseWriter {
         public void SetShortEnglish(string value) {
             _shortEnglish = value;
         }
-        public bool Known { get { return _known; } }
+        public bool Known { get; set; } // true: hide english
         public bool Suggest { get; set; }
         public int UsageCount;
 
@@ -84,7 +84,7 @@ namespace ChineseWriter {
                     _shortEnglish = wordInfo.Attribute( "short_english" ).Value;
                 }
                 if (wordInfo.Attribute( "known" ) != null) {
-                    _known = Convert.ToBoolean( wordInfo.Attribute( "known" ).Value );
+                    Known = Convert.ToBoolean( wordInfo.Attribute( "known" ).Value );
                 }
                 if (wordInfo.Attribute( "usage_count" ) != null) {
                     UsageCount = Convert.ToInt32( wordInfo.Attribute( "usage_count" ).Value );
@@ -106,6 +106,43 @@ namespace ChineseWriter {
                     Zip( _pinyin.Split( ' ' ), (hanyu, pinyin) => Tuple.Create(hanyu, pinyin) ).
                     ToArray();
             }
+        }
+
+        public override string Html {
+            get {
+                return LineDiv( HanyuHtml, "font-size: 20pt;" ) +
+                    LineDiv( PinyinHtml ) + 
+                    LineDiv( Known ? "&nbsp;" : ShortEnglish );
+            }
+        }
+
+        private string HanyuHtml {
+            get {
+                return string.Join( "", 
+                    Characters.Select( c => 
+                        string.Format( "<span style='color: {0};'>{1}</span>",
+                            HtmlColor( c.Item2 ), c.Item1 ) ).ToArray( ) );
+            }
+        }
+
+        private string PinyinHtml {
+            get {
+                return string.Join( " ",
+                    Characters.Select( c =>
+                        string.Format( "<span style='color: {0};'>{1}</span>",
+                            HtmlColor( c.Item2 ), c.Item2.AddDiacritics() ) ).ToArray( ) );
+            }
+        }
+
+        private static string HtmlColor( string pinyin ) {
+            var color = WordPanel.ToneColor( pinyin ).ToString();
+            // remove the alpha value
+            return "#" + color.Substring( 3 );
+        }
+
+        private string LineDiv( string content, string attr = "" ) {
+            return string.Format( @"<div style='margin: 4px; text-align: center; height: 24pt; {0}'>{1}</div>", 
+                attr, content );
         }
 
     }

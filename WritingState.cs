@@ -140,12 +140,16 @@ namespace ChineseWriter {
             } 
         }
 
-        public string HanyiPinyinHtml {
+        public string Html {
             get {
-                return "<table><tr>" +
-                    string.Join( "", Words.Select( word => word.Hanyu ).ToArray() ) +
+                return "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;'><tr>" +
+                    string.Join( "", Words.Select( word => WordCell(word) ).ToArray() ) +
                     "</tr></table>";
             }
+        }
+
+        public static string WordCell( Word word ) {
+            return string.Format("<td style='border: 1px solid #d0d0d0;'>{0}</td>", word.Html);
         }
 
         internal void Clear( ) {

@@ -2,7 +2,7 @@
 <Chinese>
   <Words>
     <Word pinyin="a1" hanyu="啊" />
-    <Word pinyin="ai4" hanyu="爱" known="true" usage_count="1" />
+    <Word pinyin="ai4" hanyu="爱" known="true" usage_count="2" />
     <Word pinyin="ai4 ren5" hanyu="爱人" />
     <Word pinyin="an1" hanyu="安" />
     <Word pinyin="An1" hanyu="安" />
@@ -25,12 +25,13 @@
     <Word pinyin="bai3 huo4 gong1 si1" hanyu="百货公司" />
     <Word pinyin="ban1" hanyu="搬" />
     <Word pinyin="ban1" hanyu="般" />
+    <Word pinyin="ban1 jia1" hanyu="搬家" usage_count="1" />
     <Word pinyin="ban3" hanyu="版" />
     <Word pinyin="ban4" hanyu="半" />
     <Word pinyin="ban4 gong1 shi4" hanyu="办公室" />
     <Word pinyin="ban4 ye4" hanyu="半夜" />
     <Word pinyin="bang1" hanyu="帮" />
-    <Word pinyin="bang1 zhu4" hanyu="帮助" usage_count="1" />
+    <Word pinyin="bang1 zhu4" hanyu="帮助" usage_count="3" />
     <Word pinyin="bao1" hanyu="包" />
     <Word pinyin="Bao1" hanyu="包" />
     <Word pinyin="bao3 bei4" hanyu="宝贝" />
@@ -41,7 +42,7 @@
     <Word pinyin="bao3 you4" hanyu="保佑" />
     <Word pinyin="bao4 qian4" hanyu="抱歉" />
     <Word pinyin="bei3" hanyu="北" />
-    <Word pinyin="Bei3 jing1" hanyu="北京" known="true" />
+    <Word pinyin="Bei3 jing1" hanyu="北京" known="true" usage_count="1" />
     <Word pinyin="bei4" hanyu="被" />
     <Word pinyin="ben3" hanyu="本" />
     <Word pinyin="bi3" hanyu="比" />
@@ -59,18 +60,18 @@
     <Word pinyin="bi4 zhe5" hanyu="闭着" />
     <Word pinyin="bian1" hanyu="边" />
     <Word pinyin="bian4 hua4" hanyu="变化" />
-    <Word pinyin="bie2" hanyu="别" />
+    <Word pinyin="bie2" hanyu="别" short_english="do not" usage_count="1" />
     <Word pinyin="Bie2" hanyu="别" />
     <Word pinyin="bin1 guan3" hanyu="宾馆" />
     <Word pinyin="bing4" hanyu="并" />
     <Word pinyin="bing4" hanyu="并" />
     <Word pinyin="bo2 ke4" hanyu="博客" />
-    <Word pinyin="bu4" hanyu="不" known="true" usage_count="1" />
+    <Word pinyin="bu4" hanyu="不" known="true" usage_count="7" />
     <Word pinyin="bu4" hanyu="布" />
     <Word pinyin="bu4 bian4" hanyu="不便" />
     <Word pinyin="bu4 cuo4" hanyu="不错" />
     <Word pinyin="bu4 hao3" hanyu="不好" known="true" />
-    <Word pinyin="bu4 jiu3" hanyu="不久" />
+    <Word pinyin="bu4 jiu3" hanyu="不久" usage_count="1" />
     <Word pinyin="bu4 ke3 si1 yi4" hanyu="不可思议" />
     <Word pinyin="bu4 neng2" hanyu="不能" />
     <Word pinyin="bu4 ru2" hanyu="不如" />
@@ -97,6 +98,7 @@
     <Word pinyin="chang4 yi4" hanyu="倡议" />
     <Word pinyin="chao2 xiao4" hanyu="嘲笑" />
     <Word pinyin="chao3" hanyu="炒" />
+    <Word pinyin="chao3 zui3" hanyu="吵嘴" usage_count="2" />
     <Word pinyin="che1" hanyu="车" />
     <Word pinyin="Che1" hanyu="车" />
     <Word pinyin="chen2 mo4" hanyu="沉默" />
@@ -149,6 +151,7 @@
     <Word pinyin="da4 men2" hanyu="大门" />
     <Word pinyin="da4 nao3" hanyu="大脑" />
     <Word pinyin="da4 sha4" hanyu="大厦" />
+    <Word pinyin="da4 shi3 guan3" hanyu="大使馆" usage_count="2" />
     <Word pinyin="da4 suan4" hanyu="大蒜" />
     <Word pinyin="da4 xiao3" hanyu="大小" />
     <Word pinyin="da4 xue2" hanyu="大学" />
@@ -167,7 +170,7 @@
     <Word pinyin="dang1" hanyu="当" />
     <Word pinyin="dang1 ran2" hanyu="当然" />
     <Word pinyin="dang1 shi2" hanyu="当时" />
-    <Word pinyin="dao4" hanyu="到" />
+    <Word pinyin="dao4" hanyu="到" short_english="to" usage_count="2" />
     <Word pinyin="dao4 chu4" hanyu="到处" />
     <Word pinyin="dao4 da2" hanyu="到达" />
     <Word pinyin="dao4 lai2" hanyu="到来" />
@@ -194,7 +197,7 @@
     <Word pinyin="dian4 hua4" hanyu="电话" />
     <Word pinyin="dian4 nao3" hanyu="电脑" usage_count="1" />
     <Word pinyin="dian4 ying3" hanyu="电影" />
-    <Word pinyin="dian4 you2" hanyu="电邮" usage_count="1" />
+    <Word pinyin="dian4 you2" hanyu="电邮" usage_count="5" />
     <Word pinyin="dian4 zi3" hanyu="电子" />
     <Word pinyin="dian4 zi3 you2 jian4" hanyu="电子邮件" />
     <Word pinyin="diao4 cha2" hanyu="调查" />
@@ -213,7 +216,7 @@
     <Word pinyin="dui4" hanyu="对" />
     <Word pinyin="dui4 huan4" hanyu="兑换" />
     <Word pinyin="dun4" hanyu="顿" />
-    <Word pinyin="duo1" hanyu="多" />
+    <Word pinyin="duo1" hanyu="多" usage_count="1" />
     <Word pinyin="duo1 jiu3" hanyu="多久" />
     <Word pinyin="duo1 me5" hanyu="多么" />
     <Word pinyin="duo1 shao3" hanyu="多少" />
@@ -224,7 +227,7 @@
     <Word pinyin="er2 qie3" hanyu="而且" />
     <Word pinyin="er2 zi5" hanyu="儿子" />
     <Word pinyin="er4" hanyu="二" known="true" />
-    <Word pinyin="fa1" hanyu="发" />
+    <Word pinyin="fa1" hanyu="发" usage_count="3" />
     <Word pinyin="fa1 che1" hanyu="发车" />
     <Word pinyin="fa1 gei3" hanyu="发给" />
     <Word pinyin="fa1 sheng1" hanyu="发生" />
@@ -249,7 +252,7 @@
     <Word pinyin="fei1 ji1 chang3" hanyu="飞机场" known="true" />
     <Word pinyin="fei2" hanyu="肥" />
     <Word pinyin="fen1" hanyu="分" />
-    <Word pinyin="Fen1 lan2" hanyu="芬兰" />
+    <Word pinyin="Fen1 lan2" hanyu="芬兰" usage_count="4" />
     <Word pinyin="fen1 zhong1" hanyu="分钟" />
     <Word pinyin="fen4 nu4" hanyu="愤怒" />
     <Word pinyin="feng1" hanyu="封" />
@@ -279,14 +282,14 @@
     <Word pinyin="Gao1" hanyu="高" />
     <Word pinyin="gao1 su4" hanyu="高速" />
     <Word pinyin="gao1 xing4" hanyu="高兴" />
-    <Word pinyin="gao4 su5" hanyu="告诉" />
+    <Word pinyin="gao4 su5" hanyu="告诉" usage_count="4" />
     <Word pinyin="ge1" hanyu="歌" />
     <Word pinyin="ge1 ci2" hanyu="歌词" />
     <Word pinyin="ge2" hanyu="格" />
     <Word pinyin="ge4" hanyu="个" />
     <Word pinyin="gei3" hanyu="给" known="true" />
     <Word pinyin="gen1" hanyu="跟" />
-    <Word pinyin="geng4" hanyu="更" />
+    <Word pinyin="geng4" hanyu="更" usage_count="1" />
     <Word pinyin="gong1 gong4" hanyu="公共" />
     <Word pinyin="gong1 gong4 qi4 che1" hanyu="公共汽车" />
     <Word pinyin="gong1 ju4" hanyu="工具" />
@@ -327,31 +330,32 @@
     <Word pinyin="hai1" hanyu="嗨" />
     <Word pinyin="hai2" hanyu="孩" />
     <Word pinyin="hai2" hanyu="还" />
-    <Word pinyin="hai2 shi5" hanyu="还是" />
+    <Word pinyin="hai2 shi5" hanyu="还是" usage_count="1" />
     <Word pinyin="hai2 you3" hanyu="还有" />
     <Word pinyin="hai2 zi5" hanyu="孩子" />
-    <Word pinyin="hai2 zi5 men5" hanyu="孩子们" usage_count="1" />
+    <Word pinyin="hai2 zi5 men5" hanyu="孩子们" usage_count="3" />
     <Word pinyin="hai3" hanyu="海" />
     <Word pinyin="Hai3" hanyu="海" />
     <Word pinyin="hai4 pa4" hanyu="害怕" />
     <Word pinyin="hai4 xiu1" hanyu="害羞" />
     <Word pinyin="han2 leng3" hanyu="寒冷" />
     <Word pinyin="Han4 yu3" hanyu="汉语" />
-    <Word pinyin="hao3" hanyu="好" usage_count="2" />
+    <Word pinyin="hao3" hanyu="好" usage_count="6" />
     <Word pinyin="hao3 hao3" hanyu="好好" />
     <Word pinyin="hao3 kan4" hanyu="好看" />
     <Word pinyin="hao4" hanyu="号" />
     <Word pinyin="hao4 ma3" hanyu="号码" />
-    <Word pinyin="he1" hanyu="喝" />
+    <Word pinyin="he1" hanyu="喝" usage_count="1" />
     <Word pinyin="he1 he1" hanyu="呵呵" />
     <Word pinyin="he1 jiu3" hanyu="喝酒" />
-    <Word pinyin="he2" hanyu="和" usage_count="1" />
+    <Word pinyin="he2" hanyu="和" usage_count="2" />
     <Word pinyin="he2" hanyu="河" />
     <Word pinyin="He2" hanyu="和" />
     <Word pinyin="he2 li3" hanyu="合理" />
     <Word pinyin="He2 nan2" hanyu="河南" />
     <Word pinyin="he2 shui3" hanyu="河水" />
     <Word pinyin="he2 ying3" hanyu="合影" />
+    <Word pinyin="He4 er3 xin1 ji1" hanyu="赫尔辛基" short_english="Helsinki" usage_count="1" />
     <Word pinyin="hei1" hanyu="黑" />
     <Word pinyin="Hei1" hanyu="黑" />
     <Word pinyin="hen3" hanyu="很" short_english="very" usage_count="2" />
@@ -367,6 +371,7 @@
     <Word pinyin="hou4" hanyu="后" />
     <Word pinyin="Hou4" hanyu="后" />
     <Word pinyin="hou4 lai2" hanyu="后来" />
+    <Word pinyin="hou4 mian5" hanyu="后面" usage_count="1" />
     <Word pinyin="hou4 tian1" hanyu="后天" />
     <Word pinyin="hu2 zi5" hanyu="胡子" />
     <Word pinyin="hu4" hanyu="互" />
@@ -383,6 +388,7 @@
     <Word pinyin="huai4" hanyu="坏" />
     <Word pinyin="huai4 ren2" hanyu="坏人" />
     <Word pinyin="huai4 shi4" hanyu="坏事" />
+    <Word pinyin="huan1 ying2" hanyu="欢迎" usage_count="2" />
     <Word pinyin="huan2 cheng2" hanyu="环城" />
     <Word pinyin="huan2 gei3" hanyu="还给" />
     <Word pinyin="huan2 jing4" hanyu="环境" />
@@ -414,7 +420,7 @@
     <Word pinyin="ji3 tian1" hanyu="几天" />
     <Word pinyin="ji4" hanyu="寄" />
     <Word pinyin="ji4 de5" hanyu="记得" />
-    <Word pinyin="ji4 hua4" hanyu="计划" />
+    <Word pinyin="ji4 hua4" hanyu="计划" usage_count="1" />
     <Word pinyin="ji4 jie2" hanyu="季节" />
     <Word pinyin="ji4 suan4" hanyu="计算" />
     <Word pinyin="ji4 xu4" hanyu="继续" />
@@ -433,7 +439,7 @@
     <Word pinyin="jian3 fei2" hanyu="减肥" />
     <Word pinyin="jian3 shao3" hanyu="减少" />
     <Word pinyin="jian4" hanyu="见" />
-    <Word pinyin="jian4 mian4" hanyu="见面" />
+    <Word pinyin="jian4 mian4" hanyu="见面" usage_count="1" />
     <Word pinyin="jiang1" hanyu="将" />
     <Word pinyin="Jiang1 bei3" hanyu="江北" />
     <Word pinyin="jiang4" hanyu="降" />
@@ -475,6 +481,7 @@
     <Word pinyin="jiu3" hanyu="久" />
     <Word pinyin="jiu3" hanyu="九" />
     <Word pinyin="jiu3" hanyu="酒" />
+    <Word pinyin="jiu3 ba1" hanyu="酒吧" usage_count="2" />
     <Word pinyin="jiu3 dian4" hanyu="酒店" />
     <Word pinyin="jiu4" hanyu="就" />
     <Word pinyin="jiu4 shi4" hanyu="就是" />
@@ -487,10 +494,10 @@
     <Word pinyin="kai1" hanyu="开" />
     <Word pinyin="kai1 hui4" hanyu="开会" />
     <Word pinyin="kai1 kou3" hanyu="开口" />
-    <Word pinyin="kai1 shi3" hanyu="开始" />
+    <Word pinyin="kai1 shi3" hanyu="开始" usage_count="1" />
     <Word pinyin="kai1 xin1" hanyu="开心" />
     <Word pinyin="kai1 xue2" hanyu="开学" />
-    <Word pinyin="kan4" hanyu="看" />
+    <Word pinyin="kan4" hanyu="看" short_english="to see" known="true" usage_count="3" />
     <Word pinyin="kan4 jian4" hanyu="看见" />
     <Word pinyin="kan4 kan5" hanyu="看看" />
     <Word pinyin="kan4 qi3 lai2" hanyu="看起来" />
@@ -526,7 +533,7 @@
     <Word pinyin="lang2" hanyu="狼" />
     <Word pinyin="lao3" hanyu="老" />
     <Word pinyin="lao3 ren2" hanyu="老人" />
-    <Word pinyin="lao3 shi1" hanyu="老师" />
+    <Word pinyin="lao3 shi1" hanyu="老师" usage_count="1" />
     <Word pinyin="le4" hanyu="乐" />
     <Word pinyin="Le4" hanyu="乐" />
     <Word pinyin="le5" hanyu="了" short_english="(past)" known="true" />
@@ -542,7 +549,7 @@
     <Word pinyin="li3" hanyu="里" />
     <Word pinyin="li3" hanyu="里" />
     <Word pinyin="li3" hanyu="里" />
-    <Word pinyin="Li3" hanyu="里" />
+    <Word pinyin="Li3" hanyu="里" usage_count="2" />
     <Word pinyin="li3 jie3" hanyu="理解" />
     <Word pinyin="li3 mao4" hanyu="礼貌" />
     <Word pinyin="li3 mian4" hanyu="里面" />
@@ -591,12 +598,12 @@
     <Word pinyin="lu4 xian4" hanyu="路线" />
     <Word pinyin="Luo2 bo2 te4" hanyu="罗伯特" />
     <Word pinyin="luo4 po4" hanyu="落魄" />
-    <Word pinyin="ma1 ma5" hanyu="妈妈" />
+    <Word pinyin="ma1 ma5" hanyu="妈妈" usage_count="2" />
     <Word pinyin="ma2 fan5" hanyu="麻烦" />
     <Word pinyin="ma3 lu4" hanyu="马路" />
     <Word pinyin="ma3 shang4" hanyu="马上" />
     <Word pinyin="ma4 ren2" hanyu="骂人" />
-    <Word pinyin="ma5" hanyu="吗" usage_count="6" />
+    <Word pinyin="ma5" hanyu="吗" short_english="(?)" usage_count="6" />
     <Word pinyin="ma5" hanyu="么" />
     <Word pinyin="mai3" hanyu="买" />
     <Word pinyin="mai3 mai4" hanyu="买卖" />
@@ -609,7 +616,8 @@
     <Word pinyin="mao1" hanyu="猫" />
     <Word pinyin="mao4 xian3" hanyu="冒险" />
     <Word pinyin="mei2" hanyu="没" />
-    <Word pinyin="mei2 ban4 fa3" hanyu="没办法" />
+    <Word pinyin="mei2 ban4 fa3" hanyu="没办法" usage_count="1" />
+    <Word pinyin="mei2 cuo4" hanyu="没错" usage_count="1" />
     <Word pinyin="mei2 shi4" hanyu="没事" />
     <Word pinyin="mei2 wen4 ti2" hanyu="没问题" />
     <Word pinyin="mei2 you3" hanyu="没有" usage_count="1" />
@@ -623,7 +631,7 @@
     <Word pinyin="men2" hanyu="门" />
     <Word pinyin="Men2" hanyu="门" />
     <Word pinyin="men2 kou3" hanyu="门口" />
-    <Word pinyin="men5" hanyu="们" />
+    <Word pinyin="men5" hanyu="们" usage_count="1" />
     <Word pinyin="mi2 ren2" hanyu="迷人" />
     <Word pinyin="mi4 mi4" hanyu="秘密" />
     <Word pinyin="mian3 fei4" hanyu="免费" />
@@ -631,7 +639,7 @@
     <Word pinyin="miao4" hanyu="庙" />
     <Word pinyin="ming2" hanyu="明" />
     <Word pinyin="Ming2" hanyu="明" />
-    <Word pinyin="ming2 bai5" hanyu="明白" />
+    <Word pinyin="ming2 bai5" hanyu="明白" short_english="understand" usage_count="2" />
     <Word pinyin="ming2 nian2" hanyu="明年" />
     <Word pinyin="ming2 tian1" hanyu="明天" />
     <Word pinyin="mo2" hanyu="磨" />
@@ -651,7 +659,7 @@
     <Word pinyin="nan2" hanyu="难" />
     <Word pinyin="Nan2" hanyu="南" />
     <Word pinyin="nan2 dao4" hanyu="难道" />
-    <Word pinyin="nan2 guo4" hanyu="难过" />
+    <Word pinyin="nan2 guo4" hanyu="难过" usage_count="1" />
     <Word pinyin="nan2 hai2" hanyu="男孩" />
     <Word pinyin="nan2 peng2 you5" hanyu="男朋友" usage_count="1" />
     <Word pinyin="nan2 ren2" hanyu="男人" />
@@ -661,11 +669,11 @@
     <Word pinyin="ne5" hanyu="呢" />
     <Word pinyin="nei4" hanyu="内" />
     <Word pinyin="nei4 xin1" hanyu="内心" />
-    <Word pinyin="neng2" hanyu="能" />
+    <Word pinyin="neng2" hanyu="能" short_english="be able" usage_count="2" />
     <Word pinyin="Neng2" hanyu="能" />
-    <Word pinyin="ni3" hanyu="你" known="true" usage_count="9" />
+    <Word pinyin="ni3" hanyu="你" known="true" usage_count="34" />
     <Word pinyin="ni3 deng3" hanyu="你等" />
-    <Word pinyin="ni3 hao3" hanyu="你好" />
+    <Word pinyin="ni3 hao3" hanyu="你好" usage_count="3" />
     <Word pinyin="ni3 men5" hanyu="你们" />
     <Word pinyin="nian2" hanyu="年" />
     <Word pinyin="Nian2" hanyu="年" />
@@ -686,7 +694,7 @@
     <Word pinyin="Nuan3 nuan3" hanyu="暖暖" />
     <Word pinyin="o2" hanyu="哦" />
     <Word pinyin="Ou1 yuan2" hanyu="欧元" />
-    <Word pinyin="pa4" hanyu="怕" />
+    <Word pinyin="pa4" hanyu="怕" short_english="afraid" usage_count="1" />
     <Word pinyin="Pa4" hanyu="怕" />
     <Word pinyin="pai1" hanyu="拍" />
     <Word pinyin="pai1 she4" hanyu="拍摄" />
@@ -709,7 +717,7 @@
     <Word pinyin="qi4" hanyu="汽" />
     <Word pinyin="qi4 che1" hanyu="汽车" />
     <Word pinyin="qi4 shui3" hanyu="汽水" />
-    <Word pinyin="qian1 zheng4" hanyu="签证" />
+    <Word pinyin="qian1 zheng4" hanyu="签证" usage_count="1" />
     <Word pinyin="qian2" hanyu="前" />
     <Word pinyin="qian2" hanyu="钱" />
     <Word pinyin="Qian2" hanyu="钱" />
@@ -724,7 +732,7 @@
     <Word pinyin="qing4 dian3" hanyu="庆典" />
     <Word pinyin="qiu1 tian1" hanyu="秋天" />
     <Word pinyin="qu1" hanyu="区" />
-    <Word pinyin="qu4" hanyu="去" />
+    <Word pinyin="qu4" hanyu="去" short_english="go" usage_count="2" />
     <Word pinyin="que4 ding4" hanyu="确定" />
     <Word pinyin="ran2 hou4" hanyu="然后" />
     <Word pinyin="rang4" hanyu="让" />
@@ -742,7 +750,7 @@
     <Word pinyin="rong2 yi4" hanyu="容易" />
     <Word pinyin="rou4" hanyu="肉" />
     <Word pinyin="ru2" hanyu="如" />
-    <Word pinyin="ru2 guo3" hanyu="如果" />
+    <Word pinyin="ru2 guo3" hanyu="如果" usage_count="1" />
     <Word pinyin="ru2 he2" hanyu="如何" />
     <Word pinyin="ru4 shui4" hanyu="入睡" />
     <Word pinyin="ruan3 jian4" hanyu="软件" />
@@ -759,11 +767,11 @@
     <Word pinyin="shang1" hanyu="伤" />
     <Word pinyin="shang1 chang3" hanyu="商场" />
     <Word pinyin="shang1 dian4" hanyu="商店" />
-    <Word pinyin="shang1 hai4" hanyu="伤害" />
+    <Word pinyin="shang1 hai4" hanyu="伤害" usage_count="1" />
     <Word pinyin="shang1 xin1" hanyu="伤心" />
     <Word pinyin="shang4" hanyu="上" />
     <Word pinyin="shang4 chuan2" hanyu="上传" />
-    <Word pinyin="Shang4 hai3" hanyu="上海" short_english="Shanghai" known="true" />
+    <Word pinyin="Shang4 hai3" hanyu="上海" short_english="Shanghai" known="true" usage_count="2" />
     <Word pinyin="shang4 ke4" hanyu="上课" />
     <Word pinyin="shang4 qu4" hanyu="上去" />
     <Word pinyin="shang4 tian1" hanyu="上天" />
@@ -783,7 +791,7 @@
     <Word pinyin="shen1 shang5" hanyu="身上" />
     <Word pinyin="shen1 ti3" hanyu="身体" />
     <Word pinyin="shen1 ye4" hanyu="深夜" />
-    <Word pinyin="shen2 me5" hanyu="什么" known="true" usage_count="1" />
+    <Word pinyin="shen2 me5" hanyu="什么" known="true" usage_count="3" />
     <Word pinyin="shen4 zhi4" hanyu="甚至" />
     <Word pinyin="sheng1" hanyu="生" />
     <Word pinyin="sheng1" hanyu="声" />
@@ -809,7 +817,7 @@
     <Word pinyin="shi3" hanyu="使" />
     <Word pinyin="shi3 yong4" hanyu="使用" />
     <Word pinyin="shi4" hanyu="市" />
-    <Word pinyin="shi4" hanyu="是" known="true" />
+    <Word pinyin="shi4" hanyu="是" known="true" usage_count="1" />
     <Word pinyin="shi4" hanyu="试" />
     <Word pinyin="shi4 chang3" hanyu="市场" />
     <Word pinyin="shi4 de5" hanyu="是的" />
@@ -838,7 +846,7 @@
     <Word pinyin="shui4 jiao4" hanyu="睡觉" known="true" />
     <Word pinyin="shui4 xing3" hanyu="睡醒" />
     <Word pinyin="shun4 feng1" hanyu="顺风" />
-    <Word pinyin="shuo1" hanyu="说" known="true" />
+    <Word pinyin="shuo1" hanyu="说" known="true" usage_count="1" />
     <Word pinyin="shuo1 hua4" hanyu="说话" />
     <Word pinyin="Si1 ke1" hanyu="思科" />
     <Word pinyin="si1 ren2" hanyu="私人" />
@@ -851,15 +859,16 @@
     <Word pinyin="sui4" hanyu="岁" />
     <Word pinyin="sui4" hanyu="穗" />
     <Word pinyin="Sui4" hanyu="穗" />
-    <Word pinyin="suo3 yi3" hanyu="所以" usage_count="1" />
+    <Word pinyin="suo3 yi3" hanyu="所以" usage_count="3" />
     <Word pinyin="ta1" hanyu="他" />
-    <Word pinyin="ta1" hanyu="她" usage_count="3" />
+    <Word pinyin="ta1" hanyu="她" short_english="she" known="true" usage_count="5" />
     <Word pinyin="ta1" hanyu="它" />
     <Word pinyin="ta1 ma1 de5" hanyu="他妈的" />
     <Word pinyin="ta1 men5" hanyu="他们" />
     <Word pinyin="ta1 men5" hanyu="她们" />
     <Word pinyin="ta1 men5" hanyu="它们" />
     <Word pinyin="tai4" hanyu="太" />
+    <Word pinyin="tai4 tai5" hanyu="太太" usage_count="2" />
     <Word pinyin="tan1 wan2" hanyu="贪玩" />
     <Word pinyin="tan2 tan2" hanyu="谈谈" />
     <Word pinyin="tan4 tao3" hanyu="探讨" />
@@ -879,6 +888,7 @@
     <Word pinyin="tiao4" hanyu="跳" />
     <Word pinyin="tiao4 wu3" hanyu="跳舞" />
     <Word pinyin="ting1" hanyu="听" />
+    <Word pinyin="tong1 chang2" hanyu="通常" usage_count="1" />
     <Word pinyin="tong2 xue2" hanyu="同学" />
     <Word pinyin="tong2 yi4" hanyu="同意" />
     <Word pinyin="tong4" hanyu="痛" />
@@ -900,16 +910,17 @@
     <Word pinyin="wai4 mian4" hanyu="外面" />
     <Word pinyin="Wai4 tan1" hanyu="外滩" />
     <Word pinyin="wan2" hanyu="完" />
-    <Word pinyin="wan2" hanyu="玩" usage_count="1" />
-    <Word pinyin="wan2 cheng2" hanyu="完成" />
+    <Word pinyin="wan2" hanyu="玩" usage_count="3" />
+    <Word pinyin="wan2 cheng2" hanyu="完成" usage_count="1" />
     <Word pinyin="wan3" hanyu="晚" />
+    <Word pinyin="wan3 an1" hanyu="晚安" usage_count="1" />
     <Word pinyin="wan3 can1" hanyu="晚餐" />
     <Word pinyin="wan3 shang3" hanyu="晚晌" usage_count="1" />
     <Word pinyin="wang3" hanyu="往" />
     <Word pinyin="wang3" hanyu="网" />
     <Word pinyin="wang3 ba1" hanyu="网吧" />
     <Word pinyin="wang3 luo4" hanyu="网络" short_english="network" />
-    <Word pinyin="Wang3 luo4" hanyu="网络" short_english="internet" />
+    <Word pinyin="Wang3 luo4" hanyu="网络" short_english="internet" usage_count="1" />
     <Word pinyin="wang3 qian2" hanyu="往前" />
     <Word pinyin="wang3 qiu2" hanyu="网球" />
     <Word pinyin="wang3 shang4" hanyu="网上" />
@@ -930,9 +941,9 @@
     <Word pinyin="wen2 zhang1" hanyu="文章" />
     <Word pinyin="wen3" hanyu="吻" />
     <Word pinyin="wen4" hanyu="问" />
-    <Word pinyin="wen4 ti2" hanyu="问题" />
-    <Word pinyin="wo3" hanyu="我" short_english="I" known="true" usage_count="13" />
-    <Word pinyin="wo3 men5" hanyu="我们" known="true" usage_count="1" />
+    <Word pinyin="wen4 ti2" hanyu="问题" usage_count="2" />
+    <Word pinyin="wo3" hanyu="我" short_english="I" known="true" usage_count="42" />
+    <Word pinyin="wo3 men5" hanyu="我们" known="true" usage_count="4" />
     <Word pinyin="wo4 shi4" hanyu="卧室" />
     <Word pinyin="wu1 ran3" hanyu="污染" />
     <Word pinyin="wu2 li3" hanyu="无礼" />
@@ -943,23 +954,24 @@
     <Word pinyin="wu4" hanyu="雾" />
     <Word pinyin="xi1 gua1" hanyu="西瓜" />
     <Word pinyin="xi1 hong2 shi4" hanyu="西红柿" />
-    <Word pinyin="xi1 wang4" hanyu="希望" />
+    <Word pinyin="xi1 wang4" hanyu="希望" usage_count="2" />
     <Word pinyin="xi2 su2" hanyu="习俗" />
     <Word pinyin="xi3" hanyu="喜" />
     <Word pinyin="xi3" hanyu="洗" />
-    <Word pinyin="xi3 huan5" hanyu="喜欢" usage_count="1" />
+    <Word pinyin="xi3 huan5" hanyu="喜欢" short_english="to like" known="true" usage_count="3" />
     <Word pinyin="xi3 tou2" hanyu="洗头" />
     <Word pinyin="xi3 zao3" hanyu="洗澡" />
+    <Word pinyin="xi4" hanyu="阋" usage_count="1" />
     <Word pinyin="xia4" hanyu="下" />
     <Word pinyin="xia4 ke4" hanyu="下课" />
-    <Word pinyin="xia4 tian1" hanyu="夏天" />
+    <Word pinyin="xia4 tian1" hanyu="夏天" usage_count="1" />
     <Word pinyin="xia4 wu3" hanyu="下午" />
     <Word pinyin="xia4 xue3" hanyu="下雪" />
     <Word pinyin="xia4 yu3" hanyu="下雨" />
     <Word pinyin="xia4 zai3" hanyu="下载" />
     <Word pinyin="xian1" hanyu="先" />
     <Word pinyin="xian4" hanyu="线" />
-    <Word pinyin="xian4 zai4" hanyu="现在" usage_count="2" />
+    <Word pinyin="xian4 zai4" hanyu="现在" usage_count="5" />
     <Word pinyin="xian4 zhuang4" hanyu="现状" />
     <Word pinyin="xiang1" hanyu="相" />
     <Word pinyin="Xiang1" hanyu="相" />
@@ -976,11 +988,12 @@
     <Word pinyin="xiang4 ji1" hanyu="相机" />
     <Word pinyin="xiao1 fei4" hanyu="消费" />
     <Word pinyin="xiao1 xi5" hanyu="消息" />
-    <Word pinyin="xiao3" hanyu="小" />
+    <Word pinyin="xiao3" hanyu="小" usage_count="2" />
     <Word pinyin="xiao3 shi2" hanyu="小时" />
     <Word pinyin="xiao4" hanyu="笑" />
+    <Word pinyin="xiao4 yuan2" hanyu="校园" usage_count="2" />
     <Word pinyin="xie1" hanyu="些" />
-    <Word pinyin="xie3" hanyu="写" />
+    <Word pinyin="xie3" hanyu="写" usage_count="2" />
     <Word pinyin="xie3 xin4" hanyu="写信" />
     <Word pinyin="xie4" hanyu="谢" />
     <Word pinyin="Xie4" hanyu="谢" />
@@ -994,7 +1007,7 @@
     <Word pinyin="xin1 qing2" hanyu="心情" />
     <Word pinyin="xin1 shui3" hanyu="薪水" />
     <Word pinyin="xin1 wen2" hanyu="新闻" />
-    <Word pinyin="Xin1 xiang1" hanyu="新乡" />
+    <Word pinyin="Xin1 xiang1" hanyu="新乡" short_english="Xinxiang city" usage_count="1" />
     <Word pinyin="xin1 yuan4" hanyu="心愿" />
     <Word pinyin="Xin1 zheng4" hanyu="新郑" />
     <Word pinyin="xin4" hanyu="信" />
@@ -1013,7 +1026,7 @@
     <Word pinyin="xue2" hanyu="学" />
     <Word pinyin="xue2 fei4" hanyu="学费" />
     <Word pinyin="xue2 xi2" hanyu="学习" usage_count="1" />
-    <Word pinyin="xue2 xiao4" hanyu="学校" />
+    <Word pinyin="xue2 xiao4" hanyu="学校" usage_count="1" />
     <Word pinyin="xue2 yuan4" hanyu="学院" />
     <Word pinyin="xue3" hanyu="雪" />
     <Word pinyin="Xue3" hanyu="雪" />
@@ -1033,11 +1046,11 @@
     <Word pinyin="yao2 yuan3" hanyu="遥远" />
     <Word pinyin="yao4" hanyu="药" />
     <Word pinyin="yao4" hanyu="药" />
-    <Word pinyin="yao4" hanyu="要" short_english="want" usage_count="2" />
+    <Word pinyin="yao4" hanyu="要" short_english="want" usage_count="6" />
     <Word pinyin="yao4 shi5" hanyu="钥匙" />
-    <Word pinyin="ye3" hanyu="也" />
+    <Word pinyin="ye3" hanyu="也" usage_count="3" />
     <Word pinyin="Ye3" hanyu="也" />
-    <Word pinyin="ye3 xu3" hanyu="也许" />
+    <Word pinyin="ye3 xu3" hanyu="也许" usage_count="2" />
     <Word pinyin="ye4" hanyu="夜" />
     <Word pinyin="ye4 zi5" hanyu="叶子" />
     <Word pinyin="yi1" hanyu="一" known="true" />
@@ -1069,7 +1082,7 @@
     <Word pinyin="yin2 hang2" hanyu="银行" />
     <Word pinyin="yin3 xing2" hanyu="隐形" />
     <Word pinyin="yin3 xing2 yan3 jing4" hanyu="隐形眼镜" />
-    <Word pinyin="ying1 gai1" hanyu="应该" known="true" usage_count="1" />
+    <Word pinyin="ying1 gai1" hanyu="应该" known="true" usage_count="5" />
     <Word pinyin="Ying1 yu3" hanyu="英语" />
     <Word pinyin="ying3 xiang3" hanyu="影响" />
     <Word pinyin="ying4 li4" hanyu="应力" />
@@ -1084,11 +1097,11 @@
     <Word pinyin="you2 xiang1" hanyu="邮箱" />
     <Word pinyin="you2 yong3" hanyu="游泳" />
     <Word pinyin="you2 yu2" hanyu="由于" />
-    <Word pinyin="you3" hanyu="有" usage_count="2" />
+    <Word pinyin="you3" hanyu="有" usage_count="7" />
     <Word pinyin="you3 qu4" hanyu="有趣" />
     <Word pinyin="you3 ren2" hanyu="有人" />
     <Word pinyin="you3 shan4" hanyu="友善" />
-    <Word pinyin="you3 shi2" hanyu="有时" />
+    <Word pinyin="you3 shi2" hanyu="有时" usage_count="1" />
     <Word pinyin="you3 shi4" hanyu="有事" />
     <Word pinyin="you3 yi4" hanyu="友谊" />
     <Word pinyin="you4" hanyu="又" />
@@ -1122,7 +1135,7 @@
     <Word pinyin="Yun2 nan2" hanyu="云南" />
     <Word pinyin="yun4 dong4" hanyu="运动" />
     <Word pinyin="zai4" hanyu="再" />
-    <Word pinyin="zai4" hanyu="在" short_english="at" usage_count="2" />
+    <Word pinyin="zai4" hanyu="在" short_english="at" known="true" usage_count="13" />
     <Word pinyin="zai4 ci4" hanyu="再次" />
     <Word pinyin="zai4 jian4" hanyu="再见" />
     <Word pinyin="zai4 xia4" hanyu="在下" />
@@ -1133,6 +1146,7 @@
     <Word pinyin="zao4 cheng2" hanyu="造成" />
     <Word pinyin="zen3" hanyu="怎" />
     <Word pinyin="zen3 me5" hanyu="怎么" known="true" />
+    <Word pinyin="zen3 me5 yang4" hanyu="怎么样" usage_count="3" />
     <Word pinyin="zeng1 jia1" hanyu="增加" />
     <Word pinyin="zhan4" hanyu="站" />
     <Word pinyin="zhang1" hanyu="张" />
@@ -1143,8 +1157,8 @@
     <Word pinyin="zhao4 pian4" hanyu="照片" />
     <Word pinyin="zhao4 xiang4" hanyu="照相" />
     <Word pinyin="zhe4" hanyu="这" />
-    <Word pinyin="zhe4 ge5" hanyu="这个" known="true" />
-    <Word pinyin="zhe4 li3" hanyu="这里" known="true" usage_count="1" />
+    <Word pinyin="zhe4 ge5" hanyu="这个" known="true" usage_count="1" />
+    <Word pinyin="zhe4 li3" hanyu="这里" known="true" usage_count="2" />
     <Word pinyin="zhe4 me5" hanyu="这么" />
     <Word pinyin="zhe4 xie1" hanyu="这些" />
     <Word pinyin="zhe4 yang4" hanyu="这样" />
@@ -1154,8 +1168,8 @@
     <Word pinyin="zheng1 fu2" hanyu="征服" />
     <Word pinyin="zheng4 chang2" hanyu="正常" />
     <Word pinyin="zheng4 fu3" hanyu="政府" />
-    <Word pinyin="Zheng4 zhou1" hanyu="郑州" />
-    <Word pinyin="zhi1 dao4" hanyu="知道" />
+    <Word pinyin="Zheng4 zhou1" hanyu="郑州" short_english="Zhengzhou city" usage_count="1" />
+    <Word pinyin="zhi1 dao4" hanyu="知道" usage_count="1" />
     <Word pinyin="zhi1 fu4" hanyu="支付" />
     <Word pinyin="zhi1 qian2" hanyu="之前" />
     <Word pinyin="zhi2" hanyu="直" />
@@ -1174,18 +1188,21 @@
     <Word pinyin="Zhong1" hanyu="中" />
     <Word pinyin="Zhong1" hanyu="钟" />
     <Word pinyin="zhong1 cheng2" hanyu="忠诚" />
-    <Word pinyin="Zhong1 guo2" hanyu="中国" known="true" />
+    <Word pinyin="Zhong1 guo2" hanyu="中国" known="true" usage_count="1" />
     <Word pinyin="Zhong1 guo2 ren2" hanyu="中国人" />
     <Word pinyin="zhong1 jian1" hanyu="中间" />
     <Word pinyin="Zhong1 qiu1 jie2" hanyu="中秋节" />
-    <Word pinyin="Zhong1 wen2" hanyu="中文" known="true" />
+    <Word pinyin="Zhong1 wen2" hanyu="中文" known="true" usage_count="1" />
     <Word pinyin="zhong1 wu3" hanyu="中午" />
     <Word pinyin="zhong1 xin1" hanyu="中心" />
     <Word pinyin="zhong4 shi4" hanyu="重视" />
     <Word pinyin="zhou1" hanyu="周" />
     <Word pinyin="zhou1" hanyu="周" />
     <Word pinyin="Zhou1" hanyu="周" />
-    <Word pinyin="zhou1 mo4" hanyu="周末" />
+    <Word pinyin="zhou1 er4" hanyu="周二" usage_count="1" />
+    <Word pinyin="zhou1 mo4" hanyu="周末" usage_count="1" />
+    <Word pinyin="zhou1 wu3" hanyu="周五" usage_count="2" />
+    <Word pinyin="zhou1 yi1" hanyu="周一" usage_count="1" />
     <Word pinyin="zhu1 rou4" hanyu="猪肉" />
     <Word pinyin="zhu3 yi4" hanyu="主义" />
     <Word pinyin="zhu4" hanyu="住" />
@@ -1215,7 +1232,7 @@
     <Word pinyin="zun1 zhong4" hanyu="尊重" />
     <Word pinyin="zuo2 tian1" hanyu="昨天" />
     <Word pinyin="zuo4" hanyu="做" />
-    <Word pinyin="zuo4" hanyu="坐" />
+    <Word pinyin="zuo4" hanyu="坐" usage_count="1" />
     <Word pinyin="Zuo4" hanyu="坐" />
     <Word pinyin="zuo4 dao4" hanyu="做到" />
     <Word pinyin="zuo4 pin3" hanyu="作品" />

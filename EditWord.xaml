@@ -10,10 +10,15 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Label>Short English</Label>
         <TextBox Name="ShortEnglishBox" Grid.Column="1" MinWidth="150"/>
-        <Button Grid.Row="1" IsDefault="True" Click="OkClick">Ok</Button>
-        <Button Grid.Row="1" Grid.Column="1" IsCancel="True">Cancel</Button>
+        <Label Grid.Row="1">Known (hide english)</Label>
+        <CheckBox Grid.Row="1" Name="Known" Grid.Column="2" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button IsDefault="True" Click="OkClick" Padding="4">Ok</Button>
+            <Button IsCancel="True" Padding="4">Cancel</Button>
+        </StackPanel>
     </Grid>
 </Window>

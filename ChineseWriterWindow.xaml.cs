@@ -139,7 +139,7 @@ namespace ChineseWriter {
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
             try {
-                CopyToClipboard( _writingState.HanyiPinyinHtml, "Chinese", new Uri("http://www.brotherus.net"));
+                CopyToClipboard( _writingState.Html, "Chinese", new Uri("http://www.brotherus.net"));
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ) );
             }
@@ -176,7 +176,7 @@ EndSelection:<<<<<<<3
 
             sb.Append( header );
             if (sourceUrl != null) {
-                sb.AppendFormat( "SourceURL:{0}", sourceUrl );
+                sb.AppendFormat( "SourceURL:{0}" + Environment.NewLine, sourceUrl );
             }
             int startHTML = sb.Length;
 
@@ -195,14 +195,14 @@ EndSelection:<<<<<<<3
             sb.Replace( "<<<<<<<3", To8DigitString( fragmentStart ) );
             sb.Replace( "<<<<<<<4", To8DigitString( fragmentEnd ) );
 
-
             // Finally copy to clipboard.
             string data = sb.ToString( );
             Clipboard.Clear( );
             Clipboard.SetText( data, TextDataFormat.Html );
         }
         static string To8DigitString( int x ) {
-            return String.Format( "{0,8}", x );
+            var s = x.ToString( );
+            return new string( '0', 8 - s.Length ) + s;
         }
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
