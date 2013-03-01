@@ -130,7 +130,7 @@ namespace ChineseWriter {
             CursorPos = CursorPos + newWords.Count();
         }
 
-        public object HanyiPinyinLines { 
+        public string HanyiPinyinLines { 
             get {
                 var pinyinLine = string.Join( "  ", Words
                     .Select( word => word.DisplayPinyin ).ToArray( ) );
@@ -138,6 +138,14 @@ namespace ChineseWriter {
                     .Select( word => word.Text ).ToArray( ) );
                 return hanyiLine + "\n" + pinyinLine;
             } 
+        }
+
+        public string HanyiPinyinHtml {
+            get {
+                return "<table><tr>" +
+                    string.Join( "", Words.Select( word => word.Hanyu ).ToArray() ) +
+                    "</tr></table>";
+            }
         }
 
         internal void Clear( ) {

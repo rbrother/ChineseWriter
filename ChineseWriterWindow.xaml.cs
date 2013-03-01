@@ -139,10 +139,70 @@ namespace ChineseWriter {
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
             try {
-                Clipboard.SetData( DataFormats.UnicodeText, _writingState.HanyiPinyinLines );
+                CopyToClipboard( _writingState.HanyiPinyinHtml, "Chinese", new Uri("http://www.brotherus.net"));
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ) );
             }
+        }
+
+        public static void CopyToClipboard( string htmlFragment, string title, Uri sourceUrl ) {
+            if (title == null) title = "From Clipboard";
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder( );
+
+            // Builds the CF_HTML header. See format specification here:
+            // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
+
+            // The string contains index references to other spots in the string, so we need placeholders so we can compute the offsets. 
+            // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
+            // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
+            // character must be escaped.
+            string header =
+    @"Format:HTML Format
+Version:1.0
+StartHTML:<<<<<<<1
+EndHTML:<<<<<<<2
+StartFragment:<<<<<<<3
+EndFragment:<<<<<<<4
+StartSelection:<<<<<<<3
+EndSelection:<<<<<<<3
+";
+
+            string pre =
+    @"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">
+<HTML><HEAD><TITLE>" + title + @"</TITLE></HEAD><BODY><!--StartFragment-->";
+
+            string post = @"<!--EndFragment--></BODY></HTML>";
+
+            sb.Append( header );
+            if (sourceUrl != null) {
+                sb.AppendFormat( "SourceURL:{0}", sourceUrl );
+            }
+            int startHTML = sb.Length;
+
+            sb.Append( pre );
+            int fragmentStart = sb.Length;
+
+            sb.Append( htmlFragment );
+            int fragmentEnd = sb.Length;
+
+            sb.Append( post );
+            int endHTML = sb.Length;
+
+            // Backpatch offsets
+            sb.Replace( "<<<<<<<1", To8DigitString( startHTML ) );
+            sb.Replace( "<<<<<<<2", To8DigitString( endHTML ) );
+            sb.Replace( "<<<<<<<3", To8DigitString( fragmentStart ) );
+            sb.Replace( "<<<<<<<4", To8DigitString( fragmentEnd ) );
+
+
+            // Finally copy to clipboard.
+            string data = sb.ToString( );
+            Clipboard.Clear( );
+            Clipboard.SetText( data, TextDataFormat.Html );
+        }
+        static string To8DigitString( int x ) {
+            return String.Format( "{0,8}", x );
         }
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
