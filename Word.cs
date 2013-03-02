@@ -10,7 +10,9 @@ namespace ChineseWriter {
 
     public abstract class Word {
         abstract public string Text { get; }
-        virtual public string Html { get { return Text; } }
+        virtual public string HanyuHtml { get { return Text; } }
+        virtual public string PinyinHtml { get { return ""; } }
+        virtual public string EnglishHtml { get { return ""; } }
         abstract public string DisplayPinyin { get; }
     }
 
@@ -108,15 +110,7 @@ namespace ChineseWriter {
             }
         }
 
-        public override string Html {
-            get {
-                return LineDiv( HanyuHtml, "font-size: 20pt;" ) +
-                    LineDiv( PinyinHtml ) + 
-                    LineDiv( Known ? "&nbsp;" : ShortEnglish );
-            }
-        }
-
-        private string HanyuHtml {
+        override public string HanyuHtml {
             get {
                 return string.Join( "", 
                     Characters.Select( c => 
@@ -125,7 +119,7 @@ namespace ChineseWriter {
             }
         }
 
-        private string PinyinHtml {
+        override public string PinyinHtml {
             get {
                 return string.Join( " ",
                     Characters.Select( c =>
@@ -134,15 +128,16 @@ namespace ChineseWriter {
             }
         }
 
+        public override string EnglishHtml {
+            get {
+                return Known ? "&nbsp;" : ShortEnglish;
+            }
+        }
+
         private static string HtmlColor( string pinyin ) {
             var color = WordPanel.ToneColor( pinyin ).ToString();
             // remove the alpha value
             return "#" + color.Substring( 3 );
-        }
-
-        private string LineDiv( string content, string attr = "" ) {
-            return string.Format( @"<div style='margin: 4px; text-align: center; height: 24pt; {0}'>{1}</div>", 
-                attr, content );
         }
 
     }

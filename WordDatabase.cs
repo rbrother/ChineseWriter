@@ -145,7 +145,9 @@ namespace ChineseWriter {
                             var multiWord = word as MultiMeaningWord;
                             Debug.Assert( word != null );
                             var suggested = multiWord.Words.Where( w => w.Suggest );
-                            if (suggested.Count() > 0) return suggested.First( );
+                            if (suggested.Count( ) > 0) {
+                                return suggested.OrderBy( w => w.UsageCount ).Last( );
+                            }
                             return multiWord;
                         }
                     }

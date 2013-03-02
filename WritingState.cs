@@ -142,14 +142,37 @@ namespace ChineseWriter {
 
         public string Html {
             get {
-                return "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;'><tr>" +
-                    string.Join( "", Words.Select( word => WordCell(word) ).ToArray() ) +
-                    "</tr></table>";
+                return "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;' cellpadding='4'>" +
+                    "<tr style='font-size: 20pt;'>" + HanyuHtml + "</tr>" +
+                    "<tr>" + PinyinHtml + "</tr>" +
+                    "<tr style='color: #808080; font-size: 9pt;'>" + EnglishHtml +"</tr>" +
+                    "</table>";
             }
         }
 
-        public static string WordCell( Word word ) {
-            return string.Format("<td style='border: 1px solid #d0d0d0;'>{0}</td>", word.Html);
+        private string HanyuHtml {
+            get {
+                return string.Join( "", 
+                    Words.Select( word => WordCell( word.HanyuHtml ) ).ToArray() );
+            }
+        }
+
+        private string PinyinHtml {
+            get {
+                return string.Join( "", 
+                    Words.Select( word => WordCell( word.PinyinHtml ) ).ToArray( ) );
+            }
+        }
+
+        private string EnglishHtml {
+            get {
+                return string.Join( "", 
+                    Words.Select( word => WordCell( word.EnglishHtml ) ).ToArray( ) );
+            }
+        }
+
+        public static string WordCell( string content ) {
+            return string.Format("<td style='border-right: 1px solid #d0d0d0;'>{0}</td>", content);
         }
 
         internal void Clear( ) {
