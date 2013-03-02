@@ -130,7 +130,7 @@ namespace ChineseWriter {
 
         public override string EnglishHtml {
             get {
-                return Known ? "&nbsp;" : ShortEnglish;
+                return Known ? "" : ShortEnglish;
             }
         }
 

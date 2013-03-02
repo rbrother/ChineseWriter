@@ -135,7 +135,7 @@ namespace ChineseWriter {
                 var pinyinLine = string.Join( "  ", Words
                     .Select( word => word.DisplayPinyin ).ToArray( ) );
                 var hanyiLine = string.Join( " ", Words
-                    .Select( word => word.Text ).ToArray( ) );
+                    .Select( word => word.Text ).ToArray(    ) );
                 return hanyiLine + "\n" + pinyinLine;
             } 
         }
@@ -143,9 +143,9 @@ namespace ChineseWriter {
         public string Html {
             get {
                 return "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;' cellpadding='4'>" +
-                    "<tr style='font-size: 20pt;'>" + HanyuHtml + "</tr>" +
+                    "<tr>" + HanyuHtml + "</tr>" +
                     "<tr>" + PinyinHtml + "</tr>" +
-                    "<tr style='color: #808080; font-size: 9pt;'>" + EnglishHtml +"</tr>" +
+                    "<tr>" + EnglishHtml +"</tr>" +
                     "</table>";
             }
         }
@@ -153,7 +153,7 @@ namespace ChineseWriter {
         private string HanyuHtml {
             get {
                 return string.Join( "", 
-                    Words.Select( word => WordCell( word.HanyuHtml ) ).ToArray() );
+                    Words.Select( word => WordCell( word.HanyuHtml, "font-size:20pt;" ) ).ToArray() );
             }
         }
 
@@ -166,13 +166,13 @@ namespace ChineseWriter {
 
         private string EnglishHtml {
             get {
-                return string.Join( "", 
-                    Words.Select( word => WordCell( word.EnglishHtml ) ).ToArray( ) );
+                return string.Join( "",
+                    Words.Select( word => WordCell( word.EnglishHtml, "color:#808080; font-size:9pt;" ) ).ToArray( ) );
             }
         }
 
-        public static string WordCell( string content ) {
-            return string.Format("<td style='border-right: 1px solid #d0d0d0;'>{0}</td>", content);
+        public static string WordCell( string content, string attr = "" ) {
+            return string.Format("<td style='{0}'>{1}</td>", attr, content);
         }
 
         internal void Clear( ) {

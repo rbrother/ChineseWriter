@@ -158,19 +158,15 @@ namespace ChineseWriter {
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
             string header =
-    @"Format:HTML Format
-Version:1.0
+    @"Version:1.0
 StartHTML:<<<<<<<1
 EndHTML:<<<<<<<2
 StartFragment:<<<<<<<3
 EndFragment:<<<<<<<4
-StartSelection:<<<<<<<3
-EndSelection:<<<<<<<3
 ";
 
             string pre =
-    @"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">
-<HTML><HEAD><TITLE>" + title + @"</TITLE></HEAD><BODY><!--StartFragment-->";
+    @"<HTML><HEAD><TITLE>" + title + @"</TITLE></HEAD><BODY><!--StartFragment-->";
 
             string post = @"<!--EndFragment--></BODY></HTML>";
 
