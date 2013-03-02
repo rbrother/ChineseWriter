@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -138,17 +139,11 @@ namespace ChineseWriter {
         }
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
-            try {
-                CopyToClipboard( _writingState.Html, "Chinese", new Uri("http://www.brotherus.net"));
-            } catch (Exception ex) {
-                MessageBox.Show( ex.ToString( ) );
-            }
+            CopyToClipboard( _writingState.Html, new Uri( "http://www.brotherus.net" ) );
         }
 
-        public static void CopyToClipboard( string htmlFragment, string title, Uri sourceUrl ) {
-            if (title == null) title = "From Clipboard";
-
-            System.Text.StringBuilder sb = new System.Text.StringBuilder( );
+        public static void CopyToClipboard( string htmlFragment, Uri sourceUrl ) {
+            var enc = Encoding.UTF8;
 
             // Builds the CF_HTML header. See format specification here:
             // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
@@ -157,42 +152,33 @@ namespace ChineseWriter {
             // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
-            string header =
-    @"Version:1.0
-StartHTML:<<<<<<<1
-EndHTML:<<<<<<<2
-StartFragment:<<<<<<<3
-EndFragment:<<<<<<<4
-";
+            string data =
+                "Version:1.0" + Environment.NewLine +
+                    "StartHTML:<<<<<<<1" + Environment.NewLine +
+                    "EndHTML:<<<<<<<2" + Environment.NewLine +
+                    "StartFragment:<<<<<<<3" + Environment.NewLine +
+                    "EndFragment:<<<<<<<4" + Environment.NewLine +
+                    "SourceURL:" + sourceUrl.ToString() + Environment.NewLine;
 
-            string pre =
-    @"<HTML><HEAD><TITLE>" + title + @"</TITLE></HEAD><BODY><!--StartFragment-->";
+            int startHTML = enc.GetBytes( data ).Length;
 
-            string post = @"<!--EndFragment--></BODY></HTML>";
+            data += "<HTML><BODY>";
+            int fragmentStart = enc.GetBytes( data ).Length;
 
-            sb.Append( header );
-            if (sourceUrl != null) {
-                sb.AppendFormat( "SourceURL:{0}" + Environment.NewLine, sourceUrl );
-            }
-            int startHTML = sb.Length;
+            data += htmlFragment;
+            int fragmentEnd = enc.GetBytes( data ).Length;
 
-            sb.Append( pre );
-            int fragmentStart = sb.Length;
-
-            sb.Append( htmlFragment );
-            int fragmentEnd = sb.Length;
-
-            sb.Append( post );
-            int endHTML = sb.Length;
+            data += @"</BODY></HTML>";
+            int endHTML = enc.GetBytes( data ).Length;
 
             // Backpatch offsets
-            sb.Replace( "<<<<<<<1", To8DigitString( startHTML ) );
-            sb.Replace( "<<<<<<<2", To8DigitString( endHTML ) );
-            sb.Replace( "<<<<<<<3", To8DigitString( fragmentStart ) );
-            sb.Replace( "<<<<<<<4", To8DigitString( fragmentEnd ) );
+            data = data
+                .Replace( "<<<<<<<1", To8DigitString( startHTML ) )
+                .Replace( "<<<<<<<2", To8DigitString( endHTML ) )
+                .Replace( "<<<<<<<3", To8DigitString( fragmentStart ) )
+                .Replace( "<<<<<<<4", To8DigitString( fragmentEnd ) );
 
             // Finally copy to clipboard.
-            string data = sb.ToString( );
             Clipboard.Clear( );
             Clipboard.SetText( data, TextDataFormat.Html );
         }

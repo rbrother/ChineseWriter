@@ -172,7 +172,7 @@ namespace ChineseWriter {
         }
 
         public static string WordCell( string content, string attr = "" ) {
-            return string.Format("<td style='{0}'>{1}</td>", attr, content);
+            return string.Format("<td style='{0}'>{1} </td>", attr, content);
         }
 
         internal void Clear( ) {
