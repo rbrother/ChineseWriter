@@ -23,7 +23,8 @@
         <StackPanel Orientation="Horizontal" Name="Buttons">
             <Button Style="{StaticResource ButtonStyle}" 
                     Click="Clear_Text_Click">C_lear text</Button>
-            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">_Copy Chinese</Button>
+            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy _Html</Button>
+            <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}">Copy _Chinese</Button>
             <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}">_English</CheckBox>
         </StackPanel>

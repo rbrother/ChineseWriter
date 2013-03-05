@@ -132,10 +132,32 @@ namespace ChineseWriter {
                     word is MultiMeaningWord ? WordPanel.Create( word as MultiMeaningWord, _wordDatabase ) :
                     null;
                 Characters.Children.Add( wordPanel );
+                wordPanel.Tag = word;
+                wordPanel.MouseUp += new MouseButtonEventHandler( HanyuPanelMouseUp );
                 pos++;
             }
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
+        }
+
+        void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
+            var widget = (FrameworkElement)sender;
+            var word = widget.Tag as HanyuWord;
+            if (word != null) {
+                var editWord = new EditWord( word );
+                var result = editWord.ShowDialog( );
+                if (result.HasValue && result.Value) {
+                    word.SetShortEnglish( editWord.ShortEnglishBox.Text );
+                    if (editWord.Known.IsChecked.HasValue) {
+                        word.Known = editWord.Known.IsChecked.Value;
+                        PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
+                    }
+                }
+            }
+        }
+
+        private void Copy_Plain_Click( object sender, RoutedEventArgs e ) {
+            Clipboard.SetText( _writingState.HanyiPinyinLines, TextDataFormat.UnicodeText );
         }
 
         private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
