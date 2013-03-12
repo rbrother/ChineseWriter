@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClipboardTool.cs" />
     <Compile Include="EditWord.xaml.cs">
       <DependentUpon>EditWord.xaml</DependentUpon>
     </Compile>
