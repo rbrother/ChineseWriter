@@ -59,7 +59,8 @@ namespace ChineseWriter {
         }
         public bool Known { get; set; } // true: hide english
         public bool Suggest { get; set; }
-        public int UsageCount;
+        public int UsageCount { get; set; }
+        public string UsageCountString { get { return UsageCount == 0 ? "" : UsageCount.ToString( );  } } 
 
         override public string DisplayPinyin {
             get { return _pinyinDiacritics; }
