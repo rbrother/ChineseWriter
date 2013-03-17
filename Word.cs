@@ -8,6 +8,17 @@ using System.Windows.Media;
 
 namespace ChineseWriter {
 
+    public class SuggestionWord {
+        public string Pinyin { get; set; }
+        public string Hanyu { get; set; }
+        public string UsageCountString { get; set; }
+        public string English { get; set; }
+    }
+
+}
+/*
+namespace ChineseWriter {
+
     public abstract class Word {
         abstract public string Text { get; }
         virtual public string HanyuHtml { get { return Text; } }
@@ -16,10 +27,10 @@ namespace ChineseWriter {
         abstract public string DisplayPinyin { get; }
     }
 
-    public class LiteralWord : Word {
+    public class Word : Word {
         private string _text;
 
-        public LiteralWord( string text ) {
+        public Word( string text ) {
             _text = text;
         }
 
@@ -29,7 +40,7 @@ namespace ChineseWriter {
 
     }
 
-    public abstract class ChineseEnglishWord : Word {
+    public abstract class Word : Word {
         public override string Text { get { return Hanyu; } }
         abstract public string Hanyu { get; }
         abstract public string Pinyin { get; }
@@ -37,7 +48,7 @@ namespace ChineseWriter {
         abstract public string ShortEnglish { get; }
     }
 
-    public class HanyuWord : ChineseEnglishWord {
+    public class Word : Word {
         private readonly string _hanyu, _english;
         private readonly string _pinyin; // eg. "ma3 pa2"
         private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
@@ -70,7 +81,7 @@ namespace ChineseWriter {
 
         private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\:\s]+)\]\s+\/(.+)\/" );
 
-        public HanyuWord( string line, Dictionary<Tuple<string, string>, XElement> info ) {
+        public Word( string line, Dictionary<Tuple<string, string>, XElement> info ) {
             var groups = CC_LINE.Match( line ).Groups;
             //var traditional = groups[1].Value;
             _hanyu = groups[2].Value;
@@ -143,8 +154,8 @@ namespace ChineseWriter {
 
     }
 
-    public class MultiMeaningWord : ChineseEnglishWord {
-        private HanyuWord[] _words;
+    public class Word : Word {
+        private Word[] _words;
 
         override public string Hanyu { get { return _words.First().Hanyu; } }
 
@@ -156,14 +167,15 @@ namespace ChineseWriter {
 
         override public string ShortEnglish { get { return JoinBy( word => word.ShortEnglish ); } }
 
-        public HanyuWord[] Words { get { return _words; } }
+        public Word[] Words { get { return _words; } }
 
-        private string JoinBy( Func<HanyuWord, string> selector ) {
+        private string JoinBy( Func<Word, string> selector ) {
             return string.Join( " / ", _words.Select( selector ).ToArray() );
         }
 
-        public MultiMeaningWord( HanyuWord[] words ) {
+        public Word( Word[] words ) {
             _words = words;
         }
     }
 }
+*/

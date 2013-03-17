@@ -10,14 +10,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Keyword = clojure.lang.Keyword;
+using RT = clojure.lang.RT;
 
 namespace ChineseWriter {
 
     public partial class EditWord : Window {
-        public EditWord( HanyuWord word ) {
+        public EditWord( IDictionary<string,object> word ) {
             InitializeComponent( );
-            this.ShortEnglishBox.Text = word.ShortEnglish;
-            this.Known.IsChecked = word.Known;
+            this.ShortEnglishBox.Text = (string)word["short-english"];
+            this.Known.IsChecked = (bool)word["known"];
             this.ShortEnglishBox.Focus( );
         }
 

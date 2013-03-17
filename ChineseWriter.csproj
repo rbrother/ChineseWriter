@@ -39,6 +39,12 @@
     <ApplicationIcon>GoToSolutionCenterIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Clojure">
+      <HintPath>..\..\Google Drive\Programs\clojure-clr\Clojure.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core.clj">
+      <HintPath>..\..\Google Drive\Programs\clojure-clr\clojure.core.clj.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Reactive.Core">
@@ -118,6 +124,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="cedict_ts.u8" />
+    <None Include="Clojure\WordDatabase.clj" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

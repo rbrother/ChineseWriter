@@ -8,12 +8,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Reactive.Linq;
+using RT = clojure.lang.RT;
+using Keyword = clojure.lang.Keyword;
 
 namespace ChineseWriter {
 
     public partial class ChineseWriterWindow : Window {
 
-        private WordDatabase _wordDatabase;
         private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
@@ -25,8 +26,16 @@ namespace ChineseWriter {
             try {
                 InitializeComponent( );
 
-                _wordDatabase = new WordDatabase( );
-                _writingState = new WritingState( _wordDatabase );
+                System.Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH",
+                    @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
+                RT.load( "WordDatabase" );
+
+                var startTime = DateTime.Now;
+                WordDatabase.LoadWords( );
+                var elapsed = DateTime.Now - startTime;
+                this.Title = string.Format( "Loaded {0:0.0} s", elapsed.TotalSeconds );
+
+                _writingState = new WritingState( );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
@@ -49,26 +58,35 @@ namespace ChineseWriter {
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     Subscribe( value => _writingState.English = value );
 
-                var WordsDatabaseChanged = new int[] { 0 }.ToObservable( ).
-                    Concat( _wordDatabase.WordsChanged );
-
                 // Update UI based on writing state changes
                 _writingState.PinyinChanges.ObserveOnDispatcher( ).
                     Subscribe( pinyin => _pinyinInput.Text = pinyin );
                 _writingState.SuggestionsChanges.ObserveOnDispatcher( ).
-                    Subscribe( suggestions => Suggestions.ItemsSource = suggestions );
-                _writingState.WordsChanges.
-                    CombineLatest(_writingState.CursorPosChanges, (words,cursor) => Tuple.Create(words,cursor)).                    
-                    ObserveOnDispatcher( ).
-                    Subscribe( value => PopulateCharGrid( value.Item1, value.Item2 ) );
+                    Subscribe( suggestions => UpdateSuggestions( suggestions) );
                 _writingState.CursorPosChanges.
                     ObserveOnDispatcher().
                     Subscribe( cursor => ScrollInputVisible() );
+                _writingState.WordsChanges.
+                    CombineLatest( _writingState.CursorPosChanges, ( words, cursor ) => Tuple.Create( words, cursor ) ).
+                    ObserveOnDispatcher().Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ));
+
                 _writingState.Clear( );
+                PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
                 this.Close( );
             }
+        }
+
+        private void UpdateSuggestions( IList<IDictionary<string,object>> suggestions ) {
+            Suggestions.ItemsSource = suggestions.Select( suggestion =>
+                new SuggestionWord {
+                    Pinyin = ( (string)suggestion["pinyin"] ).AddDiacritics( ),
+                    Hanyu = (string)suggestion["hanyu"],
+                    English = (string)suggestion["english"],
+                    UsageCountString = suggestion.ContainsKey( "usage-count" ) ?
+                        Convert.ToString( suggestion["usage-count"] ) : ""
+                } );
         }
 
         private FrameworkElement CreateCursorPanel( ) {
@@ -121,16 +139,12 @@ namespace ChineseWriter {
             }
         }
 
-        private void PopulateCharGrid( IEnumerable<Word> words, int cursorPos ) {
+        private void PopulateCharGrid( IEnumerable<IDictionary<string,object>> words, int cursorPos ) {
             Characters.Children.Clear( );
             int pos = 0;
-            foreach (Word word in _writingState.Words) {
+            foreach (IDictionary<string,object> word in _writingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
-                var wordPanel = 
-                    word is HanyuWord ? WordPanel.Create( word as HanyuWord, _wordDatabase ) :
-                    word is LiteralWord ? WordPanel.Create( word as LiteralWord, _wordDatabase ) :
-                    word is MultiMeaningWord ? WordPanel.Create( word as MultiMeaningWord, _wordDatabase ) :
-                    null;
+                var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
                 wordPanel.Tag = word;
                 wordPanel.MouseUp += new MouseButtonEventHandler( HanyuPanelMouseUp );
@@ -142,16 +156,16 @@ namespace ChineseWriter {
 
         void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
             var widget = (FrameworkElement)sender;
-            var word = widget.Tag as HanyuWord;
+            var word = widget.Tag as IDictionary<string,object>;
             if (word != null) {
                 var editWord = new EditWord( word );
                 var result = editWord.ShowDialog( );
                 if (result.HasValue && result.Value) {
-                    word.SetShortEnglish( editWord.ShortEnglishBox.Text );
-                    if (editWord.Known.IsChecked.HasValue) {
-                        word.Known = editWord.Known.IsChecked.Value;
-                        PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
+                    WordDatabase.SetShortEnglish( word, editWord.ShortEnglishBox.Text );
+                    if (editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value) {
+                        WordDatabase.SetWordKnown( word );
                     }
+                    PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
                 }
             }
         }
@@ -179,12 +193,13 @@ namespace ChineseWriter {
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
-            _wordDatabase.SaveWordsInfo( );
+            //throw new NotImplementedException( );
+            //_wordDatabase.SaveWordsInfo( );
         }
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
             if (e.AddedCells.Count( ) > 0) {
-                _writingState.SelectWord( (HanyuWord)e.AddedCells.First( ).Item );
+                _writingState.SelectWord( (IDictionary<string,object>) e.AddedCells.First( ).Item );
             }
         }
 

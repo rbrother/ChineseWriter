@@ -7,6 +7,8 @@ using System.Windows.Documents;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using RT = clojure.lang.RT;
+using Keyword = clojure.lang.Keyword;
 
 namespace ChineseWriter {
 
@@ -43,12 +45,12 @@ namespace ChineseWriter {
             return textBlock;
         }
 
-        private static TextBlock CreateEnglishPanel( ChineseEnglishWord word, bool breakDown ) {
+        private static TextBlock CreateEnglishPanel( IDictionary<string,object> word, bool breakDown ) {
             return new TextBlock {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = breakDown ? word.English : word.ShortEnglish,
+                Text = breakDown ? (string)word["english"] : (string)word["short-english"],
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             };
         }
@@ -60,46 +62,47 @@ namespace ChineseWriter {
             return TONE_COLORS[tone - 1];
         }
 
-        private static object CreateExplanationPanel( HanyuWord word, WordDatabase wordsDb ) {
+        private static object CreateExplanationPanel( IDictionary<string,object> word ) {
             var panel = new StackPanel { Orientation = Orientation.Vertical };
-            panel.Children.Add( new TextBlock { Padding = new Thickness(4),
-                FontSize = 16, Text = word.English, MaxWidth = 500, TextWrapping = TextWrapping.Wrap,
+            panel.Children.Add( 
+                new TextBlock { 
+                    Padding = new Thickness(4),                            
+                    FontSize = 16, Text = (string)word["english"], 
+                    MaxWidth = 500, TextWrapping = TextWrapping.Wrap,
             } );
             var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
             panel.Children.Add( detailsPanel );
             foreach (FrameworkElement childPanel in
-                word.Characters.
-                    Select( c => wordsDb.WordForHanyuPinyin( c.Item1, c.Item2 ) ).
-                    Select( w => Create( w, wordsDb, breakDown: true ) ))
+                ( (IList<object>)word["characters"] ).
+                    Select( w => Create( (IDictionary<string,object>)w, breakDown: true ) ))
                 detailsPanel.Children.Add( childPanel );
             return panel;
         }
 
         // Constructors
 
-        public static FrameworkElement Create( HanyuWord word, WordDatabase wordsDb, bool breakDown = false ) {
+        public static FrameworkElement Create( IDictionary<string,object> word, bool breakDown = false ) {
+            var chars = (IList<IList<string>>)word["characters"];
             var panel = WordStackPanel(Colors.White, new FrameworkElement[] { 
                 CreateTextBlock( "SimSun", breakDown ? 80 : 30,
-                    word.Characters.
-                        Select( c => new Run {
-                            Text = c.Item1,
-                            Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                    chars.Select( c => new Run {
+                            Text = c[0],
+                            Foreground = new SolidColorBrush( ToneColor( c[1] ) )
                         } ) ), 
                 CreateTextBlock( "Times New Roman", breakDown ? 40 : 20,
-                    word.Characters.
-                        Select( c => new Run {
-                            Text = " " + c.Item2.AddDiacritics( ) + " ",
-                            Foreground = new SolidColorBrush( ToneColor( c.Item2 ) )
+                    chars.Select( c => new Run {
+                            Text = " " + c[1].AddDiacritics( ) + " ",
+                            Foreground = new SolidColorBrush( ToneColor( c[1] ) )
                         } ) ), 
-                word.Known && !breakDown ? new TextBlock() : CreateEnglishPanel( word, breakDown ) } );
+                ((bool)word["known"]) && !breakDown ? new TextBlock() : CreateEnglishPanel( word, breakDown ) } );
             if (!breakDown) {
-                panel.ToolTip = CreateExplanationPanel( word, wordsDb );
+                panel.ToolTip = CreateExplanationPanel( word );
                 panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             }
             return GuiUtils.WrapToBorder( panel );
         }
-
-        public static FrameworkElement Create( MultiMeaningWord word, WordDatabase wordsDb ) {
+        /*
+        public static FrameworkElement Create( Word word, WordDatabase wordsDb ) {
             return GuiUtils.WrapToBorder(
                 WordStackPanel(Colors.Yellow, 
                     CreateTextBlock( "SimSun", 30, word.Hanyu ),
@@ -107,11 +110,11 @@ namespace ChineseWriter {
                     CreateEnglishPanel( word, false ) ) );
         }
 
-        public static FrameworkElement Create( LiteralWord word, WordDatabase wordsDb ) {
+        public static FrameworkElement Create( Word word, WordDatabase wordsDb ) {
             return  GuiUtils.WrapToBorder(
                     WordStackPanel(Color.FromRgb(220, 220, 220),
                     CreateTextBlock( "Times New Roman", 30, word.Text ) ) );
         }
-
+        */
     }
 }
