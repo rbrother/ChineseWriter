@@ -98,12 +98,20 @@
 
 (def women-word-calculated (first (filter #(= (% :pinyin) "wo3 men5") @word-database)))
 
+(def airen-chars ((expanded-word "爱人" "ai4 ren5") :characters))
+
+(def second-airen-char (nth airen-chars 1))
+
 (deftest cc-lines-test
   (is (= 28 (count @word-database)))
   (is (= 2 (count (find-words "wo3") )))
   (is (= wo-men-word women-word-calculated))
   (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))
-  (is (= 2 (count ((expanded-word "爱人" "ai4 ren5") :characters))))
+  (is (= "ren2" ((find-char "人" "ren2") :pinyin)))
+  (is (= "ren2" ((find-char "人" "Ren2") :pinyin)))
+  (is (= "ren2" ((find-char "人" "ren5") :pinyin)))
+  (is (= 2 (count airen-chars)))
+  (is (= "人" (second-airen-char :hanyu)))
   (is (= wo-expanded (expanded-word "我" "wo3")))
   (is (= (count (hanyu-to-words "我们女友" )) 2 ))
   (is (= (count (hanyu-to-words "我们QQ女友" )) 3 )))

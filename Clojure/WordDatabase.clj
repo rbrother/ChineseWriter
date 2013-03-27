@@ -41,12 +41,12 @@
   (let [ exact-match (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
     (if exact-match (first exact-match)
       ; Look for non-exact matches that might happen because of tone changes of char as part of a word
-      (let [ hanyu-matches (@hanyu-dict hanyu) 
+      (let [ hanyu-matches (@hanyu-dict { :hanyu hanyu }) 
             caseless-match (filter #(equal-caseless (% :pinyin) pinyin) hanyu-matches)
             toneless-matches (filter #(toneless-equal (% :pinyin) pinyin) hanyu-matches)]
         (cond
-          caseless-match (first caseless-match)
-          toneless-matches (first toneless-matches)
+          (not-empty caseless-match) (first caseless-match)
+          (not-empty toneless-matches) (first toneless-matches)
           :else (first hanyu-matches) )))))
 
 ; This is slow, so do only for a word when needed, not for all words
