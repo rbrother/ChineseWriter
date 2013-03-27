@@ -124,8 +124,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="cedict_ts.clj" />
-    <None Include="cedict_ts.u8" />
     <None Include="Clojure\WordDatabase.clj" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

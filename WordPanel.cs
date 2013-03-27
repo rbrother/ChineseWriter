@@ -50,7 +50,9 @@ namespace ChineseWriter {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = breakDown ? (string)word["english"] : (string)word["short-english"],
+                Text = breakDown ? (string)word["english"] : 
+                        word.ContainsKey("short-english") ? (string)word["short-english"] :
+                        ((string)word["english"]).Split(',').First(),
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             };
         }
@@ -98,24 +100,22 @@ namespace ChineseWriter {
 
 
         // Constructors
-        public static FrameworkElement Create( IDictionary<string,object> word, bool breakDown = false ) {
+        public static FrameworkElement Create( IDictionary<string,object> word) {
             var chars = ((IList<object>)word["characters"]).Cast<IDictionary<string, object>>( ).ToArray( );
             var panel = WordStackPanel(Colors.White, new FrameworkElement[] { 
-                CreateTextBlock( "SimSun", breakDown ? 80 : 30,
+                CreateTextBlock( "SimSun", 30,
                     chars.Select( c => new Run {
                             Text = (string) c["hanyu"],
                             Foreground = new SolidColorBrush( ToneColor( (string) c["pinyin"] ) )
                         } ).ToArray() ), 
-                CreateTextBlock( "Times New Roman", breakDown ? 40 : 20,
+                CreateTextBlock( "Times New Roman", 20,
                     chars.Select( c => new Run {
                             Text = " " + ((string)c["pinyin"]).AddDiacritics( ) + " ",
                             Foreground = new SolidColorBrush( ToneColor( (string) c["pinyin"] ) )
                         } ).ToArray() ), 
-                ((bool)word["known"]) && !breakDown ? new TextBlock() : CreateEnglishPanel( word, breakDown ) } );
-            if (!breakDown) {
-                panel.ToolTip = CreateExplanationPanel( word );
-                panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
-            }
+                word.ContainsKey("known") ? new TextBlock() : CreateEnglishPanel( word, false ) } );
+            panel.ToolTip = CreateExplanationPanel( word );
+            panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             return GuiUtils.WrapToBorder( panel );
         }
         /*
