@@ -37,6 +37,9 @@
    {:hanyu "们", :pinyin "men5", :english "plural marker for pronouns, and nouns referring to individuals"},
    {:hanyu "我们", :pinyin "wo3 men5", :english "we, us, ourselves, our"},
    {:hanyu "女友", :pinyin "nu:3 you3", :english "girlfriend"},
+   {:hanyu "爱人", :pinyin "ai4 ren5", :english "spouse, husband, wife, sweetheart, CL:個|个[ge4]"}
+   {:hanyu "爱", :pinyin "ai4", :english "to love, affection, to be fond of, to like"}
+   {:hanyu "人", :pinyin "ren2", :english "man, person, people, CL:個|个[ge4],位[wei4]"}
 ])
 
 (def test-word-info
@@ -53,6 +56,17 @@
    :usage-count 7 
    :pinyin-start "wo" })
 
+(def wo-expanded
+  {:hanyu "我", :pinyin "wo3", :pinyin-start "wo", :english "I, me, my",
+   :pinyin-no-spaces-no-tones "wo",
+   :pinyin-no-spaces "wo3",
+   :short-english "I", :known true, :usage-count 112,
+   :characters 
+   [ {:hanyu "我", :pinyin "wo3", :pinyin-start "wo", :english "I, me, my",
+      :pinyin-no-spaces-no-tones "wo",
+      :pinyin-no-spaces "wo3",
+      :short-english "I", :known true, :usage-count 112} ]} )
+  
 (def wo-men-word-expanded 
   {:pinyin-no-spaces-no-tones "women",
    :pinyin-no-spaces "wo3men5",
@@ -85,10 +99,12 @@
 (def women-word-calculated (first (filter #(= (% :pinyin) "wo3 men5") @word-database)))
 
 (deftest cc-lines-test
-  (is (= 25 (count @word-database)))
+  (is (= 28 (count @word-database)))
   (is (= 2 (count (find-words "wo3") )))
   (is (= wo-men-word women-word-calculated))
   (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))
+  (is (= 2 (count ((expanded-word "爱人" "ai4 ren5") :characters))))
+  (is (= wo-expanded (expanded-word "我" "wo3")))
   (is (= (count (hanyu-to-words "我们女友" )) 2 ))
   (is (= (count (hanyu-to-words "我们QQ女友" )) 3 )))
 

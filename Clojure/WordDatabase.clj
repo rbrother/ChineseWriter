@@ -21,6 +21,8 @@
 
 (defn map-values [ f m ] (zipmap (keys m) (map f (vals m))))
 
+(defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))
+
 ;----------------------- Atoms for the dictionary data ----------------------------------
 
 (def word-database (atom nil))
@@ -33,14 +35,26 @@
 
 ;---------------------------------------------------------
 
+(defn toneless-equal [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
+
+(defn find-char [ hanyu pinyin ]
+  (let [ exact-match (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
+    (if exact-match (first exact-match)
+      ; Look for non-exact matches that might happen because of tone changes of char as part of a word
+      (let [ hanyu-matches (@hanyu-dict hanyu) 
+            caseless-match (filter #(equal-caseless (% :pinyin) pinyin) hanyu-matches)
+            toneless-matches (filter #(toneless-equal (% :pinyin) pinyin) hanyu-matches)]
+        (cond
+          caseless-match (first caseless-match)
+          toneless-matches (first toneless-matches)
+          :else (first hanyu-matches) )))))
+
 ; This is slow, so do only for a word when needed, not for all words
 (defn expanded-word [ hanyu pinyin ]
   (let [ word (first (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } )) ]
     (->> 
       (zip (map str hanyu) (str/split pinyin #" "))
-      (map (fn [ [h p] ] { :hanyu h :pinyin p } ))
-      (map @hanyu-pinyin-dict)
-      (map first)
+      (map (fn [ [h p] ] (find-char h p)))
       (vec)
       (assoc word :characters))))
 
@@ -54,7 +68,7 @@
       (if (dict-entry :hanyu) { :usage-count 1 } {} ) ; ensure at least 1 usage count if entry in words.clj
       dict-entry
       {:pinyin-no-spaces pinyin-no-spaces 
-       :pinyin-no-spaces-no-tones (str/replace pinyin-no-spaces #"\d" "") 
+       :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) 
        :pinyin-start (subs pinyin-no-spaces 0 2) })))
 
 ; Add extra properties from words.xml

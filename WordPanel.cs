@@ -74,26 +74,43 @@ namespace ChineseWriter {
             panel.Children.Add( detailsPanel );
             foreach (FrameworkElement childPanel in
                 ( (IList<object>)word["characters"] ).
-                    Select( w => Create( (IDictionary<string,object>)w, breakDown: true ) ))
+                    Select( w => CharacterPanel( (IDictionary<string, object>)w ) ))
                 detailsPanel.Children.Add( childPanel );
             return panel;
         }
 
-        // Constructors
+        public static FrameworkElement CharacterPanel( IDictionary<string, object> character ) {
+            var pinyin = (string)character["pinyin"];
+            var hanyu = (string) character["hanyu"];
+            var foreground = new SolidColorBrush( ToneColor( pinyin ) );
+            return GuiUtils.WrapToBorder(
+                WordStackPanel( Colors.White, new FrameworkElement[] { 
+                    CreateTextBlock( "SimSun", 80, new Run[] { new Run {
+                            Text = hanyu,
+                            Foreground = foreground
+                        } } ), 
+                    CreateTextBlock( "Times New Roman", 40, new Run[] { new Run {
+                            Text = " " + pinyin.AddDiacritics( ) + " ",
+                            Foreground = foreground
+                        } } ), 
+                    CreateEnglishPanel( character, true ) } ) );
+        }
 
+
+        // Constructors
         public static FrameworkElement Create( IDictionary<string,object> word, bool breakDown = false ) {
-            var chars = (IList<IList<string>>)word["characters"];
+            var chars = ((IList<object>)word["characters"]).Cast<IDictionary<string, object>>( ).ToArray( );
             var panel = WordStackPanel(Colors.White, new FrameworkElement[] { 
                 CreateTextBlock( "SimSun", breakDown ? 80 : 30,
                     chars.Select( c => new Run {
-                            Text = c[0],
-                            Foreground = new SolidColorBrush( ToneColor( c[1] ) )
-                        } ) ), 
+                            Text = (string) c["hanyu"],
+                            Foreground = new SolidColorBrush( ToneColor( (string) c["pinyin"] ) )
+                        } ).ToArray() ), 
                 CreateTextBlock( "Times New Roman", breakDown ? 40 : 20,
                     chars.Select( c => new Run {
-                            Text = " " + c[1].AddDiacritics( ) + " ",
-                            Foreground = new SolidColorBrush( ToneColor( c[1] ) )
-                        } ) ), 
+                            Text = " " + ((string)c["pinyin"]).AddDiacritics( ) + " ",
+                            Foreground = new SolidColorBrush( ToneColor( (string) c["pinyin"] ) )
+                        } ).ToArray() ), 
                 ((bool)word["known"]) && !breakDown ? new TextBlock() : CreateEnglishPanel( word, breakDown ) } );
             if (!breakDown) {
                 panel.ToolTip = CreateExplanationPanel( word );

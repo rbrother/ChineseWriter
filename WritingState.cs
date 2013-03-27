@@ -34,10 +34,12 @@ namespace ChineseWriter {
             get { return _english;  }
             set { _english = value;  EnglishChanges.OnNext( value ); }
         }
+
         public string PinyinInput {
             get { return _pinyinInput;  }
             set { _pinyinInput = value; PinyinChanges.OnNext( value ); }
         }
+
         public IDictionary<string,object>[] Words { 
             get { return _words; }
             set { 
@@ -46,6 +48,7 @@ namespace ChineseWriter {
                 WordsChanges.OnNext( _words ); 
             }
         }
+
         public int CursorPos {
             get { return _cursorPos; }
             set { _cursorPos = value; CursorPosChanges.OnNext( value ); }

@@ -48,7 +48,9 @@ namespace ChineseWriter {
         public static object ConvertDictionaries( object clojureData ) {
             if (clojureData is IDictionary<object, object>) {
                 return ( (IDictionary<object, object>)clojureData ).
-                    ToDictionary( pair => ( (Keyword)pair.Key ).getName( ), pair => pair.Value );
+                    ToDictionary( 
+                        pair => ( (Keyword)pair.Key ).getName( ), 
+                        pair => ConvertDictionaries(pair.Value) );
             } else if (clojureData is IList<object>) {
                 return ( (IList<object>)clojureData ).
                     Select( obj => ConvertDictionaries( obj ) ).ToArray( );
