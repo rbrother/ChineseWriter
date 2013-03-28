@@ -45,14 +45,14 @@ namespace ChineseWriter {
             return textBlock;
         }
 
-        private static TextBlock CreateEnglishPanel( IDictionary<string,object> word, bool breakDown ) {
+        private static TextBlock CreateEnglishPanel( IDictionary<object,object> word, bool breakDown ) {
             return new TextBlock {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = breakDown ? word.GetStr("english") : 
-                        word.ContainsKey("short-english") ? word.GetStr("short-english") :
-                        word.GetStr("english").Split(',').First(),
+                Text = breakDown ? word.Get<string>("english") : 
+                        word.HasKeyword("short-english") ? word.Get<string>("short-english") :
+                        word.Get<string>("english").Split(',').First(),
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             };
         }
@@ -64,7 +64,7 @@ namespace ChineseWriter {
             return TONE_COLORS[tone - 1];
         }
 
-        private static object CreateExplanationPanel( IDictionary<string,object> word ) {
+        private static object CreateExplanationPanel( IDictionary<object,object> word ) {
             var panel = new StackPanel { Orientation = Orientation.Vertical };
             panel.Children.Add( 
                 new TextBlock { 
@@ -76,12 +76,12 @@ namespace ChineseWriter {
             panel.Children.Add( detailsPanel );
             foreach (FrameworkElement childPanel in
                 word.GetList( "characters" ).
-                    Select( w => CharacterPanel( (IDictionary<string, object>)w ) ))
+                    Select( w => CharacterPanel( (IDictionary<object,object>)w ) ))
                 detailsPanel.Children.Add( childPanel );
             return panel;
         }
 
-        public static FrameworkElement CharacterPanel( IDictionary<string, object> character ) {
+        public static FrameworkElement CharacterPanel( IDictionary<object,object> character ) {
             var foreground = new SolidColorBrush( ToneColor( character.Pinyin( ) ) );
             return GuiUtils.WrapToBorder(
                 WordStackPanel( Colors.White,
@@ -94,8 +94,8 @@ namespace ChineseWriter {
                     CreateEnglishPanel( character, true ) ) );
         }
 
-        private static FrameworkElement CreateForHanyu( IDictionary<string, object> word ) {
-            var chars = word.GetList( "characters" ).Cast<IDictionary<string, object>>( );
+        private static FrameworkElement CreateForHanyu( IDictionary<object,object> word ) {
+            var chars = word.GetList( "characters" ).Cast<IDictionary<object,object>>( );
             var panel = WordStackPanel( Colors.White,
                 CreateTextBlock( "SimSun", 30,
                     chars.Select( c => new Run {
@@ -107,7 +107,7 @@ namespace ChineseWriter {
                         Text = " " + c.Pinyin().AddDiacritics( ) + " ",
                         Foreground = new SolidColorBrush( ToneColor( c.Pinyin( ) ) )
                     } ).ToArray( ) ),
-                word.ContainsKey( "known" ) ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
+                word.HasKeyword( "known" ) ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
             panel.ToolTip = CreateExplanationPanel( word );
             panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             return panel;
@@ -118,10 +118,10 @@ namespace ChineseWriter {
                         CreateTextBlock( "Times New Roman", 30, text ) );
         }
 
-        public static FrameworkElement Create( IDictionary<string,object> word) {
+        public static FrameworkElement Create( IDictionary<object,object> word) {
             return GuiUtils.WrapToBorder(
-                word.ContainsKey( "text" ) ?
-                CreateForLiteral( word.GetStr("text") ) :
+                word.HasKeyword( "text" ) ?
+                CreateForLiteral( word.Get<string>("text") ) :
                 CreateForHanyu(word));
         }
 

@@ -78,13 +78,13 @@ namespace ChineseWriter {
             }
         }
 
-        private void UpdateSuggestions( IList<IDictionary<string,object>> suggestions ) {
+        private void UpdateSuggestions( IList<IDictionary<object,object>> suggestions ) {
             Suggestions.ItemsSource = suggestions.Select( suggestion =>
                 new SuggestionWord {
                     Pinyin = ( suggestion.Pinyin() ).AddDiacritics( ),
                     Hanyu = suggestion.Hanyu(),
-                    English = suggestion.GetStr("english"),
-                    UsageCountString = suggestion.ContainsKey( "usage-count" ) ?
+                    English = suggestion.Get<string>("english"),
+                    UsageCountString = suggestion.HasKeyword( "usage-count" ) ?
                         Convert.ToString( suggestion["usage-count"] ) : ""
                 } );
         }
@@ -139,10 +139,10 @@ namespace ChineseWriter {
             }
         }
 
-        private void PopulateCharGrid( IEnumerable<IDictionary<string,object>> words, int cursorPos ) {
+        private void PopulateCharGrid( IEnumerable<IDictionary<object,object>> words, int cursorPos ) {
             Characters.Children.Clear( );
             int pos = 0;
-            foreach (IDictionary<string,object> word in _writingState.Words) {
+            foreach (IDictionary<object,object> word in _writingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
@@ -156,7 +156,7 @@ namespace ChineseWriter {
 
         void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
             var widget = (FrameworkElement)sender;
-            var word = widget.Tag as IDictionary<string,object>;
+            var word = widget.Tag as IDictionary<object,object>;
             if (word != null) {
                 var editWord = new EditWord( word );
                 var result = editWord.ShowDialog( );
@@ -199,7 +199,7 @@ namespace ChineseWriter {
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
             if (e.AddedCells.Count( ) > 0) {
-                _writingState.SelectWord( (IDictionary<string,object>) e.AddedCells.First( ).Item );
+                _writingState.SelectWord( (IDictionary<object,object>) e.AddedCells.First( ).Item );
             }
         }
 

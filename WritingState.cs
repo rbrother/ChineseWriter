@@ -15,18 +15,18 @@ namespace ChineseWriter {
     internal class WritingState {
 
         private int _cursorPos;
-        private IDictionary<string,object>[] _words;
-        private IDictionary<string,object>[] _suggestions;
+        private IDictionary<object,object>[] _words;
+        private IDictionary<object,object>[] _suggestions;
         private bool _english;
         private string _pinyinInput = "";
 
         // Observables
         public Subject<string> PinyinChanges = new Subject<string>( );
         public Subject<bool> EnglishChanges = new Subject<bool>( );
-        public Subject<IList<IDictionary<string,object>>> SuggestionsChanges =
-            new Subject<IList<IDictionary<string,object>>>( );
-        public Subject<IList<IDictionary<string,object>>> WordsChanges =
-            new Subject<IList<IDictionary<string,object>>>( );
+        public Subject<IList<IDictionary<object,object>>> SuggestionsChanges =
+            new Subject<IList<IDictionary<object,object>>>( );
+        public Subject<IList<IDictionary<object,object>>> WordsChanges =
+            new Subject<IList<IDictionary<object,object>>>( );
         public Subject<int> CursorPosChanges = new Subject<int>( );
 
         // Observables accessors
@@ -40,7 +40,7 @@ namespace ChineseWriter {
             set { _pinyinInput = value; PinyinChanges.OnNext( value ); }
         }
 
-        public IDictionary<string,object>[] Words { 
+        public IDictionary<object,object>[] Words { 
             get { return _words; }
             set { 
                 _words = value;
@@ -61,9 +61,8 @@ namespace ChineseWriter {
         }
 
         private void UpdateSuggestions( ) {
-            var suggestions = (object[]) WordDatabase.ConvertDictionaries( 
-                    RT.var( "WordDatabase", "find-words" ).invoke( PinyinInput ));
-            _suggestions = suggestions.Cast<IDictionary<string, object>>( ).ToArray( );
+            var suggestions = (IEnumerable<object>) RT.var( "WordDatabase", "find-words" ).invoke( PinyinInput );
+            _suggestions = suggestions.Cast<IDictionary<object,object>>( ).ToArray( );
             SuggestionsChanges.OnNext( _suggestions );
         }
 
@@ -101,8 +100,8 @@ namespace ChineseWriter {
         internal void SelectPinyin( int n ) {
             if (n == 1 && _suggestions.Length == 0 ) {
                 // Literal input
-                var words = RT.var( "WordDatabase", "hanyu-to-words" ).invoke( PinyinInput );
-                InsertWords( ( (object[])WordDatabase.ConvertDictionaries( words ) ).Cast < IDictionary<string, object>>().ToArray() );
+                var words = (IEnumerable<object>) RT.var( "WordDatabase", "hanyu-to-words" ).invoke( PinyinInput );
+                InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
             } else if (n > _suggestions.Length) {
                 return; 
             } else {
@@ -111,13 +110,13 @@ namespace ChineseWriter {
             PinyinInput = "";
         }
 
-        internal void SelectWord( IDictionary<string,object> word ) {
-            InsertWords( new IDictionary<string,object>[] { word } );
+        internal void SelectWord( IDictionary<object,object> word ) {
+            InsertWords( new IDictionary<object,object>[] { word } );
             WordDatabase.IncreaseUsageCount( word );
             PinyinInput = "";
         }
 
-        private void InsertWords( IDictionary<string,object>[] newWords ) {
+        private void InsertWords( IDictionary<object,object>[] newWords ) {
             Words = Words.Take( CursorPos ).
                 Concat( newWords.Select( w => ExpandChars( w ) ) ).
                 Concat( Words.Skip( CursorPos ) ).
@@ -125,10 +124,10 @@ namespace ChineseWriter {
             CursorPos = CursorPos + newWords.Count();
         }
 
-        private IDictionary<string,object> ExpandChars(IDictionary<string,object> word) {
-            return word.ContainsKey( "hanyu" ) && word.ContainsKey( "pinyin" ) ?
-                (IDictionary<string, object>)WordDatabase.ConvertDictionaries(
-                    RT.var( "WordDatabase", "expanded-word" ).invoke( word.Hanyu(), word.Pinyin() ) ) :
+        private IDictionary<object,object> ExpandChars(IDictionary<object,object> word) {
+            return word.HasKeyword( "hanyu" ) && word.HasKeyword( "pinyin" ) ?
+                (IDictionary<object,object>) RT.var( "WordDatabase", "expanded-word" ).
+                    invoke( word.Hanyu(), word.Pinyin() ) :
                 word;
         }
 
@@ -181,7 +180,7 @@ namespace ChineseWriter {
         }
 
         internal void Clear( ) {
-            Words = new IDictionary<string,object>[] { };
+            Words = new IDictionary<object,object>[] { };
             PinyinInput = "";
             CursorPos = 0;
         }
@@ -191,9 +190,8 @@ namespace ChineseWriter {
         }
 
         internal void Reparse( ) {
-            Words = (IDictionary<string, object>[]) WordDatabase.
-                ConvertDictionaries(RT.var( "WordDatabase", "hanyu-to-words" ).
-                    invoke( RT.var( "WordDatabase", "hanyu-dict" ), Hanyu ) );
+            Words = (IDictionary<object,object>[]) RT.var( "WordDatabase", "hanyu-to-words" ).
+                    invoke( RT.var( "WordDatabase", "hanyu-dict" ), Hanyu );
         }
     } // class
 

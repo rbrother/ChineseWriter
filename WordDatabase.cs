@@ -39,35 +39,15 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
-        /// <summary>
-        /// Recursively convert nested clojure hashes / dictionaries to
-        /// more C# friendlt form with Keywords replaced by corresponding string
-        /// </summary>
-        /// <param name="clojureData">raw clojure data</param>
-        /// <returns></returns>
-        public static object ConvertDictionaries( object clojureData ) {
-            if (clojureData is IDictionary<object, object>) {
-                return ( (IDictionary<object, object>)clojureData ).
-                    ToDictionary( 
-                        pair => ( (Keyword)pair.Key ).getName( ), 
-                        pair => ConvertDictionaries(pair.Value) );
-            } else if (clojureData is IList<object>) {
-                return ( (IList<object>)clojureData ).
-                    Select( obj => ConvertDictionaries( obj ) ).ToArray( );
-            } else {
-                return clojureData;
-            }
-        }
-
-        internal static void SetShortEnglish( IDictionary<string,object> word, string shortEnglish ) {
+        internal static void SetShortEnglish( IDictionary<object,object> word, string shortEnglish ) {
             throw new NotImplementedException( );
         }
 
-        internal static void SetWordKnown( IDictionary<string, object> word ) {
+        internal static void SetWordKnown( IDictionary<object,object> word ) {
             Debug.Print( "SetWordKnown not implemented" );
         }
 
-        internal static void IncreaseUsageCount( IDictionary<string, object> word ) {
+        internal static void IncreaseUsageCount( IDictionary<object,object> word ) {
             Debug.Print( "IncreaseUsageCount not implemented" );
         }
     } // class

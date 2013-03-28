@@ -16,10 +16,10 @@ using RT = clojure.lang.RT;
 namespace ChineseWriter {
 
     public partial class EditWord : Window {
-        public EditWord( IDictionary<string,object> word ) {
+        public EditWord( IDictionary<object,object> word ) {
             InitializeComponent( );
-            this.ShortEnglishBox.Text = word.GetStr("short-english");
-            this.Known.IsChecked = (bool)word["known"];
+            this.ShortEnglishBox.Text = word.Get<string>("short-english");
+            this.Known.IsChecked = word.Get<bool>("known");
             this.ShortEnglishBox.Focus( );
         }
 

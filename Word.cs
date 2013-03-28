@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using RT = clojure.lang.RT;
 
 namespace ChineseWriter {
 
@@ -17,27 +18,31 @@ namespace ChineseWriter {
 
     public static class WordExtensions {
 
-        public static string GetStr( this IDictionary<string, object> dict, string key ) {
-            return Convert.ToString( dict[key] );
+        public static T Get<T>( this IDictionary<object,object> dict, string key ) {
+            return (T) Convert.ChangeType( dict[ RT.keyword( null, key) ], typeof(T) );
         }
 
-        public static IList<object> GetList( this IDictionary<string, object> dict, string key ) {
-            return (IList<object>)dict[key];
+        public static IList<object> GetList( this IDictionary<object,object> dict, string key ) {
+            return (IList<object>)dict[RT.keyword( null, key )];
         }
 
-        public static string Pinyin( this IDictionary<string, object> word ) {
-            return word.ContainsKey( "pinyin" ) ?
-                word.GetStr( "pinyin" ) : word.GetStr( "text" );
+        public static string Pinyin( this IDictionary<object,object> word ) {
+            return word.HasKeyword("pinyin") ?
+                word.Get<string>( "pinyin" ) : word.Get<string>( "text" );
         }
 
-        public static string PinyinDiacritics( this IDictionary<string, object> word ) {
-            return word.ContainsKey( "pinyin" ) ?
-                word.Pinyin( ).AddDiacritics( ) : word.GetStr( "text" );
+        public static bool HasKeyword( this IDictionary<object, object> dict, string key ) {
+            return dict.ContainsKey( RT.keyword( null, key ) );
         }
 
-        public static string Hanyu( this IDictionary<string, object> word ) {
-            return word.ContainsKey( "hanyu" ) ?
-                word.GetStr( "hanyu" ) : word.GetStr( "text" );
+        public static string PinyinDiacritics( this IDictionary<object,object> word ) {
+            return word.HasKeyword( "pinyin" ) ?
+                word.Pinyin( ).AddDiacritics( ) : word.Get<string>( "text" );
+        }
+
+        public static string Hanyu( this IDictionary<object,object> word ) {
+            return word.HasKeyword( "hanyu" ) ?
+                word.Get<string>( "hanyu" ) : word.Get<string>( "text" );
         }
 
     }
