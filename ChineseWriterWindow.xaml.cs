@@ -81,9 +81,9 @@ namespace ChineseWriter {
         private void UpdateSuggestions( IList<IDictionary<string,object>> suggestions ) {
             Suggestions.ItemsSource = suggestions.Select( suggestion =>
                 new SuggestionWord {
-                    Pinyin = ( (string)suggestion["pinyin"] ).AddDiacritics( ),
-                    Hanyu = (string)suggestion["hanyu"],
-                    English = (string)suggestion["english"],
+                    Pinyin = ( suggestion.Pinyin() ).AddDiacritics( ),
+                    Hanyu = suggestion.Hanyu(),
+                    English = suggestion.GetStr("english"),
                     UsageCountString = suggestion.ContainsKey( "usage-count" ) ?
                         Convert.ToString( suggestion["usage-count"] ) : ""
                 } );

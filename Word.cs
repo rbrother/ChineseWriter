@@ -15,167 +15,31 @@ namespace ChineseWriter {
         public string English { get; set; }
     }
 
+    public static class WordExtensions {
+
+        public static string GetStr( this IDictionary<string, object> dict, string key ) {
+            return Convert.ToString( dict[key] );
+        }
+
+        public static IList<object> GetList( this IDictionary<string, object> dict, string key ) {
+            return (IList<object>)dict[key];
+        }
+
+        public static string Pinyin( this IDictionary<string, object> word ) {
+            return word.ContainsKey( "pinyin" ) ?
+                word.GetStr( "pinyin" ) : word.GetStr( "text" );
+        }
+
+        public static string PinyinDiacritics( this IDictionary<string, object> word ) {
+            return word.ContainsKey( "pinyin" ) ?
+                word.Pinyin( ).AddDiacritics( ) : word.GetStr( "text" );
+        }
+
+        public static string Hanyu( this IDictionary<string, object> word ) {
+            return word.ContainsKey( "hanyu" ) ?
+                word.GetStr( "hanyu" ) : word.GetStr( "text" );
+        }
+
+    }
+
 }
-/*
-namespace ChineseWriter {
-
-    public abstract class Word {
-        abstract public string Text { get; }
-        virtual public string HanyuHtml { get { return Text; } }
-        virtual public string PinyinHtml { get { return ""; } }
-        virtual public string EnglishHtml { get { return ""; } }
-        abstract public string DisplayPinyin { get; }
-    }
-
-    public class Word : Word {
-        private string _text;
-
-        public Word( string text ) {
-            _text = text;
-        }
-
-        public override string Text { get { return _text; } }
-
-        public override string DisplayPinyin { get { return Text; } }
-
-    }
-
-    public abstract class Word : Word {
-        public override string Text { get { return Hanyu; } }
-        abstract public string Hanyu { get; }
-        abstract public string Pinyin { get; }
-        abstract public string English { get; }
-        abstract public string ShortEnglish { get; }
-    }
-
-    public class Word : Word {
-        private readonly string _hanyu, _english;
-        private readonly string _pinyin; // eg. "ma3 pa2"
-        private readonly string _pinyinNoSpaces; // with spaces removed eg. "ma3pa2"
-        private readonly string _pinyinNoSpacesNoTones; // eg. "mapa"
-        private readonly string _pinyinDiacritics; // with diacritics added eg. "má pà"
-        private string _shortEnglish; // explicit short english, replacing CCDICT first part
-
-        override public string English { get { return _english; } }
-        override public string Hanyu { get { return _hanyu; } }
-        override public string Pinyin { get { return _pinyin; } }
-        public bool ShortEnglishGiven { get { return _shortEnglish != null; } }
-        override public string ShortEnglish {
-            get {
-                return ShortEnglishGiven ? _shortEnglish : English.Split( ',' ).First( );
-            }
-        }
-        public void SetShortEnglish(string value) {
-            _shortEnglish = value;
-        }
-        public bool Known { get; set; } // true: hide english
-        public bool Suggest { get; set; }
-        public int UsageCount { get; set; }
-        public string UsageCountString { get { return UsageCount == 0 ? "" : UsageCount.ToString( );  } } 
-
-        override public string DisplayPinyin {
-            get { return _pinyinDiacritics; }
-        }
-
-        private static readonly Regex NUMBERS = new Regex( @"\d", RegexOptions.Compiled );
-
-        private static readonly Regex CC_LINE = new Regex( @"(\S+)\s+(\S+)\s+\[([\w\:\s]+)\]\s+\/(.+)\/" );
-
-        public Word( string line, Dictionary<Tuple<string, string>, XElement> info ) {
-            var groups = CC_LINE.Match( line ).Groups;
-            //var traditional = groups[1].Value;
-            _hanyu = groups[2].Value;
-            _pinyin = groups[3].Value;
-            _english = groups[4].Value.Replace( "/", ", " );
-            _pinyinNoSpaces = _pinyin.Replace( " ", "" ).Replace( ":", "" ).ToLower( );
-            _pinyinNoSpacesNoTones = NUMBERS.Replace( _pinyinNoSpaces, "" );
-            _pinyinDiacritics = _pinyin.AddDiacritics( );
-            var infoKey = Tuple.Create( _hanyu, _pinyin );
-            if (info.ContainsKey( infoKey )) {
-                var wordInfo = info[infoKey];
-                Suggest = true;
-                if (wordInfo.Attribute( "short_english" ) != null) {
-                    _shortEnglish = wordInfo.Attribute( "short_english" ).Value;
-                }
-                if (wordInfo.Attribute( "known" ) != null) {
-                    Known = Convert.ToBoolean( wordInfo.Attribute( "known" ).Value );
-                }
-                if (wordInfo.Attribute( "usage_count" ) != null) {
-                    UsageCount = Convert.ToInt32( wordInfo.Attribute( "usage_count" ).Value );
-                }
-            }
-        }
-
-        public bool MatchesPinyin( string pinyinInput ) {
-            return _pinyinNoSpaces.StartsWith( pinyinInput ) ||
-                _pinyinNoSpacesNoTones.StartsWith( pinyinInput );
-        }
-
-        // TODO: Make word compose of character-objects (or sub-word objects)
-        public Tuple<string, string>[] Characters {
-            get {
-                return _hanyu.
-                    ToCharArray( ).
-                    Select( c => c.ToString() ).
-                    Zip( _pinyin.Split( ' ' ), (hanyu, pinyin) => Tuple.Create(hanyu, pinyin) ).
-                    ToArray();
-            }
-        }
-
-        override public string HanyuHtml {
-            get {
-                return string.Join( "", 
-                    Characters.Select( c => 
-                        string.Format( "<span style='color: {0};'>{1}</span>",
-                            HtmlColor( c.Item2 ), c.Item1 ) ).ToArray( ) );
-            }
-        }
-
-        override public string PinyinHtml {
-            get {
-                return string.Join( " ",
-                    Characters.Select( c =>
-                        string.Format( "<span style='color: {0};'>{1}</span>",
-                            HtmlColor( c.Item2 ), c.Item2.AddDiacritics() ) ).ToArray( ) );
-            }
-        }
-
-        public override string EnglishHtml {
-            get {
-                return Known ? "" : ShortEnglish;
-            }
-        }
-
-        private static string HtmlColor( string pinyin ) {
-            var color = WordPanel.ToneColor( pinyin ).ToString();
-            // remove the alpha value
-            return "#" + color.Substring( 3 );
-        }
-
-    }
-
-    public class Word : Word {
-        private Word[] _words;
-
-        override public string Hanyu { get { return _words.First().Hanyu; } }
-
-        override public string Pinyin { get { return JoinBy( word => word.Pinyin ); } }
-
-        override public string DisplayPinyin { get { return JoinBy( word => word.DisplayPinyin ); } }
-
-        override public string English { get { return JoinBy( word => word.English ); } }
-
-        override public string ShortEnglish { get { return JoinBy( word => word.ShortEnglish ); } }
-
-        public Word[] Words { get { return _words; } }
-
-        private string JoinBy( Func<Word, string> selector ) {
-            return string.Join( " / ", _words.Select( selector ).ToArray() );
-        }
-
-        public Word( Word[] words ) {
-            _words = words;
-        }
-    }
-}
-*/

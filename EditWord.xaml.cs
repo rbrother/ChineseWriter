@@ -18,7 +18,7 @@ namespace ChineseWriter {
     public partial class EditWord : Window {
         public EditWord( IDictionary<string,object> word ) {
             InitializeComponent( );
-            this.ShortEnglishBox.Text = (string)word["short-english"];
+            this.ShortEnglishBox.Text = word.GetStr("short-english");
             this.Known.IsChecked = (bool)word["known"];
             this.ShortEnglishBox.Focus( );
         }

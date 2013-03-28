@@ -102,7 +102,7 @@ namespace ChineseWriter {
             if (n == 1 && _suggestions.Length == 0 ) {
                 // Literal input
                 var words = RT.var( "WordDatabase", "hanyu-to-words" ).invoke( PinyinInput );
-                InsertWords( (IDictionary<string,object>[]) WordDatabase.ConvertDictionaries( words ) );
+                InsertWords( ( (object[])WordDatabase.ConvertDictionaries( words ) ).Cast < IDictionary<string, object>>().ToArray() );
             } else if (n > _suggestions.Length) {
                 return; 
             } else {
@@ -126,16 +126,18 @@ namespace ChineseWriter {
         }
 
         private IDictionary<string,object> ExpandChars(IDictionary<string,object> word) {
-            return (IDictionary<string,object>) WordDatabase.ConvertDictionaries(
-                RT.var( "WordDatabase", "expanded-word" ).invoke( word["hanyu"], word["pinyin"] ));
+            return word.ContainsKey( "hanyu" ) && word.ContainsKey( "pinyin" ) ?
+                (IDictionary<string, object>)WordDatabase.ConvertDictionaries(
+                    RT.var( "WordDatabase", "expanded-word" ).invoke( word.Hanyu(), word.Pinyin() ) ) :
+                word;
         }
 
         public string HanyiPinyinLines { 
             get {
                 var pinyinLine = string.Join( "  ", Words
-                    .Select( word => word["pinyin-diacritics"] ).ToArray( ) );
+                    .Select( word => word.PinyinDiacritics() ) );
                 var hanyiLine = string.Join( " ", Words
-                    .Select( word => word["hanyu"] ).ToArray( ) );
+                    .Select( word => word.Hanyu() ));
                 return hanyiLine + "\n" + pinyinLine;
             } 
         }
