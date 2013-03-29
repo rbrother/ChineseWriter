@@ -45,6 +45,20 @@ namespace ChineseWriter {
                 word.Get<string>( "hanyu" ) : word.Get<string>( "text" );
         }
 
+        public static string UsageCountStr( this IDictionary<object,object> word ) {
+            return word.HasKeyword( "usage-count" ) ?
+                Convert.ToString( word.Get<int>("usage-count") ) : "";
+        }
+
+        public static SuggestionWord ToDataWord( this IDictionary<object, object> word ) {
+            return new SuggestionWord {
+                Pinyin = ( word.Pinyin( ) ).AddDiacritics( ),
+                Hanyu = word.Hanyu( ),
+                English = word.Get<string>( "english" ),
+                UsageCountString = word.UsageCountStr( )
+            };
+        }
+
     }
 
 }

@@ -69,7 +69,7 @@ namespace ChineseWriter {
             panel.Children.Add( 
                 new TextBlock { 
                     Padding = new Thickness(4),                            
-                    FontSize = 16, Text = (string)word["english"], 
+                    FontSize = 16, Text = word.Get<string>("english"), 
                     MaxWidth = 500, TextWrapping = TextWrapping.Wrap,
             } );
             var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };

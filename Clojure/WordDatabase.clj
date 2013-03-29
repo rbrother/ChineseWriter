@@ -38,10 +38,10 @@
 (defn toneless-equal [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
 
 (defn find-char [ hanyu pinyin ]
-  (let [ exact-match (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
+  (let [ exact-match (@@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
     (if exact-match (first exact-match)
       ; Look for non-exact matches that might happen because of tone changes of char as part of a word
-      (let [ hanyu-matches (@hanyu-dict { :hanyu hanyu }) 
+      (let [ hanyu-matches (@@hanyu-dict { :hanyu hanyu }) 
             caseless-match (filter #(equal-caseless (% :pinyin) pinyin) hanyu-matches)
             toneless-matches (filter #(toneless-equal (% :pinyin) pinyin) hanyu-matches)]
         (cond
@@ -51,7 +51,7 @@
 
 ; This is slow, so do only for a word when needed, not for all words
 (defn expanded-word [ hanyu pinyin ]
-  (let [ word (first (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } )) ]
+  (let [ word (first (@@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } )) ]
     (->> 
       (zip (map str hanyu) (str/split pinyin #" "))
       (map (fn [ [h p] ] (find-char h p)))
@@ -93,9 +93,10 @@
 (defn set-word-database! [words-raw info-dict]
   (do
     (reset! word-database (merge-info words-raw info-dict))
-    (reset! hanyu-dict (index @word-database [:hanyu]))
-    (reset! hanyu-pinyin-dict (index @word-database [ :hanyu :pinyin ]))
-    (reset! pinyin-start-dict (create-pinyin-start-dict @word-database))))
+    ; use (future) for performance: run parallel in background and stall only when value is needed
+    (reset! hanyu-dict (future (index @word-database [:hanyu])))
+    (reset! hanyu-pinyin-dict (future (index @word-database [ :hanyu :pinyin ])))
+    (reset! pinyin-start-dict (future (create-pinyin-start-dict @word-database)))))
 
 ; It's better to store the data at clojure-side. Casting the data to more C# usable
 ; format renders it less usable to clojure code
@@ -110,11 +111,8 @@
         pinyin-matcher (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones } ]
                          (or (re-find pattern p1) (re-find pattern p2) )) ] 
     (if (< (count pinyin) 2) [] ; only suggest for 2+ letter of pinyin
-      (->> (@pinyin-start-dict { :pinyin-start (subs pinyin 0 2) } )
-        (filter pinyin-matcher)
-        ;(sort suggestion-comparer)
-        (take 50)
-        (vec)))))
+      (->> (@@pinyin-start-dict { :pinyin-start (subs pinyin 0 2) } )
+        (filter pinyin-matcher)))))
 
 ; -------------------- Parsing chinese text to words ---------------------
 
@@ -123,7 +121,7 @@
 
 (defn find-first-word-len [ chinese len ]
   (if (= len 0) { :text (subs chinese 0 1) }
-    (let [words (@hanyu-dict { :hanyu (subs chinese 0 len) } )]
+    (let [words (@@hanyu-dict { :hanyu (subs chinese 0 len) } )]
       (if words (pick-word words) 
         (find-first-word-len chinese (dec len))))))
       

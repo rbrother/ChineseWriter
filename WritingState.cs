@@ -186,7 +186,7 @@ namespace ChineseWriter {
         }
 
         internal string Hanyu {
-            get { return string.Join( "", Words.Select( word => word["hanyu"] ).ToArray( ) ); }
+            get { return string.Join( "", Words.Select( word => word.Get<string>("hanyu") ).ToArray( ) ); }
         }
 
         internal void Reparse( ) {

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Reactive.Linq;
+using System.Threading;
 using RT = clojure.lang.RT;
 using Keyword = clojure.lang.Keyword;
 
@@ -78,15 +79,23 @@ namespace ChineseWriter {
             }
         }
 
+        private int CurrentUpdater = 0;
+
         private void UpdateSuggestions( IList<IDictionary<object,object>> suggestions ) {
-            Suggestions.ItemsSource = suggestions.Select( suggestion =>
-                new SuggestionWord {
-                    Pinyin = ( suggestion.Pinyin() ).AddDiacritics( ),
-                    Hanyu = suggestion.Hanyu(),
-                    English = suggestion.Get<string>("english"),
-                    UsageCountString = suggestion.HasKeyword( "usage-count" ) ?
-                        Convert.ToString( suggestion["usage-count"] ) : ""
-                } );
+            ThreadPool.QueueUserWorkItem(
+                state => UpdateSuggestionsBackground( (IList<IDictionary<object,object>>) state ), suggestions );       
+        }
+
+        private void UpdateSuggestionsBackground( IList<IDictionary<object,object>> suggestions ) {
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            CurrentUpdater++;
+            var id = CurrentUpdater;
+            this.Dispatcher.Invoke(new Action( () => Suggestions.Items.Clear( )));
+            foreach (var suggestion in suggestions) {
+                if (id != CurrentUpdater) break;
+                var dataWord = suggestion.ToDataWord( );
+                this.Dispatcher.Invoke( new Action( () => Suggestions.Items.Add( dataWord ) ) );
+            }
         }
 
         private FrameworkElement CreateCursorPanel( ) {
