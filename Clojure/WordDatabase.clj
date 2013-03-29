@@ -94,12 +94,18 @@
   (set-word-database!
     (load-from-file cc-dict-file) (load-from-file info-file)))
 
+(defn update-word-props [ hanyu pinyin new-props ]
+  (let [ key { :hanyu hanyu :pinyin pinyin }
+        old-word (or (@word-info-dict key) key ) ; info might not contain this word yet 
+        new-word (merge old-word new-props) ]
+    (reset! word-info-dict (assoc @word-info-dict key new-word ))))
+
 (defn inc-usage-count [ hanyu pinyin ]
-  (let [ old-word (@word-info-dict { :hanyu hanyu :pinyin pinyin }) 
-        new-word (assoc old-word :usage-count (inc (get old-word :usage-count 0) )) ]
-    (reset! word-info-dict (assoc @word-info-dict { :hanyu hanyu :pinyin pinyin } new-word ))))
-  
-(defn set-word-info [hanyu pinyin short-english known ] nil )
+  (let [ old-word (@word-info-dict { :hanyu hanyu :pinyin pinyin }) ]
+    (update-word-props hanyu pinyin { :usage-count (inc (get old-word :usage-count 0)) } )))
+
+(defn set-word-info [hanyu pinyin short-english known ]  
+  (update-word-props hanyu pinyin { :short-english short-english :known known }))
 
 (defn word-info-string [ ] 
   (list-to-str (sort-by #(% :pinyin) (vals @word-info-dict))))

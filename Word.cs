@@ -26,13 +26,18 @@ namespace ChineseWriter {
             return (IList<object>)dict[RT.keyword( null, key )];
         }
 
+        public static bool HasKeyword( this IDictionary<object, object> dict, string key ) {
+            return dict.ContainsKey( RT.keyword( null, key ) );
+        }
+
         public static string Pinyin( this IDictionary<object,object> word ) {
             return word.HasKeyword("pinyin") ?
                 word.Get<string>( "pinyin" ) : word.Get<string>( "text" );
         }
 
-        public static bool HasKeyword( this IDictionary<object, object> dict, string key ) {
-            return dict.ContainsKey( RT.keyword( null, key ) );
+        public static string ShortEnglish( this IDictionary<object,object> word ) {
+            return word.HasKeyword("text") ? word.Get<string>("text") :
+                word.Get<bool>( "known" ) ? "" : word.Get<string>( "short-english" );
         }
 
         public static string PinyinDiacritics( this IDictionary<object,object> word ) {

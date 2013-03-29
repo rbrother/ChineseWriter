@@ -114,7 +114,7 @@
   {{:pinyin "wo3", :hanyu "我"}
    {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
    {:pinyin "wo3 men5", :hanyu "我们"}
-   {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 8},
+   {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8},
    {:pinyin "xiang4", :hanyu "向"} 
    {:pinyin "xiang4", :hanyu "向"} })
 
@@ -130,7 +130,11 @@
 
 (deftest cc-lines-test
   (is (= word-info-dict-test @word-info-dict ))
-  (is (= word-info-dict-modified (do (inc-usage-count "我们" "wo3 men5" ) @word-info-dict)))
+  (is (= word-info-dict-modified 
+         (do 
+           (inc-usage-count "我们" "wo3 men5" ) 
+           (set-word-info "我们" "wo3 men5" "xxx" true) 
+           @word-info-dict)))
   (is (= 2 (count (find-words "wo3") )))
   (is (= wo-men-word women-word-calculated))
   (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))

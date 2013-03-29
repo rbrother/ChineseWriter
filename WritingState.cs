@@ -131,13 +131,34 @@ namespace ChineseWriter {
                 word;
         }
 
+        private static string PadHanyu( string s, int latinLength ) {
+            int hanyuExtraLen = s.Replace( " ", "" ).Length / 2;
+            return s.PadRight( latinLength - hanyuExtraLen );
+        }
+
         public string HanyiPinyinLines { 
             get {
-                var pinyinLine = string.Join( "  ", Words
-                    .Select( word => word.PinyinDiacritics() ) );
-                var hanyiLine = string.Join( " ", Words
-                    .Select( word => word.Hanyu() ));
-                return hanyiLine + "\n" + pinyinLine;
+                var hanyus = Words.Select( word => word.Hanyu());
+                var pinyins = Words.Select( word => word.PinyinDiacritics());
+                var english = Words.Select( word => word.ShortEnglish()); 
+                var lengths = hanyus.Select( word => word.Length + 1 )
+                    .Zip( pinyins, (l1,s2) => Math.Max(l1, s2.Length + 1))
+                    .Zip( english, (l1,s2) => Math.Max(l1, s2.Length + 1));
+                // could not think of way to do this with the base LINQ funcs:
+                var cumulativeLengths = new List<int>();
+                int cumulativeLength = 0;
+                foreach( int length in lengths) {
+                    cumulativeLength += length;
+                    cumulativeLengths.Add( cumulativeLength );
+                }
+                // Chinese characters in a monospaced font are ~1.5 times as wide as Latin
+                // characters in the same font, so take account into padding:
+                var hanyuLine = hanyus
+                    .Zip( cumulativeLengths, ( h, len ) => Tuple.Create( h, len ) )
+                    .Aggregate( "", ( hanyu, tuple ) => PadHanyu( hanyu + tuple.Item1, tuple.Item2 ) );
+                var pinyinLine = string.Join( "", pinyins.Zip(lengths, (h,len) => h.PadRight(len)));
+                var englishLine = string.Join( "", english.Zip(lengths, (h,len) => h.PadRight(len)));
+                return hanyuLine + "\n" + pinyinLine + "\n" + englishLine;
             } 
         }
 
