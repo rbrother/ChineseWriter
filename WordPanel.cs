@@ -50,9 +50,7 @@ namespace ChineseWriter {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = breakDown ? word.Get<string>("english") : 
-                        word.HasKeyword("short-english") ? word.Get<string>("short-english") :
-                        word.Get<string>("english").Split(',').First(),
+                Text = breakDown ? word.Get<string>("english") : word.Get<string>("short-english"),
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             };
         }

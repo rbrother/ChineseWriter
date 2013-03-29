@@ -60,16 +60,19 @@
 
 ;--------------- Loading database -------------------------------------
 
-(defn merge-info-word [ {:keys [hanyu pinyin] :as word} info-dict ]
+(defn merge-info-word [ {:keys [hanyu pinyin english] :as word} info-dict ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" ""))
         dict-entry (first (or (info-dict {:hanyu hanyu :pinyin pinyin}) [{}]))]
     (merge
       word
-      (if (dict-entry :hanyu) { :usage-count 1 } {} ) ; ensure at least 1 usage count if entry in words.clj
-      dict-entry
-      {:pinyin-no-spaces pinyin-no-spaces 
+      ; Default values of attributes, can be overridden in dict-entry
+      { :usage-count (if (dict-entry :hanyu) 1 0)  ; default usage-count
+       :short-english (first (str/split english #","))  ; Default short english, can be overwritten by value in dict-entry
+       :known false
+       :pinyin-no-spaces pinyin-no-spaces 
        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) 
-       :pinyin-start (subs pinyin-no-spaces 0 2) })))
+       :pinyin-start (subs pinyin-no-spaces 0 2) }
+      dict-entry )))
 
 ; Add extra properties from words.xml
 (defn merge-info [words info]
@@ -78,7 +81,7 @@
       (map #(merge-info-word % info-dict)))))
 
 (defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
-  (let [ uc1 (get word1 :usage-count 0) uc2 (get word2 :usage-count 0) ]
+  (let [ uc1 (word1 :usage-count) uc2 (word2 :usage-count) ]
     (cond
       (not= uc1 uc2) (if (> uc1 uc2) -1 1 )
       (not= (count hanyu1) (count hanyu2)) (if (< (count hanyu1) (count hanyu2)) -1 1 )
@@ -116,13 +119,13 @@
 
 ; -------------------- Parsing chinese text to words ---------------------
 
-(defn pick-word [words]
-  (first words)) ; TODO: Implement selection of most likely word based on usage-counts etc.
+(defn most-common-word [words]
+  (apply max-key #(% :usage-count) words))
 
 (defn find-first-word-len [ chinese len ]
   (if (= len 0) { :text (subs chinese 0 1) }
     (let [words (@@hanyu-dict { :hanyu (subs chinese 0 len) } )]
-      (if words (pick-word words) 
+      (if words (most-common-word words) 
         (find-first-word-len chinese (dec len))))))
       
 (def non-hanyu-regexp #"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=]+")

@@ -40,16 +40,20 @@
    {:hanyu "爱人", :pinyin "ai4 ren5", :english "spouse, husband, wife, sweetheart, CL:個|个[ge4]"}
    {:hanyu "爱", :pinyin "ai4", :english "to love, affection, to be fond of, to like"}
    {:hanyu "人", :pinyin "ren2", :english "man, person, people, CL:個|个[ge4],位[wei4]"}
+   {:hanyu "向", :pinyin "Xiang4", :english "surname Xiang"},
+   {:hanyu "向", :pinyin "xiang4", :english "towards, to face, to turn towards, direction, to support, to side with, shortly before, formerly, always, all along"},
 ])
 
 (def test-word-info
   [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112 }
-    { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 } ])
+    { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 } 
+    { :hanyu "向", :pinyin "xiang4" }])
 
 (def wo-men-word
   {:hanyu "我们",
    :pinyin "wo3 men5",
    :english "we, us, ourselves, our"
+   :short-english "we"
    :pinyin-no-spaces "wo3men5"
    :pinyin-no-spaces-no-tones "women"
    :known true 
@@ -74,6 +78,7 @@
    :hanyu "我们",
    :pinyin "wo3 men5",
    :english "we, us, ourselves, our",
+   :short-english "we"
    :known true,
    :usage-count 7,   
    :characters
@@ -91,8 +96,10 @@
      :pinyin-start "me",
      :hanyu "们",
      :pinyin "men5",
-     :english
-     "plural marker for pronouns, and nouns referring to individuals"}]})
+     :usage-count 0,
+     :known false,
+     :english "plural marker for pronouns, and nouns referring to individuals"
+     :short-english "plural marker for pronouns"}]})
 
 (set-word-database! test-words-raw test-word-info)
 
@@ -100,10 +107,11 @@
 
 (def airen-chars ((expanded-word "爱人" "ai4 ren5") :characters))
 
+(def xiang-words (filter #(= (% :hanyu) "向" ) @word-database))
+
 (def second-airen-char (nth airen-chars 1))
 
 (deftest cc-lines-test
-  (is (= 28 (count @word-database)))
   (is (= 2 (count (find-words "wo3") )))
   (is (= wo-men-word women-word-calculated))
   (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))
@@ -113,6 +121,8 @@
   (is (= 2 (count airen-chars)))
   (is (= "人" (second-airen-char :hanyu)))
   (is (= wo-expanded (expanded-word "我" "wo3")))
+  (is (= 2 (count xiang-words)))
+  (is (= ((most-common-word xiang-words) :short-english) "towards"))
   (is (= (count (hanyu-to-words "我们女友" )) 2 ))
   (is (= (count (hanyu-to-words "我们QQ女友" )) 3 )))
 

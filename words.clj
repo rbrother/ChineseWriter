@@ -1112,7 +1112,6 @@
  {:pinyin "xiang3 yao4", :hanyu "想要"}
  {:pinyin "xiang4", :hanyu "像"}
  {:pinyin "xiang4", :hanyu "向"}
- {:pinyin "Xiang4", :hanyu "向"}
  {:pinyin "xiang4 ji1", :hanyu "相机"}
  {:pinyin "xiao1 fei4", :hanyu "消费"}
  {:pinyin "xiao1 xi5", :hanyu "消息"}
@@ -1128,7 +1127,6 @@
  {:pinyin "xie4 xie5", :hanyu "谢谢", :usage-count 2}
  {:pinyin "xin1", :hanyu "心"}
  {:pinyin "xin1", :hanyu "新"}
- {:pinyin "Xin1", :hanyu "新"}
  {:pinyin "Xin1 gang3", :hanyu "新港"}
  {:pinyin "xin1 ku3", :hanyu "辛苦"}
  {:pinyin "xin1 li3", :hanyu "心理", :usage-count 1}
@@ -1191,7 +1189,6 @@
   :short-english "also",
   :known true,
   :usage-count 5}
- {:pinyin "Ye3", :hanyu "也"}
  {:pinyin "ye3 xu3", :hanyu "也许", :usage-count 2}
  {:pinyin "ye4", :hanyu "夜"}
  {:pinyin "ye4 zi5", :hanyu "叶子"}
