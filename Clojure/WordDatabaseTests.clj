@@ -1,6 +1,6 @@
 (ns WordDatabaseTests
   (:use WordDatabase)
-  (:use clojure.set)  
+  (:use clojure.set)
   (:use clojure.pprint)
   (:use clojure.test))
 
@@ -101,6 +101,22 @@
      :english "plural marker for pronouns, and nouns referring to individuals"
      :short-english "plural marker for pronouns"}]})
 
+(def word-info-dict-test
+  {{:pinyin "wo3", :hanyu "我"}
+   {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
+   {:pinyin "wo3 men5", :hanyu "我们"}
+   {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7},
+   {:pinyin "xiang4", :hanyu "向"} 
+   {:pinyin "xiang4", :hanyu "向"} })
+
+(def word-info-dict-modified
+  {{:pinyin "wo3", :hanyu "我"}
+   {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
+   {:pinyin "wo3 men5", :hanyu "我们"}
+   {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 8},
+   {:pinyin "xiang4", :hanyu "向"} 
+   {:pinyin "xiang4", :hanyu "向"} })
+
 (set-word-database! test-words-raw test-word-info)
 
 (def women-word-calculated (first (filter #(= (% :pinyin) "wo3 men5") @word-database)))
@@ -112,6 +128,8 @@
 (def second-airen-char (nth airen-chars 1))
 
 (deftest cc-lines-test
+  (is (= word-info-dict-test @word-info-dict ))
+  (is (= word-info-dict-modified (do (inc-usage-count "我们" "wo3 men5" ) @word-info-dict)))
   (is (= 2 (count (find-words "wo3") )))
   (is (= wo-men-word women-word-calculated))
   (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))

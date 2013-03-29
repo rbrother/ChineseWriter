@@ -1,5 +1,6 @@
 ﻿(ns WordDatabase
   (:require [clojure.string :as str])
+  (:use clojure.pprint)
   (:use clojure.set)
   (:use clojure.clr.io))
 
@@ -15,7 +16,7 @@
 
 (defn single? [coll] (= (count coll) 1 ) )
 
-;(defn write-to-file [ path value ] (with-open [wri (text-writer path)] (pprint value wri)))
+(defn write-to-file [ path value ] (with-open [wri (text-writer path)] (pprint value wri)))
 
 (defn load-from-file [ path ] (read-string (slurp path :encoding "UTF-8")))
 
@@ -33,13 +34,15 @@
 
 (def hanyu-pinyin-dict (atom nil))
 
+(def word-info-dict (atom nil)) ; retain so that properties like usage-count can be changed at runtime
+
 ;---------------------------------------------------------
 
 (defn toneless-equal [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
 
 (defn find-char [ hanyu pinyin ]
   (let [ exact-match (@@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
-    (if exact-match (first exact-match)
+    (if exact-match exact-match
       ; Look for non-exact matches that might happen because of tone changes of char as part of a word
       (let [ hanyu-matches (@@hanyu-dict { :hanyu hanyu }) 
             caseless-match (filter #(equal-caseless (% :pinyin) pinyin) hanyu-matches)
@@ -51,7 +54,7 @@
 
 ; This is slow, so do only for a word when needed, not for all words
 (defn expanded-word [ hanyu pinyin ]
-  (let [ word (first (@@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } )) ]
+  (let [ word (@@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ) ]
     (->> 
       (zip (map str hanyu) (str/split pinyin #" "))
       (map (fn [ [h p] ] (find-char h p)))
@@ -95,10 +98,11 @@
 
 (defn set-word-database! [words-raw info-dict]
   (do
+    (reset! word-info-dict (map-values first (index info-dict [ :hanyu :pinyin ] )))
     (reset! word-database (merge-info words-raw info-dict))
     ; use (future) for performance: run parallel in background and stall only when value is needed
     (reset! hanyu-dict (future (index @word-database [:hanyu])))
-    (reset! hanyu-pinyin-dict (future (index @word-database [ :hanyu :pinyin ])))
+    (reset! hanyu-pinyin-dict (future (map-values first (index @word-database [ :hanyu :pinyin ]))))
     (reset! pinyin-start-dict (future (create-pinyin-start-dict @word-database)))))
 
 ; It's better to store the data at clojure-side. Casting the data to more C# usable
@@ -106,6 +110,15 @@
 (defn load-database [ cc-dict-file info-file ]
   (set-word-database!
     (load-from-file cc-dict-file) (load-from-file info-file)))
+
+(defn inc-usage-count [ hanyu pinyin ]
+  (let [ old-word (@word-info-dict { :hanyu hanyu :pinyin pinyin }) 
+        new-word (assoc old-word :usage-count (inc (old-word :usage-count) )) ]
+    (reset! word-info-dict (assoc @word-info-dict { :hanyu hanyu :pinyin pinyin } new-word ))))
+  
+(defn set-word-info [hanyu pinyin short-english known ] nil )
+
+(defn save-word-info [ file-name ] (write-to-file file-name @word-info-dict))
 
 ;-------------------  Finding words   ----------------------------------------
 

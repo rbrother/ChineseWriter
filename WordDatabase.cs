@@ -22,8 +22,10 @@ namespace ChineseWriter {
 
         public static void LoadWords( ) {
             RT.var( "WordDatabase", "load-database" )
-                .invoke( FilePath( "cedict_ts.clj" ), FilePath( "words.clj" ) );
+                .invoke( FilePath( "cedict_ts.clj" ), InfoFileName );
         }
+
+        private static string InfoFileName { get { return FilePath( "words.clj" ); } }
 
         private static DirectoryInfo ExeDir {
             get {
@@ -39,16 +41,18 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
-        internal static void SetShortEnglish( IDictionary<object,object> word, string shortEnglish ) {
-            throw new NotImplementedException( );
+        internal static void SetWordInfo( IDictionary<object,object> word, 
+            string shortEnglish, bool known ) {
+                RT.var( "WordDatabase", "set-word-info" ).
+                    invoke( word.Hanyu( ), word.Pinyin( ), shortEnglish, known );
         }
 
-        internal static void SetWordKnown( IDictionary<object,object> word ) {
-            Debug.Print( "SetWordKnown not implemented" );
+        internal static void IncreaseUsageCount( IDictionary<object, object> word ) {
+            RT.var( "WordDatabase", "inc-usage-count" ).invoke( word.Hanyu( ), word.Pinyin( ) );
         }
 
-        internal static void IncreaseUsageCount( IDictionary<object,object> word ) {
-            Debug.Print( "IncreaseUsageCount not implemented" );
+        internal static void SaveWordsInfo( ) {
+            RT.var( "WordDatabase", "save-word-info" ).invoke( InfoFileName );
         }
     } // class
 

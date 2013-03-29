@@ -170,10 +170,8 @@ namespace ChineseWriter {
                 var editWord = new EditWord( word );
                 var result = editWord.ShowDialog( );
                 if (result.HasValue && result.Value) {
-                    WordDatabase.SetShortEnglish( word, editWord.ShortEnglishBox.Text );
-                    if (editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value) {
-                        WordDatabase.SetWordKnown( word );
-                    }
+                    WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text, 
+                        editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value);
                     PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
                 }
             }
@@ -202,8 +200,7 @@ namespace ChineseWriter {
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
-            //throw new NotImplementedException( );
-            //_wordDatabase.SaveWordsInfo( );
+            WordDatabase.SaveWordsInfo( );
         }
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
