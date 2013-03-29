@@ -1,4 +1,5 @@
 (ns WordDatabaseTests
+  (:use Utils)
   (:use WordDatabase)
   (:use clojure.set)
   (:use clojure.pprint)

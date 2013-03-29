@@ -1,28 +1,9 @@
 ﻿(ns WordDatabase
+  (:use Utils)
   (:require [clojure.string :as str])
   (:use clojure.pprint)
   (:use clojure.set)
   (:use clojure.clr.io))
-
-; helpers
-
-(defn zip [list1 list2] (map vec (partition 2 (interleave list1 list2) )))
-
-(defn starts-with-pattern [start] (re-pattern (str/join ["^" start]) ))
-
-(defn starts-with [str start] (re-find (re-pattern (str/join ["^" start]) ) str ))
-
-(defn equal-caseless [ str1 str2 ] (= (str/lower-case str1) (str/lower-case str2)))
-
-(defn single? [coll] (= (count coll) 1 ) )
-
-(defn write-to-file [ path value ] (with-open [wri (text-writer path)] (pprint value wri)))
-
-(defn load-from-file [ path ] (read-string (slurp path :encoding "UTF-8")))
-
-(defn map-values [ f m ] (zipmap (keys m) (map f (vals m))))
-
-(defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))
 
 ;----------------------- Atoms for the dictionary data ----------------------------------
 
@@ -37,6 +18,8 @@
 (def word-info-dict (atom nil)) ; retain so that properties like usage-count can be changed at runtime
 
 ;---------------------------------------------------------
+
+(defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))
 
 (defn toneless-equal [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
 
@@ -113,12 +96,13 @@
 
 (defn inc-usage-count [ hanyu pinyin ]
   (let [ old-word (@word-info-dict { :hanyu hanyu :pinyin pinyin }) 
-        new-word (assoc old-word :usage-count (inc (old-word :usage-count) )) ]
+        new-word (assoc old-word :usage-count (inc (get old-word :usage-count 0) )) ]
     (reset! word-info-dict (assoc @word-info-dict { :hanyu hanyu :pinyin pinyin } new-word ))))
   
 (defn set-word-info [hanyu pinyin short-english known ] nil )
 
-(defn save-word-info [ file-name ] (write-to-file file-name @word-info-dict))
+(defn word-info-string [ ] 
+  (list-to-str (sort-by #(% :pinyin) (vals @word-info-dict))))
 
 ;-------------------  Finding words   ----------------------------------------
 
