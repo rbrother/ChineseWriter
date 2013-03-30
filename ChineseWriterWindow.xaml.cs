@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -80,6 +81,7 @@ namespace ChineseWriter {
         }
 
         private int CurrentUpdater = 0;
+        private int ActiveUpdaters = 0;
 
         private void UpdateSuggestions( IList<IDictionary<object,object>> suggestions ) {
             ThreadPool.QueueUserWorkItem(
@@ -90,11 +92,20 @@ namespace ChineseWriter {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             CurrentUpdater++;
             var id = CurrentUpdater;
-            this.Dispatcher.Invoke(new Action( () => Suggestions.Items.Clear( )));
-            foreach (var suggestion in suggestions) {
-                if (id != CurrentUpdater) break;
-                var dataWord = suggestion.ToDataWord( );
-                this.Dispatcher.Invoke( new Action( () => Suggestions.Items.Add( dataWord ) ) );
+            ActiveUpdaters++;
+            try {
+                while (ActiveUpdaters > 1) {
+                    Thread.Sleep( 10 );
+                    if (id != CurrentUpdater) return;
+                }
+                this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Clear( ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
+                foreach (var suggestion in suggestions) {
+                    if (id != CurrentUpdater) return;
+                    var dataWord = suggestion.ToDataWord( );
+                    this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
+                }
+            } finally {
+                ActiveUpdaters--;
             }
         }
 

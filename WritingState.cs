@@ -51,7 +51,12 @@ namespace ChineseWriter {
 
         public int CursorPos {
             get { return _cursorPos; }
-            set { _cursorPos = value; CursorPosChanges.OnNext( value ); }
+            set {
+                if ( value != _cursorPos ) {
+                    _cursorPos = value; 
+                    CursorPosChanges.OnNext( value ); 
+                }
+            }
         }
 
         // Constructor
