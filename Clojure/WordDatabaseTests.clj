@@ -73,34 +73,35 @@
       :short-english "I", :known true, :usage-count 112} ]} )
   
 (def wo-men-word-expanded 
-  {:pinyin-no-spaces-no-tones "women",
-   :pinyin-no-spaces "wo3men5",
-   :pinyin-start "wo",
-   :hanyu "我们",
-   :pinyin "wo3 men5",
-   :english "we, us, ourselves, our",
-   :short-english "we"
-   :known true,
-   :usage-count 7,   
-   :characters
+  {:characters
    [{:pinyin-start "wo",
      :pinyin-no-spaces-no-tones "wo",
      :pinyin-no-spaces "wo3",
      :known true,
      :short-english "I",
+     :usage-count 112 
      :hanyu "我",
      :pinyin "wo3",
-     :english "I, me, my",
-     :usage-count 112 }
-    {:pinyin-no-spaces-no-tones "men",
+     :english "I, me, my" }
+    {:pinyin-start "me",
+     :pinyin-no-spaces-no-tones "men",
      :pinyin-no-spaces "men5",
-     :pinyin-start "me",
+     :known false,
+     :short-english "plural marker for pronouns"
+     :usage-count 0,
      :hanyu "们",
      :pinyin "men5",
-     :usage-count 0,
-     :known false,
-     :english "plural marker for pronouns, and nouns referring to individuals"
-     :short-english "plural marker for pronouns"}]})
+     :english "plural marker for pronouns, and nouns referring to individuals" }]
+   :pinyin-start "wo",
+   :pinyin-no-spaces-no-tones "women",
+   :pinyin-no-spaces "wo3men5",
+   :known true,
+   :hanyu "我们",
+   :pinyin "wo3 men5",
+   :english "we, us, ourselves, our",
+   :short-english "we"   
+   :usage-count 7,   
+})
 
 (def word-info-dict-test
   {{:pinyin "wo3", :hanyu "我"}

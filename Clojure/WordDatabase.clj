@@ -46,19 +46,20 @@
 
 ;--------------- Loading database -------------------------------------
 
+(defn word-info [ hanyu pinyin ] 
+  (get @word-info-dict {:hanyu hanyu :pinyin pinyin} {:hanyu hanyu :pinyin pinyin} ))
+
 (defn merge-info-word [ {:keys [hanyu pinyin english] :as word} ]
-  (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" ""))
-        dict-entry (or (@word-info-dict {:hanyu hanyu :pinyin pinyin}) {})]
-    (merge
-      word
-      ; Default values of attributes, can be overridden in dict-entry
-      { :usage-count (if (dict-entry :hanyu) 1 0)  ; default usage-count
-       :short-english (first (str/split english #","))  ; Default short english, can be overwritten by value in dict-entry
-       :known false
-       :pinyin-no-spaces pinyin-no-spaces 
-       :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) 
-       :pinyin-start (subs pinyin-no-spaces 0 2) }
-      dict-entry )))
+  (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
+    (merge word
+      ; Default values of attributes, can be overridden in info
+      { :usage-count 0
+        :known false
+        :pinyin-no-spaces pinyin-no-spaces 
+        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) 
+        :pinyin-start (subs pinyin-no-spaces 0 2) 
+        :short-english (first (str/split english #",")) }  ; Default short english, can be overwritten by value in dict-entry
+      (word-info hanyu pinyin) )))
 
 (defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
   (let [ uc1 (word1 :usage-count) uc2 (word2 :usage-count) ]
@@ -82,21 +83,23 @@
     (reset! hanyu-pinyin-dict (future (map-values first (index @word-database [ :hanyu :pinyin ]))))
     (reset! pinyin-start-dict (future (create-pinyin-start-dict @word-database)))))
 
+(defn set-default-usage-count [word] (merge { :usage-count 1 } word ))
+
 ; It's better to store the data at clojure-side. Casting the data to more C# usable
 ; format renders it less usable to clojure code
 (defn load-database [ cc-dict-file info-file ]
   (set-word-database!
-    (load-from-file cc-dict-file) (load-from-file info-file)))
+    (load-from-file cc-dict-file) 
+    (map set-default-usage-count (load-from-file info-file))))
 
 (defn update-word-props [ hanyu pinyin new-props ]
-  (let [ key { :hanyu hanyu :pinyin pinyin }
-        old-word (or (@word-info-dict key) key ) ; info might not contain this word yet 
-        new-word (merge old-word new-props) ]
-    (reset! word-info-dict (assoc @word-info-dict key new-word ))))
+  (let [ new-word (merge (word-info hanyu pinyin) new-props) ]
+    (reset! word-info-dict (assoc @word-info-dict { :hanyu hanyu :pinyin pinyin } new-word ))))
+
+(defn usage-count [ hanyu pinyin ] (get (word-info hanyu pinyin) :usage-count 0))
 
 (defn inc-usage-count [ hanyu pinyin ]
-  (let [ old-word (@word-info-dict { :hanyu hanyu :pinyin pinyin }) ]
-    (update-word-props hanyu pinyin { :usage-count (inc (get old-word :usage-count 0)) } )))
+  (update-word-props hanyu pinyin { :usage-count (inc (usage-count hanyu pinyin)) } ))
 
 (defn set-word-info [hanyu pinyin short-english known ]  
   (update-word-props hanyu pinyin { :short-english short-english :known known }))
