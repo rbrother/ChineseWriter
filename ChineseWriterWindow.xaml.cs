@@ -25,35 +25,27 @@ namespace ChineseWriter {
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
 
         public ChineseWriterWindow( ) {
+            InitializeComponent( );
+            System.Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH",
+                @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
             try {
-                InitializeComponent( );
-
-                System.Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH",
-                    @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
-                RT.load( "WordDatabase" );
-
-                var startTime = DateTime.Now;
-                WordDatabase.LoadWords( );
-                var elapsed = DateTime.Now - startTime;
-                this.Title = string.Format( "Loaded {0:0.0} s", elapsed.TotalSeconds );
-
                 _writingState = new WritingState( );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
-                _pinyinInput.TextChanged += new TextChangedEventHandler(PinyinInput_TextChanged);
+                _pinyinInput.TextChanged += new TextChangedEventHandler( PinyinInput_TextChanged );
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
 
                 _cursorPanel = CreateCursorPanel( );
 
                 var ControlKeyPresses = Observable.
                     FromEventPattern<KeyEventArgs>( _pinyinInput, "KeyUp" ).
-                    Where( args => args.EventArgs.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control)).
+                    Where( args => args.EventArgs.KeyboardDevice.Modifiers.HasFlag( ModifierKeys.Control ) ).
                     Select( args => args.EventArgs.Key );
 
-                ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains(key) ).
+                ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains( key ) ).
                     Subscribe( key => _writingState.TextEdit( key ) );
 
-                ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains(key) ).
+                ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
                     Subscribe( pinyinIndex => SelectPinyin( pinyinIndex + 1 ) );
 
@@ -64,20 +56,41 @@ namespace ChineseWriter {
                 _writingState.PinyinChanges.ObserveOnDispatcher( ).
                     Subscribe( pinyin => _pinyinInput.Text = pinyin );
                 _writingState.SuggestionsChanges.ObserveOnDispatcher( ).
-                    Subscribe( suggestions => UpdateSuggestions( suggestions) );
+                    Subscribe( suggestions => UpdateSuggestions( suggestions ) );
                 _writingState.CursorPosChanges.
-                    ObserveOnDispatcher().
-                    Subscribe( cursor => ScrollInputVisible() );
+                    ObserveOnDispatcher( ).
+                    Subscribe( cursor => ScrollInputVisible( ) );
                 _writingState.WordsChanges.
                     CombineLatest( _writingState.CursorPosChanges, ( words, cursor ) => Tuple.Create( words, cursor ) ).
-                    ObserveOnDispatcher().Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ));
+                    ObserveOnDispatcher( ).Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ) );
 
                 _writingState.Clear( );
                 PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
+                _pinyinInput.Focus( );
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
-                this.Close( );
             }
+        }
+
+        private void Window_Loaded( object sender, RoutedEventArgs e ) {
+            ThreadPool.QueueUserWorkItem( state => InitializeClojure( ) ); 
+        }
+
+        private void SetTitleThreadsafe( string title ) {
+            this.Dispatcher.Invoke( new Action( ( ) => { this.Title = title; } ) );
+        }
+
+        private void InitializeClojure( ) {
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            SetTitleThreadsafe( "Starting Clojure Runtime..." );
+            var startTime = DateTime.Now;
+            RT.load( "WordDatabase" );
+            var elapsed = DateTime.Now - startTime;
+            SetTitleThreadsafe( string.Format( "Clojure Runtime started {0:0.0} s. Loading dictionary...", elapsed.TotalSeconds ) );
+            startTime = DateTime.Now;
+            WordDatabase.LoadWords( );
+            elapsed = DateTime.Now - startTime;
+            SetTitleThreadsafe( string.Format( "Dictinary loaded {0:0.0} s", elapsed.TotalSeconds ));
         }
 
         private int CurrentUpdater = 0;
@@ -199,10 +212,6 @@ namespace ChineseWriter {
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
             _writingState.Clear( );
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e) {
-            _pinyinInput.Focus();
         }
 
         private void Suggestions_LoadingRow( object sender, DataGridRowEventArgs e ) {

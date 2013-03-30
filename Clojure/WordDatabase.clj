@@ -12,13 +12,13 @@
 ; { :hanyu hanyu }  (values are lists of words)
 ; { :hanyu hanyu :pinyin pinyin }  (values are single words)
 ; { :pinyin-start pinyin-start  }  (values are lists of words)
-(def word-dict (atom nil))
+(def word-dict (atom {}))
 
-(def word-info-dict (atom nil)) ; retain so that properties like usage-count can be changed at runtime
+(def word-info-dict (atom {})) ; retain so that properties like usage-count can be changed at runtime
 
 ;----------------------- Dictionary accessors ----------------------------------
 
-(defn get-word [ key ] (@@word-dict key))
+(defn get-word [ key ] (@word-dict key))
 
 (defn word-info [ hanyu-pinyin ] (get @word-info-dict hanyu-pinyin hanyu-pinyin ))
 
@@ -81,10 +81,10 @@
     (reset! word-info-dict (map-values first (index info-dict [ :hanyu :pinyin ] )))
     (let [ word-database (map merge-info-word words-raw) ]
       (reset! word-dict
-        (future (merge ; use (future) for performance: run parallel in background and stall only when value is needed
+        (merge
           (index word-database [ :hanyu ])
           (map-values first (index word-database [ :hanyu :pinyin ]))
-          (map-values sort-suggestions (index word-database [ :pinyin-start ]))))))))
+          (map-values sort-suggestions (index word-database [ :pinyin-start ])))))))
 
 (defn set-default-usage-count [word] (merge { :usage-count 1 } word ))
 

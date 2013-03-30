@@ -17,7 +17,7 @@ namespace ChineseWriter {
         private int _cursorPos;
         private IDictionary<object,object>[] _words;
         private IDictionary<object,object>[] _suggestions;
-        private bool _english;
+        private bool _english = false;
         private string _pinyinInput = "";
 
         // Observables
@@ -32,12 +32,22 @@ namespace ChineseWriter {
         // Observables accessors
         public bool English {
             get { return _english;  }
-            set { _english = value;  EnglishChanges.OnNext( value ); }
+            set {
+                if (value != _english) {
+                    _english = value; 
+                    EnglishChanges.OnNext( value );
+                }
+            }
         }
 
         public string PinyinInput {
             get { return _pinyinInput;  }
-            set { _pinyinInput = value; PinyinChanges.OnNext( value ); }
+            set {
+                if (value != _pinyinInput) {
+                    _pinyinInput = value; 
+                    PinyinChanges.OnNext( value );
+                }
+            }
         }
 
         public IDictionary<object,object>[] Words { 
@@ -63,12 +73,16 @@ namespace ChineseWriter {
         public WritingState( ) {
             PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => 0 ).
                 Subscribe( value => UpdateSuggestions( ) );
+            EnglishChanges.OnNext( _english ); // initial state so that PinyinChanges trigger a combined change
         }
 
         private void UpdateSuggestions( ) {
-            var suggestions = (IEnumerable<object>) RT.var( "WordDatabase", "find-words" ).invoke( PinyinInput );
-            _suggestions = suggestions.Cast<IDictionary<object,object>>( ).ToArray( );
-            SuggestionsChanges.OnNext( _suggestions );
+            var findWords = RT.var( "WordDatabase", "find-words" );
+            if (findWords.isBound) {
+                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", "find-words" ).invoke( PinyinInput );
+                _suggestions = suggestions.Cast<IDictionary<object, object>>( ).ToArray( );
+                SuggestionsChanges.OnNext( _suggestions );
+            }
         }
 
         public void TextEdit( Key key ) {
