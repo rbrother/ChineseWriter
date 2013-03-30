@@ -35,7 +35,7 @@
           (not-empty toneless-matches) (first toneless-matches)
           :else (first hanyu-matches) )))))
 
-; This is slow, so do only for a word when needed, not for all words
+; This is slow, so do only for a word when needed (mainly when fetched to form current sentence words), not for all words in dictionary
 (defn expanded-word [ hanyu pinyin ]
   (let [ word (@@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ) ]
     (->> 
@@ -46,9 +46,9 @@
 
 ;--------------- Loading database -------------------------------------
 
-(defn merge-info-word [ {:keys [hanyu pinyin english] :as word} info-dict ]
+(defn merge-info-word [ {:keys [hanyu pinyin english] :as word} ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" ""))
-        dict-entry (first (or (info-dict {:hanyu hanyu :pinyin pinyin}) [{}]))]
+        dict-entry (or (@word-info-dict {:hanyu hanyu :pinyin pinyin}) {})]
     (merge
       word
       ; Default values of attributes, can be overridden in dict-entry
@@ -59,12 +59,6 @@
        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) 
        :pinyin-start (subs pinyin-no-spaces 0 2) }
       dict-entry )))
-
-; Add extra properties from words.xml
-(defn merge-info [words info]
-  (let [ info-dict (index info [ :hanyu :pinyin ]) ]
-    (->> words
-      (map #(merge-info-word % info-dict)))))
 
 (defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
   (let [ uc1 (word1 :usage-count) uc2 (word2 :usage-count) ]
@@ -82,7 +76,7 @@
 (defn set-word-database! [words-raw info-dict]
   (do
     (reset! word-info-dict (map-values first (index info-dict [ :hanyu :pinyin ] )))
-    (reset! word-database (merge-info words-raw info-dict))
+    (reset! word-database (map merge-info-word words-raw))
     ; use (future) for performance: run parallel in background and stall only when value is needed
     (reset! hanyu-dict (future (index @word-database [:hanyu])))
     (reset! hanyu-pinyin-dict (future (map-values first (index @word-database [ :hanyu :pinyin ]))))
@@ -108,7 +102,8 @@
   (update-word-props hanyu pinyin { :short-english short-english :known known }))
 
 (defn word-info-string [ ] 
-  (list-to-str (sort-by #(% :pinyin) (vals @word-info-dict))))
+  (let [ sortfn (fn [ { hanyu :hanyu pinyin :pinyin } ] [ pinyin hanyu ] ) ]
+    (list-to-str (sort-by sortfn (vals @word-info-dict)))))
 
 ;-------------------  Finding words   ----------------------------------------
 
