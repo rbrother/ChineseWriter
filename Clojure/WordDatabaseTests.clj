@@ -48,7 +48,7 @@
 (def test-word-info
   [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112 }
     { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 } 
-    { :hanyu "向", :pinyin "xiang4" }])
+    { :hanyu "向", :pinyin "xiang4", :usage-count 2 }])
 
 (def wo-men-word
   {:hanyu "我们",
@@ -74,20 +74,20 @@
   
 (def wo-men-word-expanded 
   {:characters
-   [{:pinyin-start "wo",
+   [{:short-english "I",
+     :pinyin-start "wo",
      :pinyin-no-spaces-no-tones "wo",
      :pinyin-no-spaces "wo3",
      :known true,
-     :short-english "I",
      :usage-count 112 
      :hanyu "我",
      :pinyin "wo3",
      :english "I, me, my" }
-    {:pinyin-start "me",
+    {:short-english "plural marker for pronouns"
+     :pinyin-start "me",
      :pinyin-no-spaces-no-tones "men",
      :pinyin-no-spaces "men5",
      :known false,
-     :short-english "plural marker for pronouns"
      :usage-count 0,
      :hanyu "们",
      :pinyin "men5",
@@ -99,33 +99,33 @@
    :hanyu "我们",
    :pinyin "wo3 men5",
    :english "we, us, ourselves, our",
-   :short-english "we"   
-   :usage-count 7,   
+   :short-english "xxx", ; by the time we get to test this, we have changed it
+   :usage-count 8 ; by the time we get to test this, we have increased it
 })
 
 (def word-info-dict-test
   {{:pinyin "wo3", :hanyu "我"}
-   {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
+       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
    {:pinyin "wo3 men5", :hanyu "我们"}
-   {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7},
+       {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7},
    {:pinyin "xiang4", :hanyu "向"} 
-   {:pinyin "xiang4", :hanyu "向"} })
+       {:pinyin "xiang4", :hanyu "向", :usage-count 2} })
 
 (def word-info-dict-modified
   {{:pinyin "wo3", :hanyu "我"}
-   {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
+       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
    {:pinyin "wo3 men5", :hanyu "我们"}
-   {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8},
+       {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8},
    {:pinyin "xiang4", :hanyu "向"} 
-   {:pinyin "xiang4", :hanyu "向"} })
+       {:pinyin "xiang4", :hanyu "向", :usage-count 2} })
 
 (set-word-database! test-words-raw test-word-info)
 
-(def women-word-calculated (first (filter #(= (% :pinyin) "wo3 men5") @word-database)))
+(def women-word-calculated (first (get-word { :hanyu "我们" })))
 
 (def airen-chars ((expanded-word "爱人" "ai4 ren5") :characters))
 
-(def xiang-words (filter #(= (% :hanyu) "向" ) @word-database))
+(def xiang-words (get-word { :hanyu "向" } ))
 
 (def second-airen-char (nth airen-chars 1))
 
@@ -138,6 +138,8 @@
            @word-info-dict)))
   (is (= 2 (count (find-words "wo3") )))
   (is (= wo-men-word women-word-calculated))
+  (is (= (first (wo-men-word-expanded :characters)) (first ((expanded-word "我们" "wo3 men5") :characters))))
+  (is (= (last (wo-men-word-expanded :characters)) (last ((expanded-word "我们" "wo3 men5") :characters))))
   (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))
   (is (= "ren2" ((find-char "人" "ren2") :pinyin)))
   (is (= "ren2" ((find-char "人" "Ren2") :pinyin)))
