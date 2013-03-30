@@ -124,6 +124,10 @@ namespace ChineseWriter {
             CursorPos = CursorPos + newWords.Count();
         }
 
+        public void RefreshInfo( ) {
+            Words = Words.Select( w => ExpandChars( w ) ).ToArray();
+        }
+
         private IDictionary<object,object> ExpandChars(IDictionary<object,object> word) {
             return word.HasKeyword( "hanyu" ) && word.HasKeyword( "pinyin" ) ?
                 (IDictionary<object,object>) RT.var( "WordDatabase", "expanded-word" ).
@@ -210,10 +214,6 @@ namespace ChineseWriter {
             get { return string.Join( "", Words.Select( word => word.Get<string>("hanyu") ).ToArray( ) ); }
         }
 
-        internal void Reparse( ) {
-            Words = (IDictionary<object,object>[]) RT.var( "WordDatabase", "hanyu-to-words" ).
-                    invoke( RT.var( "WordDatabase", "hanyu-dict" ), Hanyu );
-        }
     } // class
 
 } // namespace

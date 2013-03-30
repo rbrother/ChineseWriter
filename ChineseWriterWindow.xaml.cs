@@ -172,6 +172,7 @@ namespace ChineseWriter {
                 if (result.HasValue && result.Value) {
                     WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text, 
                         editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value);
+                    _writingState.RefreshInfo( );
                     PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
                 }
             }
