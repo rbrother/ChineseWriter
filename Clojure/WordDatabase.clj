@@ -76,15 +76,20 @@
 
 (defn sort-suggestions [ suggestions ] (sort suggestion-comparer suggestions))
 
+(defn create-word-dict [words]
+  (merge
+    (index words [ :hanyu ])
+    (map-values first (index words [ :hanyu :pinyin ]))
+    (map-values sort-suggestions (index words [ :pinyin-start ]))))
+
 (defn set-word-database! [words-raw info-dict]
   (do
     (reset! word-info-dict (map-values first (index info-dict [ :hanyu :pinyin ] )))
     (let [ word-database (map merge-info-word words-raw) ]
-      (reset! word-dict
-        (merge
-          (index word-database [ :hanyu ])
-          (map-values first (index word-database [ :hanyu :pinyin ]))
-          (map-values sort-suggestions (index word-database [ :pinyin-start ])))))))
+      ; Quick dict based on most common words
+      (reset! word-dict (create-word-dict (filter #(% :known) word-database))) 
+      ; Fully sorted full dict, takes ~25 sec to process
+      (reset! word-dict (create-word-dict word-database)))))
 
 (defn set-default-usage-count [word] (merge { :usage-count 1 } word ))
 
