@@ -110,12 +110,12 @@ namespace ChineseWriter {
         private int CurrentUpdater = 0;
         private int ActiveUpdaters = 0;
 
-        private void UpdateSuggestions( IList<IDictionary<object,object>> suggestions ) {
+        private void UpdateSuggestions( IEnumerable<IDictionary<object,object>> suggestions ) {
             ThreadPool.QueueUserWorkItem(
-                state => UpdateSuggestionsBackground( (IList<IDictionary<object,object>>) state ), suggestions );       
+                state => UpdateSuggestionsBackground( (IEnumerable<IDictionary<object,object>>) state ), suggestions );       
         }
 
-        private void UpdateSuggestionsBackground( IList<IDictionary<object,object>> suggestions ) {
+        private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object,object>> suggestions ) {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             CurrentUpdater++;
             var id = CurrentUpdater;
@@ -126,10 +126,14 @@ namespace ChineseWriter {
                     if (id != CurrentUpdater) return;
                 }
                 this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Clear( ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
+                var index = 1;
                 foreach (var suggestion in suggestions) {
                     if (id != CurrentUpdater) return;
-                    var dataWord = suggestion.ToDataWord( );
+                    var shortcut = index == 1 ? "Enter" :
+                        index <= 10 ? string.Format( "CTRL+{0}", index - 1 ) : "<click>";
+                    var dataWord = suggestion.ToDataTableWord( shortcut );
                     this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
+                    index++;
                 }
             } finally {
                 ActiveUpdaters--;
@@ -155,14 +159,16 @@ namespace ChineseWriter {
 
         void ScrollInputVisible( ) {
             try {
-                TextScrollView.UpdateLayout( );
-                var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
-                var scrollTo = TextScrollView.HorizontalOffset - 
-                    TextScrollView.TransformToVisual( _cursorPanel ).Transform( new Point( 0, 0 ) ).X -
-                    TextScrollView.ViewportWidth * 0.5;
-                if (scrollTo < 0) scrollTo = 0;
-                if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
-                TextScrollView.ScrollToHorizontalOffset( scrollTo );
+                if (_cursorPanel.Parent != null) {
+                    TextScrollView.UpdateLayout( );
+                    var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
+                    var scrollTo = TextScrollView.HorizontalOffset -
+                        TextScrollView.TransformToVisual( _cursorPanel ).Transform( new Point( 0, 0 ) ).X -
+                        TextScrollView.ViewportWidth * 0.5;
+                    if (scrollTo < 0) scrollTo = 0;
+                    if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
+                    TextScrollView.ScrollToHorizontalOffset( scrollTo );
+                }
             } catch (InvalidOperationException) {
                 // TextScrollView.TransformToVisual( _cursorPanel ) fails in startup, works then
             }
@@ -226,12 +232,6 @@ namespace ChineseWriter {
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
             _writingState.Clear( );
-        }
-
-        private void Suggestions_LoadingRow( object sender, DataGridRowEventArgs e ) {
-            int n = e.Row.GetIndex( ) + 1;
-            e.Row.Header =  n == 1 ? "Enter" :
-                n <= 10 ? string.Format( "CTRL+{0}", n - 1 ) : "<click>";
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {

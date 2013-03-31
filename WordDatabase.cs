@@ -52,9 +52,12 @@ namespace ChineseWriter {
         }
 
         internal static void SaveWordsInfo( ) {
-            File.WriteAllText( InfoFileName,
-                (string) RT.var( "WordDatabase", "word-info-string" ).invoke( ),
-                Encoding.UTF8 );
+            var word_info_string = RT.var( "WordDatabase", "word-info-string" );
+            if (word_info_string.isBound) { // might be that SW is closed before words loaded
+                File.WriteAllText( InfoFileName,
+                    (string)word_info_string.invoke( ),
+                    Encoding.UTF8 );
+            }
         }
     } // class
 

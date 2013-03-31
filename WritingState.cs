@@ -16,17 +16,17 @@ namespace ChineseWriter {
 
         private int _cursorPos;
         private IDictionary<object,object>[] _words;
-        private IDictionary<object,object>[] _suggestions;
+        private IEnumerable<IDictionary<object,object>> _suggestions;
         private bool _english = false;
         private string _pinyinInput = "";
 
         // Observables
         public Subject<string> PinyinChanges = new Subject<string>( );
         public Subject<bool> EnglishChanges = new Subject<bool>( );
-        public Subject<IList<IDictionary<object,object>>> SuggestionsChanges =
-            new Subject<IList<IDictionary<object,object>>>( );
-        public Subject<IList<IDictionary<object,object>>> WordsChanges =
-            new Subject<IList<IDictionary<object,object>>>( );
+        public Subject<IEnumerable<IDictionary<object,object>>> SuggestionsChanges =
+            new Subject<IEnumerable<IDictionary<object, object>>>( );
+        public Subject<IDictionary<object, object>[]> WordsChanges =
+            new Subject<IDictionary<object, object>[]>( );
         public Subject<int> CursorPosChanges = new Subject<int>( );
 
         // Observables accessors
@@ -71,16 +71,19 @@ namespace ChineseWriter {
 
         // Constructor
         public WritingState( ) {
-            PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => 0 ).
-                Subscribe( value => UpdateSuggestions( ) );
+            PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => english ).
+                Subscribe( english => UpdateSuggestions( english ) );
             EnglishChanges.OnNext( _english ); // initial state so that PinyinChanges trigger a combined change
         }
 
-        private void UpdateSuggestions( ) {
+        private void UpdateSuggestions( bool english ) {
             var findWords = RT.var( "WordDatabase", "find-words" );
             if (findWords.isBound) {
-                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", "find-words" ).invoke( PinyinInput );
-                _suggestions = suggestions.Cast<IDictionary<object, object>>( ).ToArray( );
+                var method = english ? "find-words-english" : "find-words";
+                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", method ).invoke( PinyinInput );
+                // Do *not* cast suggestions to list or Array here! That kills the performance since it forces
+                // the lazy list to be fully evaluated
+                _suggestions = suggestions.Cast<IDictionary<object, object>>( );
                 SuggestionsChanges.OnNext( _suggestions );
             }
         }
@@ -117,14 +120,14 @@ namespace ChineseWriter {
         }
 
         internal void SelectPinyin( int n ) {
-            if (n == 1 && _suggestions.Length == 0 ) {
+            if (n == 1 && _suggestions.FirstOrDefault() == null ) {
                 // Literal input
                 var words = (IEnumerable<object>) RT.var( "WordDatabase", "hanyu-to-words" ).invoke( PinyinInput );
                 InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
-            } else if (n > _suggestions.Length) {
-                return; 
             } else {
-                SelectWord( _suggestions[n - 1] );
+                var selected = _suggestions.Skip( n - 1 ).FirstOrDefault();
+                if (selected == null) return;                
+                SelectWord( selected );
             }
             PinyinInput = "";
         }

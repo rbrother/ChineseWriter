@@ -3,9 +3,7 @@
 
 (defn zip [list1 list2] (map vec (partition 2 (interleave list1 list2) )))
 
-(defn starts-with-pattern [start] (re-pattern (str/join ["^" start]) ))
-
-(defn starts-with [str start] (re-find (re-pattern (str/join ["^" start]) ) str ))
+(defn starts-with [str start] (if (> (count start) (count str)) false (= start (subs str 0 (count start)))))
 
 (defn equal-caseless [ str1 str2 ] (= (str/lower-case str1) (str/lower-case str2)))
 

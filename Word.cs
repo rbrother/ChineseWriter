@@ -10,6 +10,7 @@ using RT = clojure.lang.RT;
 namespace ChineseWriter {
 
     public class SuggestionWord {
+        public string Shortcut { get; set; }
         public string Pinyin { get; set; }
         public string Hanyu { get; set; }
         public string UsageCountString { get; set; }
@@ -55,8 +56,9 @@ namespace ChineseWriter {
                 Convert.ToString( word.Get<int>("usage-count") ) : "";
         }
 
-        public static SuggestionWord ToDataWord( this IDictionary<object, object> word ) {
+        public static SuggestionWord ToDataTableWord( this IDictionary<object, object> word, string shortCut ) {
             return new SuggestionWord {
+                Shortcut = shortCut,
                 Pinyin = ( word.Pinyin( ) ).AddDiacritics( ),
                 Hanyu = word.Hanyu( ),
                 English = word.Get<string>( "english" ),

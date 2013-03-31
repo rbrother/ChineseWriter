@@ -33,10 +33,11 @@
         </ScrollViewer>
         <!--                   -->
         <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
-            <DataGrid Name="Suggestions" AutoGenerateColumns="False" LoadingRow="Suggestions_LoadingRow"
+            <DataGrid Name="Suggestions" AutoGenerateColumns="False"
                       AlternatingRowBackground="Gainsboro" AlternationCount="2"
                       SelectedCellsChanged="Suggestions_SelectedCellsChanged">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="Shortcut" Foreground="Gray" Binding="{Binding Path=Shortcut}"/>
                     <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=Pinyin}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Usage" Binding="{Binding Path=UsageCountString}"/>

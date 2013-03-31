@@ -23,7 +23,7 @@
 
 (defn word-info [ hanyu-pinyin ] (get @word-info-dict hanyu-pinyin hanyu-pinyin ))
 
-;---------------------------------------------------------
+;--------------------- Expanding word characters ------------------------------------
 
 (defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))
 
@@ -55,16 +55,6 @@
       { :characters (characters key)})))
 
 ;--------------- Loading database -------------------------------------
-
-;(defn english-keys [ english ]
-;  (->> english
-;    (str/lower-case)
-;    #(str/split % #" ")
-;    (map #(subs % 0 2))
-;    (set)))
-
-;(defn english-parts-map [ { :keys [ english ] :as word }  ]
-;  (zipmap (english-keys english) (repeat [ word ])))
 
 (defn merge-info-word [ {:keys [hanyu pinyin english] :as word} ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
@@ -135,15 +125,21 @@
 
 ;-------------------  Finding words   ----------------------------------------
 
+(defn pinyin-matcher [ pinyin-start ]
+  (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones } ]
+    (or (starts-with p1 pinyin-start) (starts-with p2 pinyin-start))))
+
+(defn english-matcher [ english-start ]
+  (fn [ { english :english } ]
+    (some #(starts-with % english-start) (str/split english #" "))))
+
 ; Although filtering the whole dictionary is slowish, this function quickly returns
 ; a lazy-seq which we process in background-thread in the UI, so no delay is noticeable.
 ; The key here is to have all-words pre-sorted in order of usage-count, so no new sorting is needed:
 ; Top results come quickly from top of the list
-(defn find-words [ pinyin ]
-  (let [ pattern (starts-with-pattern pinyin)
-        pinyin-matcher (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones } ]
-                         (or (re-find pattern p1) (re-find pattern p2) )) ] 
-      (filter pinyin-matcher @all-words)))
+(defn find-words [ pinyin ] (filter (pinyin-matcher pinyin) @all-words))
+
+(defn find-words-english [ english ] (filter (english-matcher english) @all-words))
 
 ; -------------------- Parsing chinese text to words ---------------------
 

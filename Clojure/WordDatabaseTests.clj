@@ -138,6 +138,9 @@
            (set-word-info "我们" "wo3 men5" "xxx" true) 
            @word-info-dict)
   2 (count (find-words "wo3"))
+  1 (count (find-words-english "girlfriend"))
+  1 (count (find-words-english "people"))
+  0 (count (find-words-english "zoobaba"))
   wo-men-word women-word-calculated
   wo-men-word-expanded (expanded-word "我们" "wo3 men5")
   "ren2" ((find-char "人" "ren2") :pinyin)
