@@ -7,11 +7,12 @@
 
 ;----------------------- Atoms for the dictionary data ----------------------------------
 
+(def all-words (atom []))
+
 ; dictionaries for all words. Immutable once set (could they be just defs?)
 ; Keyed by:
 ; { :hanyu hanyu }  (values are lists of words)
 ; { :hanyu hanyu :pinyin pinyin }  (values are single words)
-; { :pinyin-start pinyin-start  }  (values are lists of words)
 (def word-dict (atom {}))
 
 (def word-info-dict (atom {})) ; retain so that properties like usage-count can be changed at runtime
@@ -55,6 +56,16 @@
 
 ;--------------- Loading database -------------------------------------
 
+;(defn english-keys [ english ]
+;  (->> english
+;    (str/lower-case)
+;    #(str/split % #" ")
+;    (map #(subs % 0 2))
+;    (set)))
+
+;(defn english-parts-map [ { :keys [ english ] :as word }  ]
+;  (zipmap (english-keys english) (repeat [ word ])))
+
 (defn merge-info-word [ {:keys [hanyu pinyin english] :as word} ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
     (merge word
@@ -62,8 +73,7 @@
       { :usage-count 0
         :known false
         :pinyin-no-spaces pinyin-no-spaces 
-        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) 
-        :pinyin-start (subs pinyin-no-spaces 0 2) 
+        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces)  
         :short-english (first (str/split english #",")) }  ; Default short english, can be overwritten by value in dict-entry
       (word-info { :hanyu hanyu :pinyin pinyin } ))))
 
@@ -79,17 +89,20 @@
 (defn create-word-dict [words]
   (merge
     (index words [ :hanyu ])
-    (map-values first (index words [ :hanyu :pinyin ]))
-    (map-values sort-suggestions (index words [ :pinyin-start ]))))
+    (map-values first (index words [ :hanyu :pinyin ]))))
+
+(defn set-word-database-inner! [words]
+  (reset! all-words (sort-suggestions words))
+  (reset! word-dict (create-word-dict words)))
 
 (defn set-word-database! [words-raw info-dict]
   (do
     (reset! word-info-dict (map-values first (index info-dict [ :hanyu :pinyin ] )))
-    (let [ word-database (map merge-info-word words-raw) ]
-      ; Quick dict based on most common words
-      (reset! word-dict (create-word-dict (filter #(% :known) word-database))) 
-      ; Fully sorted full dict, takes ~25 sec to process
-      (reset! word-dict (create-word-dict word-database)))))
+    (let [ words (map merge-info-word words-raw) ]
+      ; Short word list for quickly getting writing
+      (set-word-database-inner! (filter #(> (% :usage-count) 0 ) words))
+      ; Full word list (slow to process)
+      (set-word-database-inner! words))))
 
 (defn set-default-usage-count [word] (merge { :usage-count 1 } word ))
 
@@ -99,6 +112,8 @@
   (set-word-database!
     (load-from-file cc-dict-file) 
     (map set-default-usage-count (load-from-file info-file))))
+
+;----------------------- Updating word info  ---------------------
 
 (defn update-word-props [ hanyu-pinyin new-props ]
   (let [ new-word (merge (word-info hanyu-pinyin) new-props) ]
@@ -120,13 +135,15 @@
 
 ;-------------------  Finding words   ----------------------------------------
 
+; Although filtering the whole dictionary is slowish, this function quickly returns
+; a lazy-seq which we process in background-thread in the UI, so no delay is noticeable.
+; The key here is to have all-words pre-sorted in order of usage-count, so no new sorting is needed:
+; Top results come quickly from top of the list
 (defn find-words [ pinyin ]
   (let [ pattern (starts-with-pattern pinyin)
         pinyin-matcher (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones } ]
                          (or (re-find pattern p1) (re-find pattern p2) )) ] 
-    (if (< (count pinyin) 2) [] ; only suggest for 2+ letter of pinyin
-      (->> (get-word { :pinyin-start (subs pinyin 0 2) } )
-        (filter pinyin-matcher)))))
+      (filter pinyin-matcher @all-words)))
 
 ; -------------------- Parsing chinese text to words ---------------------
 

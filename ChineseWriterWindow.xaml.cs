@@ -67,30 +67,44 @@ namespace ChineseWriter {
                 _writingState.Clear( );
                 PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
                 _pinyinInput.Focus( );
+
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
             }
         }
 
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
-            ThreadPool.QueueUserWorkItem( state => InitializeClojure( ) ); 
+            ThreadPool.QueueUserWorkItem( state => {
+                Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+                RT.load( "WordDatabase" );
+                WordDatabase.LoadWords( );            
+            } );
+            ThreadPool.QueueUserWorkItem( state => ReportLoadStateTask( ) );
+        }
+
+        private void ReportLoadStateTask( ) {
+            var start = DateTime.Now;
+            SetTitleThreadsafe("Loading Clojure runtime...");
+            while (true) {
+                string status;
+                if (RT.var( "WordDatabase", "all-words").isBound) {
+                    var wordsList = (IList<object>) ((clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( )).deref();
+                    var dict = (IDictionary<object,object>) ((clojure.lang.Atom) RT.var( "WordDatabase", "word-dict" ).deref( )).deref();
+                    status = wordsList.Count == 0 ? "Loading word list..." :
+                        wordsList.Count < 10000 ? "Short word list loaded (start writing!), loading full dictionary..." :
+                        string.Format("ChineseWriter, {0} words. All ready", wordsList.Count);
+                } else {
+                    status = "Loading Clojure runtime...";
+                }
+                var dur = DateTime.Now - start;
+                SetTitleThreadsafe( string.Format("{0} {1:0.0} s", status, dur.TotalSeconds ) );
+                if (status.StartsWith( "ChineseWriter" )) return;
+                Thread.Sleep(100);
+            }
         }
 
         private void SetTitleThreadsafe( string title ) {
             this.Dispatcher.Invoke( new Action( ( ) => { this.Title = title; } ) );
-        }
-
-        private void InitializeClojure( ) {
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-            SetTitleThreadsafe( "Starting Clojure Runtime..." );
-            var startTime = DateTime.Now;
-            RT.load( "WordDatabase" );
-            var elapsed = DateTime.Now - startTime;
-            SetTitleThreadsafe( string.Format( "Clojure Runtime started {0:0.0} s. Loading dictionary...", elapsed.TotalSeconds ) );
-            startTime = DateTime.Now;
-            WordDatabase.LoadWords( );
-            elapsed = DateTime.Now - startTime;
-            SetTitleThreadsafe( string.Format( "Dictinary loaded {0:0.0} s", elapsed.TotalSeconds ));
         }
 
         private int CurrentUpdater = 0;

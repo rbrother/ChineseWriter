@@ -58,16 +58,15 @@
    :pinyin-no-spaces "wo3men5"
    :pinyin-no-spaces-no-tones "women"
    :known true 
-   :usage-count 7 
-   :pinyin-start "wo" })
+   :usage-count 7 })
 
 (def wo-expanded
-  {:hanyu "我", :pinyin "wo3", :pinyin-start "wo", :english "I, me, my",
+  {:hanyu "我", :pinyin "wo3", :english "I, me, my",
    :pinyin-no-spaces-no-tones "wo",
    :pinyin-no-spaces "wo3",
    :short-english "I", :known true, :usage-count 112,
    :characters 
-   [ {:hanyu "我", :pinyin "wo3", :pinyin-start "wo", :english "I, me, my",
+   [ {:hanyu "我", :pinyin "wo3", :english "I, me, my",
       :pinyin-no-spaces-no-tones "wo",
       :pinyin-no-spaces "wo3",
       :short-english "I", :known true, :usage-count 112} ]} )
@@ -75,7 +74,6 @@
 (def wo-men-word-expanded 
   {:characters
    [{:short-english "I",
-     :pinyin-start "wo",
      :pinyin-no-spaces-no-tones "wo",
      :pinyin-no-spaces "wo3",
      :known true,
@@ -84,7 +82,6 @@
      :pinyin "wo3",
      :english "I, me, my" }
     {:short-english "plural marker for pronouns"
-     :pinyin-start "me",
      :pinyin-no-spaces-no-tones "men",
      :pinyin-no-spaces "men5",
      :known false,
@@ -92,7 +89,6 @@
      :hanyu "们",
      :pinyin "men5",
      :english "plural marker for pronouns, and nouns referring to individuals" }]
-   :pinyin-start "wo",
    :pinyin-no-spaces-no-tones "women",
    :pinyin-no-spaces "wo3men5",
    :known true,
@@ -129,27 +125,32 @@
 
 (def second-airen-char (nth airen-chars 1))
 
+;Example: (are [x y] (= x y)  
+;              2 (+ 1 1)
+;              4 (* 2 2))
+
 (deftest cc-lines-test
-  (is (= word-info-dict-test @word-info-dict ))
-  (is (= word-info-dict-modified 
+  (are [ expected calculated ] (= expected calculated)
+       word-info-dict-test @word-info-dict
+       word-info-dict-modified 
          (do 
            (inc-usage-count "我们" "wo3 men5" ) 
            (set-word-info "我们" "wo3 men5" "xxx" true) 
-           @word-info-dict)))
-  (is (= 2 (count (find-words "wo3") )))
-  (is (= wo-men-word women-word-calculated))
-  (is (= (first (wo-men-word-expanded :characters)) (first ((expanded-word "我们" "wo3 men5") :characters))))
-  (is (= (last (wo-men-word-expanded :characters)) (last ((expanded-word "我们" "wo3 men5") :characters))))
-  (is (= wo-men-word-expanded (expanded-word "我们" "wo3 men5")))
-  (is (= "ren2" ((find-char "人" "ren2") :pinyin)))
-  (is (= "ren2" ((find-char "人" "Ren2") :pinyin)))
-  (is (= "ren2" ((find-char "人" "ren5") :pinyin)))
-  (is (= 2 (count airen-chars)))
-  (is (= "人" (second-airen-char :hanyu)))
-  (is (= wo-expanded (expanded-word "我" "wo3")))
-  (is (= 2 (count xiang-words)))
-  (is (= ((most-common-word xiang-words) :short-english) "towards"))
-  (is (= (count (hanyu-to-words "我们女友" )) 2 ))
-  (is (= (count (hanyu-to-words "我们QQ女友" )) 3 )))
+           @word-info-dict)
+  2 (count (find-words "wo3"))
+  wo-men-word women-word-calculated
+  wo-men-word-expanded (expanded-word "我们" "wo3 men5")
+  "ren2" ((find-char "人" "ren2") :pinyin)
+  "ren2" ((find-char "人" "Ren2") :pinyin)
+  "ren2" ((find-char "人" "ren5") :pinyin)
+  2 (count airen-chars)
+  "人" (second-airen-char :hanyu)
+  wo-expanded (expanded-word "我" "wo3")
+  2 (count xiang-words)
+  "towards" ((most-common-word xiang-words) :short-english)
+  2 (count (hanyu-to-words "我们女友" ))
+  3 (count (hanyu-to-words "我们QQ女友" ))
+))
+;"we, us, ourselves, our"
 
 (run-tests)
