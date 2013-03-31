@@ -158,19 +158,15 @@ namespace ChineseWriter {
         }
 
         void ScrollInputVisible( ) {
-            try {
-                if (_cursorPanel.Parent != null) {
-                    TextScrollView.UpdateLayout( );
-                    var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
-                    var scrollTo = TextScrollView.HorizontalOffset -
-                        TextScrollView.TransformToVisual( _cursorPanel ).Transform( new Point( 0, 0 ) ).X -
-                        TextScrollView.ViewportWidth * 0.5;
-                    if (scrollTo < 0) scrollTo = 0;
-                    if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
-                    TextScrollView.ScrollToHorizontalOffset( scrollTo );
-                }
-            } catch (InvalidOperationException) {
-                // TextScrollView.TransformToVisual( _cursorPanel ) fails in startup, works then
+            if (_cursorPanel.Parent != null) {
+                TextScrollView.UpdateLayout( );
+                var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
+                var scrollTo = TextScrollView.HorizontalOffset -
+                    TextScrollView.TransformToVisual( _cursorPanel ).Transform( new Point( 0, 0 ) ).X -
+                    TextScrollView.ViewportWidth * 0.5;
+                if (scrollTo < 0) scrollTo = 0;
+                if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
+                TextScrollView.ScrollToHorizontalOffset( scrollTo );
             }
         }
 
