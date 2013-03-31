@@ -125,10 +125,6 @@
 
 (def second-airen-char (nth airen-chars 1))
 
-;Example: (are [x y] (= x y)  
-;              2 (+ 1 1)
-;              4 (* 2 2))
-
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
        word-info-dict-test @word-info-dict
@@ -150,7 +146,6 @@
   "人" (second-airen-char :hanyu)
   wo-expanded (expanded-word "我" "wo3")
   2 (count xiang-words)
-  "towards" ((most-common-word xiang-words) :short-english)
   2 (count (hanyu-to-words "我们女友" ))
   3 (count (hanyu-to-words "我们QQ女友" ))
 ))

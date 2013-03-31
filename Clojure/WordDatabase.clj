@@ -78,7 +78,7 @@
 
 (defn create-word-dict [words]
   (merge
-    (index words [ :hanyu ])
+    (map-values sort-suggestions (index words [ :hanyu ]))
     (map-values first (index words [ :hanyu :pinyin ]))))
 
 (defn set-word-database-inner! [words]
@@ -143,27 +143,20 @@
 
 ; -------------------- Parsing chinese text to words ---------------------
 
-(defn most-common-word [words]
-  (apply max-key #(% :usage-count) words))
-
 (defn find-first-word-len [ chinese len ]
-  (if (= len 0) { :text (subs chinese 0 1) }
+  (if (zero? len) { :text (subs chinese 0 1) }
     (let [words (get-word { :hanyu (subs chinese 0 len) } )]
-      (if words (most-common-word words) 
+      (if words (first words) 
         (find-first-word-len chinese (dec len))))))
-      
-(def non-hanyu-regexp #"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=]+")
 
 (defn find-first-word [ chinese ]
-  (let [non-hanyu (re-find non-hanyu-regexp chinese)]
+  (let [non-hanyu-regexp #"^[a-zA-Z0-9!！\?\？\.。,，\-\:\：\/=]+"
+        non-hanyu (re-find non-hanyu-regexp chinese)]
     (if non-hanyu { :text non-hanyu }
       (find-first-word-len chinese (min (count chinese) 7)))))
 
 (defn word-len [ { :keys [hanyu text] :as word } ]
-  (cond 
-    hanyu (count hanyu)
-    text (count text)
-    :else (throw (Exception. "Cannot determine length for word"))))
+  (if hanyu (count hanyu) (count text)))
 
 ; example: 很抱歉.没有信号 -> ["很","抱歉",".","没有","信号"]
 (defn hanyu-to-words [ chinese ]
@@ -174,13 +167,3 @@
     (let [ first-word (find-first-word chinese )
           remaining-chinese (subs chinese (word-len first-word)) ]    
       (cons first-word (hanyu-to-words remaining-chinese)))))
-
-(defn find-word-for-hanyu-pinyin [ dict hanyu pinyin ]
-  (let [words (dict { :hanyu hanyu }) 
-        exact-matches (filter #(= (% :pinyin) pinyin )) 
-        caseless-matches (filter #(equal-caseless (% :pinyin) pinyin )) ]
-    (cond 
-      (not (zero? (count exact-matches))) (first exact-matches)
-      (not (zero? (count caseless-matches))) (first caseless-matches)
-      :else (first words) ))) ; match based on Hanyi alone can be necessary when a character has changed from some tone to neutral tone when combined to a word.
-      
