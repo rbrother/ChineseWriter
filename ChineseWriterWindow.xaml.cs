@@ -125,7 +125,11 @@ namespace ChineseWriter {
                     Thread.Sleep( 10 );
                     if (id != CurrentUpdater) return;
                 }
-                this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Clear( ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
+                this.Dispatcher.Invoke( new Action( ( ) => {
+                    ProcessingLabel.Content = "Searching dictionary...";
+                    ProcessingLabel.Foreground = new SolidColorBrush( Colors.Red );
+                    Suggestions.Items.Clear( );
+                } ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                 var index = 1;
                 foreach (var suggestion in suggestions) {
                     if (id != CurrentUpdater) return;
@@ -135,6 +139,10 @@ namespace ChineseWriter {
                     this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                     index++;
                 }
+                this.Dispatcher.Invoke( new Action( ( ) => {
+                    ProcessingLabel.Foreground = new SolidColorBrush( Colors.Black );
+                    ProcessingLabel.Content = string.Format( "{0} suggestions", Suggestions.Items.Count );
+                } ) );
             } finally {
                 ActiveUpdaters--;
             }
@@ -238,6 +246,10 @@ namespace ChineseWriter {
             if (e.AddedCells.Count( ) > 0) {
                 _writingState.SelectWord( (IDictionary<object,object>) e.AddedCells.First( ).Item );
             }
+        }
+
+        private void StayOnTop_Checked( object sender, RoutedEventArgs e ) {
+            this.Topmost = StayOnTop.IsChecked ?? false;
         }
 
     } // class

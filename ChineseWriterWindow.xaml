@@ -27,6 +27,12 @@
             <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}">Copy _Chinese</Button>
             <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}">_English</CheckBox>
+            <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+                      Style="{StaticResource WidgetStyle}" 
+                      Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>            
+            <Border BorderThickness="1" BorderBrush="Black">
+                <Label Name="ProcessingLabel">Suggestions</Label>
+            </Border>
         </StackPanel>
         <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
             <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>

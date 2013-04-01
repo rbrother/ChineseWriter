@@ -136,10 +136,12 @@
 ; Although filtering the whole dictionary is slowish, this function quickly returns
 ; a lazy-seq which we process in background-thread in the UI, so no delay is noticeable.
 ; The key here is to have all-words pre-sorted in order of usage-count, so no new sorting is needed:
-; Top results come quickly from top of the list
-(defn find-words [ pinyin ] (filter (pinyin-matcher pinyin) @all-words))
+; Top results come quickly from top of the list.
+; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
+; to consume processor power, limit to 1000
+(defn find-words [ pinyin ] (take 1000 (filter (pinyin-matcher pinyin) @all-words)))
 
-(defn find-words-english [ english ] (filter (english-matcher english) @all-words))
+(defn find-words-english [ english ] (take 1000 (filter (english-matcher english) @all-words)))
 
 ; -------------------- Parsing chinese text to words ---------------------
 
