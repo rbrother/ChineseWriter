@@ -244,7 +244,8 @@ namespace ChineseWriter {
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
             if (e.AddedCells.Count( ) > 0) {
-                _writingState.SelectWord( (IDictionary<object,object>) e.AddedCells.First( ).Item );
+                var suggestionWord = (SuggestionWord)e.AddedCells.First( ).Item;
+                _writingState.SelectWord( suggestionWord.Word );
             }
         }
 

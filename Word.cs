@@ -15,6 +15,7 @@ namespace ChineseWriter {
         public string Hanyu { get; set; }
         public string UsageCountString { get; set; }
         public string English { get; set; }
+        public IDictionary<object, object> Word { set; get; }
     }
 
     public static class WordExtensions {
@@ -58,6 +59,7 @@ namespace ChineseWriter {
 
         public static SuggestionWord ToDataTableWord( this IDictionary<object, object> word, string shortCut ) {
             return new SuggestionWord {
+                Word = word, // for later retrieval when suggetion used
                 Shortcut = shortCut,
                 Pinyin = ( word.Pinyin( ) ).AddDiacritics( ),
                 Hanyu = word.Hanyu( ),
