@@ -39,7 +39,9 @@
         (cond
           (not-empty caseless-match) (first caseless-match)
           (not-empty toneless-matches) (first toneless-matches)
-          :else (first hanyu-matches) )))))
+          (not-empty hanyu-matches) (first hanyu-matches)
+          ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
+          :else { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))))
 
 ; This is slow, so do only for a word when needed (mainly when fetched to form current sentence words), not for all words in dictionary
 (defn characters [ { hanyu :hanyu pinyin :pinyin } ] 
