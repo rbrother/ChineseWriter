@@ -73,8 +73,7 @@ namespace ChineseWriter {
             var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
             panel.Children.Add( detailsPanel );
             foreach (FrameworkElement childPanel in
-                word.GetList( "characters" ).
-                    Select( w => CharacterPanel( (IDictionary<object,object>)w ) ))
+                word.Characters().Select( w => CharacterPanel( w ) ))
                 detailsPanel.Children.Add( childPanel );
             return panel;
         }

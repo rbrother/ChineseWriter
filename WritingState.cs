@@ -16,7 +16,8 @@ namespace ChineseWriter {
 
         private int _cursorPos;
         private IDictionary<object,object>[] _words;
-        private IEnumerable<IDictionary<object,object>> _suggestions;
+        private IEnumerable<IDictionary<object, object>> _suggestions =
+            new List<IDictionary<object, object>> { };
         private bool _english = false;
         private string _pinyinInput = "";
 
@@ -200,25 +201,22 @@ namespace ChineseWriter {
 
         private string HanyuHtml {
             get {
-                throw new NotImplementedException( "Reimplement in Clojure" );
-                //return string.Join( "", 
-                //    Words.Select( word => WordCell( word.HanyuHtml, "font-size:20pt;" ) ).ToArray() );
+                return string.Join( "", 
+                    Words.Select( word => WordCell( word.HanyuHtml(), "font-size:20pt;" ) ).ToArray() );
             }
         }
 
         private string PinyinHtml {
             get {
-                throw new NotImplementedException( "Reimplement in Clojure" );
-                //return string.Join( "", 
-                //    Words.Select( word => WordCell( word.PinyinHtml ) ).ToArray( ) );
+                return string.Join( "", 
+                    Words.Select( word => WordCell( word.PinyinHtml() ) ).ToArray( ) );
             }
         }
 
         private string EnglishHtml {
             get {
-                throw new NotImplementedException( "Reimplement in Clojure" );
-                //return string.Join( "",
-                //    Words.Select( word => WordCell( word.EnglishHtml, "color:#808080; font-size:9pt;" ) ).ToArray( ) );
+                return string.Join( "",
+                    Words.Select( word => WordCell( word.EnglishHtml(), "color:#808080; font-size:9pt;" ) ).ToArray( ) );
             }
         }
 

@@ -39,7 +39,15 @@ namespace ChineseWriter {
 
         public static string ShortEnglish( this IDictionary<object,object> word ) {
             return word.HasKeyword("text") ? word.Get<string>("text") :
-                word.Get<bool>( "known" ) ? "" : word.Get<string>( "short-english" );
+                word.Known() ? "" : word.Get<string>( "short-english" );
+        }
+
+        public static bool Known( this IDictionary<object, object> word ) {
+            return word.HasKeyword("known") && word.Get<bool>( "known" );
+        }
+
+        public static IEnumerable<IDictionary<object,object>> Characters( this IDictionary<object, object> word ) {
+            return word.GetList( "characters" ).Cast<IDictionary<object, object>>( );
         }
 
         public static string PinyinDiacritics( this IDictionary<object,object> word ) {
@@ -55,6 +63,34 @@ namespace ChineseWriter {
         public static string UsageCountStr( this IDictionary<object,object> word ) {
             return word.HasKeyword( "usage-count" ) ?
                 Convert.ToString( word.Get<int>("usage-count") ) : "";
+        }
+
+        public static string HanyuHtml( this IDictionary<object, object> word ) {
+            return HtmlPart( word, "", c => c.Hanyu( ) );
+        }
+
+        public static string PinyinHtml( this IDictionary<object, object> word ) {
+            return HtmlPart( word, " ", c => c.Pinyin( ).AddDiacritics( ) );
+        }
+
+        public static string HtmlPart( this IDictionary<object, object> word, string separator, Func<IDictionary<object, object>,string> charToPart ) {
+            return word.HasKeyword( "characters" ) ?
+                string.Join( separator,
+                    word.Characters( ).Select( c =>
+                        string.Format( "<span style='color: {0};'>{1}</span>",
+                            HtmlColor( c.Pinyin( ) ), charToPart( c ) ) ).ToArray( ) ) :
+                word.Get<string>( "text" );
+        }
+
+
+        private static string HtmlColor( string pinyin ) {
+            var color = WordPanel.ToneColor( pinyin ).ToString( );
+            // remove the alpha value
+            return "#" + color.Substring( 3 );
+        }
+
+        public static string EnglishHtml( this IDictionary<object, object> word ) {
+            return word.Known( ) ? "" : word.ShortEnglish();
         }
 
         public static SuggestionWord ToDataTableWord( this IDictionary<object, object> word, string shortCut ) {
