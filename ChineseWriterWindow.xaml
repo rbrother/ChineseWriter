@@ -20,23 +20,35 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Name="Buttons">
-            <Button Style="{StaticResource ButtonStyle}" 
-                    Click="Clear_Text_Click">C_lear text</Button>
-            <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy _Html</Button>
-            <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}">Copy _Chinese</Button>
-            <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
-                          Style="{StaticResource WidgetStyle}">_English</CheckBox>
-            <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
-                      Style="{StaticResource WidgetStyle}" 
-                      Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>            
-            <Border BorderThickness="1" BorderBrush="Black">
-                <Label Name="ProcessingLabel">Suggestions</Label>
-            </Border>
+        <StackPanel Orientation="Vertical" >
+            <StackPanel.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="Gray"/>
+                        <GradientStop Color="LightGray" Offset="0.4" />
+                        <GradientStop Color="LightGray" Offset="0.5" />
+                        <GradientStop Color="Gray" Offset="1.0"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </StackPanel.Background> 
+            <StackPanel Orientation="Horizontal" Name="Buttons">
+                <Button Style="{StaticResource ButtonStyle}" 
+                        Click="Clear_Text_Click">C_lear Text</Button>
+                <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy _Html</Button>
+                <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}">Copy _Chinese</Button>
+                <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+                              Style="{StaticResource WidgetStyle}">_English</CheckBox>
+                <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+                          Style="{StaticResource WidgetStyle}" 
+                          Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>            
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Label Name="ProcessingLabel">Suggestions</Label>
+                </Border>
+            </StackPanel>
+            <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Background="Transparent">
+                <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}" Background="Transparent"/>
+            </ScrollViewer>
         </StackPanel>
-        <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
-            <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}"/>
-        </ScrollViewer>
         <!--                   -->
         <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
             <DataGrid Name="Suggestions" AutoGenerateColumns="False"
