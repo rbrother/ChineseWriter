@@ -17,40 +17,11 @@ namespace ChineseWriter {
 
         private int _cursorPos;
         private IDictionary<object,object>[] _words;
-        private IEnumerable<IDictionary<object, object>> _suggestions =
-            new List<IDictionary<object, object>> { };
-        private bool _english = false;
-        private string _pinyinInput = "";
 
         // Observables
-        public Subject<string> PinyinChanges = new Subject<string>( );
-        public Subject<bool> EnglishChanges = new Subject<bool>( );
-        public Subject<IEnumerable<IDictionary<object,object>>> SuggestionsChanges =
-            new Subject<IEnumerable<IDictionary<object, object>>>( );
         public Subject<IDictionary<object, object>[]> WordsChanges =
             new Subject<IDictionary<object, object>[]>( );
         public Subject<int> CursorPosChanges = new Subject<int>( );
-
-        // Observables accessors
-        public bool English {
-            get { return _english;  }
-            set {
-                if (value != _english) {
-                    _english = value; 
-                    EnglishChanges.OnNext( value );
-                }
-            }
-        }
-
-        public string PinyinInput {
-            get { return _pinyinInput;  }
-            set {
-                if (value != _pinyinInput) {
-                    _pinyinInput = value; 
-                    PinyinChanges.OnNext( value );
-                }
-            }
-        }
 
         public IDictionary<object,object>[] Words { 
             get { return _words; }
@@ -73,9 +44,6 @@ namespace ChineseWriter {
 
         // Constructor
         public WritingState( ) {
-            PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => english ).
-                Subscribe( english => UpdateSuggestions( english ) );
-            EnglishChanges.OnNext( _english ); // initial state so that PinyinChanges trigger a combined change
         }
 
         public void LoadText() {
@@ -86,15 +54,16 @@ namespace ChineseWriter {
             }
         }
 
-        private void UpdateSuggestions( bool english ) {
+        public IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {
             var findWords = RT.var( "WordDatabase", "find-words" );
             if (findWords.isBound) {
                 var method = english ? "find-words-english" : "find-words";
-                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", method ).invoke( PinyinInput );
+                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", method ).invoke( input );
                 // Do *not* cast suggestions to list or Array here! That kills the performance since it forces
                 // the lazy list to be fully evaluated
-                _suggestions = suggestions.Cast<IDictionary<object, object>>( );
-                SuggestionsChanges.OnNext( _suggestions );
+                return suggestions.Cast<IDictionary<object, object>>( );
+            } else {
+                return new IDictionary<object, object>[] {};
             }
         }
 
@@ -129,23 +98,14 @@ namespace ChineseWriter {
             }
         }
 
-        internal void SelectPinyin( int n ) {
-            if (n == 1 && _suggestions.FirstOrDefault() == null ) {
-                // Literal input
-                var words = (IEnumerable<object>) RT.var( "WordDatabase", "hanyu-to-words" ).invoke( PinyinInput );
-                InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
-            } else {
-                var selected = _suggestions.Skip( n - 1 ).FirstOrDefault();
-                if (selected == null) return;                
-                SelectWord( selected );
-            }
-            PinyinInput = "";
+        internal void LiteralInput( string text ) {
+            var words = (IEnumerable<object>)RT.var( "WordDatabase", "hanyu-to-words" ).invoke( text );
+            InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
         }
 
         internal void SelectWord( IDictionary<object,object> word ) {
             InsertWords( new IDictionary<object,object>[] { word } );
             WordDatabase.IncreaseUsageCount( word );
-            PinyinInput = "";
         }
 
         private void InsertWords( IDictionary<object,object>[] newWords ) {
@@ -235,7 +195,6 @@ namespace ChineseWriter {
 
         internal void Clear( ) {
             Words = new IDictionary<object,object>[] { };
-            PinyinInput = "";
             CursorPos = 0;
         }
 

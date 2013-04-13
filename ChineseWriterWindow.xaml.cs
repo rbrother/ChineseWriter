@@ -8,7 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using RT = clojure.lang.RT;
 using Keyword = clojure.lang.Keyword;
@@ -33,7 +35,6 @@ namespace ChineseWriter {
                 _writingState = new WritingState( );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
-                _pinyinInput.TextChanged += new TextChangedEventHandler( PinyinInput_TextChanged );
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
 
                 _cursorPanel = CreateCursorPanel( );
@@ -48,16 +49,17 @@ namespace ChineseWriter {
 
                 ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
-                    Subscribe( pinyinIndex => SelectPinyin( pinyinIndex + 1 ) );
+                    Subscribe( pinyinIndex => SelectSuggestionIndex( pinyinIndex ) );
 
-                GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
-                    Subscribe( value => _writingState.English = value );
-
+                var PinyinChanges = Observable.
+                    FromEventPattern<TextChangedEventArgs>( _pinyinInput, "TextChanged" ).
+                    ObserveOnDispatcher().
+                    Select( args => ((TextBox) args.Sender).Text );
                 // Update UI based on writing state changes
-                _writingState.PinyinChanges.ObserveOnDispatcher( ).
-                    Subscribe( pinyin => _pinyinInput.Text = pinyin );
-                _writingState.SuggestionsChanges.ObserveOnDispatcher( ).
-                    Subscribe( suggestions => UpdateSuggestions( suggestions ) );
+                GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
+                    CombineLatest( PinyinChanges, (english,input) => Tuple.Create(english,input) ).
+                    ObserveOnDispatcher( ).
+                    Subscribe( tuple => UpdateSuggestions( _writingState.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 _writingState.CursorPosChanges.
                     ObserveOnDispatcher( ).
                     Subscribe( cursor => ScrollInputVisible( ) );
@@ -66,8 +68,6 @@ namespace ChineseWriter {
                     ObserveOnDispatcher( ).Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ) );
 
                 _writingState.LoadText( );
-
-                //PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
                 _pinyinInput.Focus( );
 
             } catch (Exception ex) {
@@ -181,20 +181,23 @@ namespace ChineseWriter {
 
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if (e.Key == Key.Enter) {
-                SelectPinyin(1);
+                if (Suggestions.Items.Count == 0) {
+                    _writingState.LiteralInput( _pinyinInput.Text );
+                } else {
+                    SelectSuggestion( (SuggestionWord)Suggestions.Items[0] );
+                }
                 e.Handled = true;
             }
         }
 
-        private void SelectPinyin(int index) {
-            _writingState.SelectPinyin(index);
-            ShowEnglish.IsChecked = false;
+        private void SelectSuggestionIndex( int pinyinIndex ) {
+            SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex] );
         }
 
-        void PinyinInput_TextChanged(object sender, TextChangedEventArgs e) {
-            if (_pinyinInput.Text != _writingState.PinyinInput) {
-                _writingState.PinyinInput = _pinyinInput.Text;
-            }
+        private void SelectSuggestion(SuggestionWord word) {
+            _writingState.SelectWord( word.Word );
+            ShowEnglish.IsChecked = false;
+            _pinyinInput.Text = "";
         }
 
         private void PopulateCharGrid( IEnumerable<IDictionary<object,object>> words, int cursorPos ) {
@@ -237,6 +240,7 @@ namespace ChineseWriter {
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
             _writingState.Clear( );
+            _pinyinInput.Text = "";
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
@@ -246,8 +250,7 @@ namespace ChineseWriter {
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
             if (e.AddedCells.Count( ) > 0) {
-                var suggestionWord = (SuggestionWord)e.AddedCells.First( ).Item;
-                _writingState.SelectWord( suggestionWord.Word );
+                SelectSuggestion( (SuggestionWord)e.AddedCells.First( ).Item );
             }
         }
 
