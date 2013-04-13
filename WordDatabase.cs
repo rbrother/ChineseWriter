@@ -27,7 +27,7 @@ namespace ChineseWriter {
 
         private static string InfoFileName { get { return FilePath( "words.clj" ); } }
 
-        private static DirectoryInfo ExeDir {
+        public static DirectoryInfo ExeDir {
             get {
                 var exePath = new Uri( Assembly.GetExecutingAssembly( ).CodeBase ).LocalPath;
                 var exeDir = new FileInfo( exePath ).Directory;

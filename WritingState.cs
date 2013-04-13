@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,6 +76,14 @@ namespace ChineseWriter {
             PinyinChanges.CombineLatest( EnglishChanges, ( pinyin, english ) => english ).
                 Subscribe( english => UpdateSuggestions( english ) );
             EnglishChanges.OnNext( _english ); // initial state so that PinyinChanges trigger a combined change
+        }
+
+        public void LoadText() {
+            if (File.Exists( TextSaveFileName )) {
+                var data = RT.var( "Utils", "load-from-file" ).invoke( TextSaveFileName );
+                Words = ( (IEnumerable<object>)data ).Cast<IDictionary<object, object>>( ).ToArray( );
+                CursorPos = Words.Length;
+            }
         }
 
         private void UpdateSuggestions( bool english ) {
@@ -234,6 +243,16 @@ namespace ChineseWriter {
             get { return string.Join( "", Words.Select( word => word.Get<string>("hanyu") ).ToArray( ) ); }
         }
 
+        internal string TextSaveFileName {
+            get {
+                return Path.Combine( WordDatabase.ExeDir.ToString( ), "text.clj" );
+            }
+        }
+
+        internal void SaveCurrentText( ) {
+            var content = (string) RT.var( "Utils", "list-to-str" ).invoke( Words );
+            File.WriteAllText( TextSaveFileName, content, Encoding.UTF8 );
+        }
     } // class
 
 } // namespace

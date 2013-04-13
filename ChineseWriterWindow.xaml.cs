@@ -29,6 +29,7 @@ namespace ChineseWriter {
             System.Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH",
                 @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
             try {
+                RT.load( "WordDatabase" );
                 _writingState = new WritingState( );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
@@ -64,8 +65,9 @@ namespace ChineseWriter {
                     CombineLatest( _writingState.CursorPosChanges, ( words, cursor ) => Tuple.Create( words, cursor ) ).
                     ObserveOnDispatcher( ).Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ) );
 
-                _writingState.Clear( );
-                PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
+                _writingState.LoadText( );
+
+                //PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
                 _pinyinInput.Focus( );
 
             } catch (Exception ex) {
@@ -76,7 +78,6 @@ namespace ChineseWriter {
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
             ThreadPool.QueueUserWorkItem( state => {
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-                RT.load( "WordDatabase" );
                 WordDatabase.LoadWords( );            
             } );
             ThreadPool.QueueUserWorkItem( state => ReportLoadStateTask( ) );
@@ -240,6 +241,7 @@ namespace ChineseWriter {
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
             WordDatabase.SaveWordsInfo( );
+            _writingState.SaveCurrentText( );
         }
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {

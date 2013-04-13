@@ -22,7 +22,7 @@ namespace ChineseWriter {
             var panel = new StackPanel {
                 Orientation = Orientation.Vertical,
                 Background = new SolidColorBrush( color ),
-                MaxWidth = 150,
+                MaxWidth = 200,
                 Margin = new Thickness( 2 )
             };
             foreach (FrameworkElement item in content) {
