@@ -15,30 +15,17 @@ namespace ChineseWriter {
 
     internal class WritingState {
 
-        private int _cursorPos;
         private IDictionary<object,object>[] _words;
 
         // Observables
         public Subject<IDictionary<object, object>[]> WordsChanges =
             new Subject<IDictionary<object, object>[]>( );
-        public Subject<int> CursorPosChanges = new Subject<int>( );
 
         public IDictionary<object,object>[] Words { 
             get { return _words; }
             set { 
                 _words = value;
-                if (_cursorPos > _words.Length) CursorPos = _words.Length;
                 WordsChanges.OnNext( _words ); 
-            }
-        }
-
-        public int CursorPos {
-            get { return _cursorPos; }
-            set {
-                if ( value != _cursorPos ) {
-                    _cursorPos = value; 
-                    CursorPosChanges.OnNext( value ); 
-                }
             }
         }
 
@@ -50,7 +37,6 @@ namespace ChineseWriter {
             if (File.Exists( TextSaveFileName )) {
                 var data = RT.var( "Utils", "load-from-file" ).invoke( TextSaveFileName );
                 Words = ( (IEnumerable<object>)data ).Cast<IDictionary<object, object>>( ).ToArray( );
-                CursorPos = Words.Length;
             }
         }
 
@@ -67,57 +53,46 @@ namespace ChineseWriter {
             }
         }
 
-        public void TextEdit( Key key ) {
-            switch (key ) {
-                case Key.Back: BackSpace(); break;
-                case Key.Delete: Delete(); break;
-                case Key.Left: CursorPos--; break;
-                case Key.Right: CursorPos++; break;
-                case Key.Home: CursorPos = 0; break;
-                case Key.End: CursorPos = Words.Length; break;
-            }
-            if (CursorPos < 0) CursorPos = 0;
-            if (CursorPos > Words.Length) CursorPos = Words.Length;
-        }
-
-        private void Delete() {
-            if (CursorPos < Words.Length) {
-                Words = Words.Take(CursorPos).
-                    Concat(Words.Skip(CursorPos + 1)).
+        public void Delete( int cursorPos) {
+            if (cursorPos < Words.Length) {
+                Words = Words.Take( cursorPos ).
+                    Concat( Words.Skip( cursorPos + 1 ) ).
                     ToArray();
             }            
         }
 
-        private void BackSpace() {
-            if (CursorPos > 0) {
-                var orignalCursor = CursorPos;
-                Words = Words.Take( orignalCursor - 1 ).
-                    Concat( Words.Skip( orignalCursor ) ).
+        public void BackSpace( int cursorPos ) {
+            if (cursorPos > 0) {
+                Words = Words.Take( cursorPos - 1 ).
+                    Concat( Words.Skip( cursorPos ) ).
                     ToArray();
-                CursorPos = orignalCursor - 1;
             }
         }
 
-        internal void LiteralInput( string text ) {
+        /// <returns>New cursor position</returns>
+        internal int LiteralInput( string text, int cursorPos ) {
             var words = (IEnumerable<object>)RT.var( "WordDatabase", "hanyu-to-words" ).invoke( text );
-            InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
+            return InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ), cursorPos );
         }
 
-        internal void SelectWord( IDictionary<object,object> word ) {
-            InsertWords( new IDictionary<object,object>[] { word } );
+        /// <returns>New cursor position</returns>
+        internal int SelectWord( IDictionary<object, object> word, int cursorPos ) {
             WordDatabase.IncreaseUsageCount( word );
+            return InsertWords( new IDictionary<object, object>[] { word }, cursorPos );            
         }
 
-        private void InsertWords( IDictionary<object,object>[] newWords ) {
-            Words = Words.Take( CursorPos ).
+        /// <returns>New cursor position</returns>
+        private int InsertWords( IDictionary<object, object>[] newWords, int cursorPos ) {
+            Words = Words.Take( cursorPos ).
                 Concat( newWords.Select( w => ExpandChars( w ) ) ).
-                Concat( Words.Skip( CursorPos ) ).
+                Concat( Words.Skip( cursorPos ) ).
                 ToArray( );
-            CursorPos = CursorPos + newWords.Count();
+            return cursorPos + newWords.Count();
         }
 
-        public void RefreshInfo( ) {
+        public void ExpandChars( ) {
             Words = Words.Select( w => ExpandChars( w ) ).ToArray();
+            WordsChanges.OnNext( Words );
         }
 
         private IDictionary<object,object> ExpandChars(IDictionary<object,object> word) {
@@ -195,7 +170,6 @@ namespace ChineseWriter {
 
         internal void Clear( ) {
             Words = new IDictionary<object,object>[] { };
-            CursorPos = 0;
         }
 
         internal string Hanyu {

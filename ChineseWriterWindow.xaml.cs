@@ -22,6 +22,8 @@ namespace ChineseWriter {
         private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
+        private int _cursorPos;
+        public Subject<int> CursorPosChanges = new Subject<int>( );
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
@@ -45,7 +47,7 @@ namespace ChineseWriter {
                     Select( args => args.EventArgs.Key );
 
                 ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains( key ) ).
-                    Subscribe( key => _writingState.TextEdit( key ) );
+                    Subscribe( key => TextEdit( key ) );
 
                 ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
@@ -60,18 +62,45 @@ namespace ChineseWriter {
                     CombineLatest( PinyinChanges, (english,input) => Tuple.Create(english,input) ).
                     ObserveOnDispatcher( ).
                     Subscribe( tuple => UpdateSuggestions( _writingState.Suggestions( tuple.Item2, tuple.Item1 ) ) );
-                _writingState.CursorPosChanges.
+                CursorPosChanges.
                     ObserveOnDispatcher( ).
                     Subscribe( cursor => ScrollInputVisible( ) );
                 _writingState.WordsChanges.
-                    CombineLatest( _writingState.CursorPosChanges, ( words, cursor ) => Tuple.Create( words, cursor ) ).
+                    CombineLatest( CursorPosChanges, ( words, cursor ) => Tuple.Create( words, cursor ) ).
                     ObserveOnDispatcher( ).Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ) );
 
                 _writingState.LoadText( );
+                CursorPos = _writingState.Words.Length;
                 _pinyinInput.Focus( );
 
             } catch (Exception ex) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
+            }
+        }
+
+        public void TextEdit( Key key ) {
+            switch (key) {
+                case Key.Left: CursorPos--; return;
+                case Key.Right: CursorPos++; return;
+                case Key.Home: CursorPos = 0; return;
+                case Key.End: CursorPos = _writingState.Words.Length; return;
+                case Key.Back: 
+                    _writingState.BackSpace( CursorPos );
+                    CursorPos--;
+                    break;
+                case Key.Delete: _writingState.Delete( CursorPos ); break;
+            }
+        }
+
+        public int CursorPos {
+            get { return _cursorPos; }
+            set {
+                if (value != _cursorPos) {
+                    _cursorPos = value;
+                    if (_cursorPos < 0) _cursorPos = 0;
+                    if (_cursorPos > _writingState.Words.Length) _cursorPos = _writingState.Words.Length;
+                    CursorPosChanges.OnNext( _cursorPos );
+                }
             }
         }
 
@@ -182,7 +211,7 @@ namespace ChineseWriter {
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if (e.Key == Key.Enter) {
                 if (Suggestions.Items.Count == 0) {
-                    _writingState.LiteralInput( _pinyinInput.Text );
+                    CursorPos = _writingState.LiteralInput( _pinyinInput.Text, CursorPos );
                 } else {
                     SelectSuggestion( (SuggestionWord)Suggestions.Items[0] );
                 }
@@ -195,7 +224,7 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestion(SuggestionWord word) {
-            _writingState.SelectWord( word.Word );
+            CursorPos = _writingState.SelectWord( word.Word, CursorPos );
             ShowEnglish.IsChecked = false;
             _pinyinInput.Text = "";
         }
@@ -224,8 +253,7 @@ namespace ChineseWriter {
                 if (result.HasValue && result.Value) {
                     WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text, 
                         editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value);
-                    _writingState.RefreshInfo( );
-                    PopulateCharGrid( _writingState.Words, _writingState.CursorPos );
+                    _writingState.ExpandChars( );
                 }
             }
         }
