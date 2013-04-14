@@ -19,7 +19,7 @@ namespace ChineseWriter {
         public EditWord( IDictionary<object,object> word ) {
             InitializeComponent( );
             this.ShortEnglishBox.Text = word.Get<string>("short-english");
-            this.Known.IsChecked = word.Get<bool>("known");
+            this.Known.IsChecked = word.Known();
             this.ShortEnglishBox.Focus( );
         }
 

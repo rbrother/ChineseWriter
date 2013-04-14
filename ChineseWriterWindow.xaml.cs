@@ -22,8 +22,6 @@ namespace ChineseWriter {
         private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
-        private int _cursorPos;
-        public Subject<int> CursorPosChanges = new Subject<int>( );
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
@@ -62,15 +60,10 @@ namespace ChineseWriter {
                     CombineLatest( PinyinChanges, (english,input) => Tuple.Create(english,input) ).
                     ObserveOnDispatcher( ).
                     Subscribe( tuple => UpdateSuggestions( _writingState.Suggestions( tuple.Item2, tuple.Item1 ) ) );
-                CursorPosChanges.
-                    ObserveOnDispatcher( ).
-                    Subscribe( cursor => ScrollInputVisible( ) );
                 _writingState.WordsChanges.
-                    CombineLatest( CursorPosChanges, ( words, cursor ) => Tuple.Create( words, cursor ) ).
-                    ObserveOnDispatcher( ).Subscribe( tuple => PopulateCharGrid( tuple.Item1, tuple.Item2 ) );
+                    ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, _writingState.CursorPos ) );
 
                 _writingState.LoadText( );
-                CursorPos = _writingState.Words.Length;
                 _pinyinInput.Focus( );
 
             } catch (Exception ex) {
@@ -80,28 +73,23 @@ namespace ChineseWriter {
 
         public void TextEdit( Key key ) {
             switch (key) {
-                case Key.Left: CursorPos--; return;
-                case Key.Right: CursorPos++; return;
-                case Key.Home: CursorPos = 0; return;
-                case Key.End: CursorPos = _writingState.Words.Length; return;
-                case Key.Back: 
-                    _writingState.BackSpace( CursorPos );
-                    CursorPos--;
+                case Key.Left: 
+                case Key.Right:
+                case Key.Home:
+                case Key.End:
+                    _writingState.Move( key.ToString( ) );
                     break;
-                case Key.Delete: _writingState.Delete( CursorPos ); break;
+                case Key.Back: 
+                    _writingState.BackSpace();
+                    break;
+                case Key.Delete: 
+                    _writingState.Delete(); 
+                    break;
             }
         }
 
         public int CursorPos {
-            get { return _cursorPos; }
-            set {
-                if (value != _cursorPos) {
-                    _cursorPos = value;
-                    if (_cursorPos < 0) _cursorPos = 0;
-                    if (_cursorPos > _writingState.Words.Length) _cursorPos = _writingState.Words.Length;
-                    CursorPosChanges.OnNext( _cursorPos );
-                }
-            }
+            get { return _writingState.CursorPos; }
         }
 
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
@@ -197,6 +185,7 @@ namespace ChineseWriter {
 
         void ScrollInputVisible( ) {
             if (_cursorPanel.Parent != null) {
+                /*
                 TextScrollView.UpdateLayout( );
                 var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
                 var scrollTo = TextScrollView.HorizontalOffset -
@@ -205,13 +194,14 @@ namespace ChineseWriter {
                 if (scrollTo < 0) scrollTo = 0;
                 if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
                 TextScrollView.ScrollToHorizontalOffset( scrollTo );
+                 */
             }
         }
 
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if (e.Key == Key.Enter) {
                 if (Suggestions.Items.Count == 0) {
-                    CursorPos = _writingState.LiteralInput( _pinyinInput.Text, CursorPos );
+                    _writingState.LiteralInput( _pinyinInput.Text );
                 } else {
                     SelectSuggestion( (SuggestionWord)Suggestions.Items[0] );
                 }
@@ -224,7 +214,7 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestion(SuggestionWord word) {
-            CursorPos = _writingState.SelectWord( word.Word, CursorPos );
+            _writingState.SelectWord( word.Word );
             ShowEnglish.IsChecked = false;
             _pinyinInput.Text = "";
         }
@@ -242,6 +232,7 @@ namespace ChineseWriter {
             }
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
+            ScrollInputVisible( );
         }
 
         void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {

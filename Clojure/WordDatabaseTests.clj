@@ -151,4 +151,16 @@
 ))
 ;"we, us, ourselves, our"
 
+(def current-text-data { :text [ nil nil nil nil nil ] :cursor-pos 2 } )
+
+(deftest current-text-test
+  (are [ expected calculated ] (= expected calculated)
+     3 (moved-cursor-pos current-text-data "Right" )
+     3 (moved-cursor-pos current-text-data "Right" )
+     1 (moved-cursor-pos current-text-data "Left" )
+     1 (moved-cursor-pos current-text-data "Left" )
+     0 (moved-cursor-pos current-text-data "Home" )
+     5 (moved-cursor-pos current-text-data "End" )
+))
+
 (run-tests)

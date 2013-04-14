@@ -15,17 +15,28 @@ namespace ChineseWriter {
 
     internal class WritingState {
 
-        private IDictionary<object,object>[] _words;
-
         // Observables
         public Subject<IDictionary<object, object>[]> WordsChanges =
             new Subject<IDictionary<object, object>[]>( );
 
-        public IDictionary<object,object>[] Words { 
-            get { return _words; }
-            set { 
-                _words = value;
-                WordsChanges.OnNext( _words ); 
+
+        private IDictionary<object, object> WritingStateData {
+            get {
+                return (IDictionary<object, object>) 
+                    ( (clojure.lang.Atom)RT.var( "WordDatabase", "writing-state" ).deref( ) ).deref( );
+            }
+        }
+
+        public IDictionary<object,object>[] Words {
+            get {
+                // TODO: remove array cast
+                return WritingStateData.GetList( "text" ).Cast<IDictionary<object, object>>( ).ToArray( );
+            }
+        }
+
+        public int CursorPos {
+            get {
+                return WritingStateData.Get<int>( "cursor-pos" );
             }
         }
 
@@ -35,8 +46,8 @@ namespace ChineseWriter {
 
         public void LoadText() {
             if (File.Exists( TextSaveFileName )) {
-                var data = RT.var( "Utils", "load-from-file" ).invoke( TextSaveFileName );
-                Words = ( (IEnumerable<object>)data ).Cast<IDictionary<object, object>>( ).ToArray( );
+                var data = RT.var( "WordDatabase", "load-current-text" ).invoke( TextSaveFileName );
+                WordsChanges.OnNext( Words );
             }
         }
 
@@ -53,53 +64,44 @@ namespace ChineseWriter {
             }
         }
 
-        public void Delete( int cursorPos) {
-            if (cursorPos < Words.Length) {
-                Words = Words.Take( cursorPos ).
-                    Concat( Words.Skip( cursorPos + 1 ) ).
-                    ToArray();
-            }            
-        }
-
-        public void BackSpace( int cursorPos ) {
-            if (cursorPos > 0) {
-                Words = Words.Take( cursorPos - 1 ).
-                    Concat( Words.Skip( cursorPos ) ).
-                    ToArray();
+        public void Delete( ) {
+            if (CursorPos < Words.Length) {
+                DeleteWordInner( CursorPos );
             }
         }
 
-        /// <returns>New cursor position</returns>
-        internal int LiteralInput( string text, int cursorPos ) {
-            var words = (IEnumerable<object>)RT.var( "WordDatabase", "hanyu-to-words" ).invoke( text );
-            return InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ), cursorPos );
+        public void BackSpace( ) {
+            if (CursorPos > 0) {
+                DeleteWordInner( CursorPos - 1 );
+            }
         }
 
-        /// <returns>New cursor position</returns>
-        internal int SelectWord( IDictionary<object, object> word, int cursorPos ) {
-            WordDatabase.IncreaseUsageCount( word );
-            return InsertWords( new IDictionary<object, object>[] { word }, cursorPos );            
-        }
-
-        /// <returns>New cursor position</returns>
-        private int InsertWords( IDictionary<object, object>[] newWords, int cursorPos ) {
-            Words = Words.Take( cursorPos ).
-                Concat( newWords.Select( w => ExpandChars( w ) ) ).
-                Concat( Words.Skip( cursorPos ) ).
-                ToArray( );
-            return cursorPos + newWords.Count();
-        }
-
-        public void ExpandChars( ) {
-            Words = Words.Select( w => ExpandChars( w ) ).ToArray();
+        public void DeleteWordInner( int pos ) {
+            RT.var( "WordDatabase", "delete-word" ).invoke( pos );
             WordsChanges.OnNext( Words );
         }
 
-        private IDictionary<object,object> ExpandChars(IDictionary<object,object> word) {
-            return word.HasKeyword( "hanyu" ) && word.HasKeyword( "pinyin" ) ?
-                (IDictionary<object,object>) RT.var( "WordDatabase", "expanded-word" ).
-                    invoke( word.Hanyu(), word.Pinyin() ) :
-                word;
+        /// <returns>New cursor position</returns>
+        internal void LiteralInput( string text ) {
+            var words = (IEnumerable<object>)RT.var( "WordDatabase", "hanyu-to-words" ).invoke( text );
+            InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
+        }
+
+        /// <returns>New cursor position</returns>
+        internal void SelectWord( IDictionary<object, object> word ) {
+            WordDatabase.IncreaseUsageCount( word );
+            InsertWords( new IDictionary<object, object>[] { word } );            
+        }
+
+        /// <returns>New cursor position</returns>
+        private void InsertWords( IDictionary<object, object>[] newWords ) {
+            RT.var( "WordDatabase", "insert-text-words!" ).invoke( newWords );
+            WordsChanges.OnNext( Words );
+        }
+
+        public void ExpandChars( ) {
+            RT.var( "WordDatabase", "expand-text-words" ).invoke( );
+            WordsChanges.OnNext( Words );
         }
 
         private static string PadHanyu( string s, int latinLength ) {
@@ -169,7 +171,7 @@ namespace ChineseWriter {
         }
 
         internal void Clear( ) {
-            Words = new IDictionary<object,object>[] { };
+            RT.var( "WordDatabase", "clear-current-text!" ).invoke( );
         }
 
         internal string Hanyu {
@@ -185,6 +187,11 @@ namespace ChineseWriter {
         internal void SaveCurrentText( ) {
             var content = (string) RT.var( "Utils", "list-to-str" ).invoke( Words );
             File.WriteAllText( TextSaveFileName, content, Encoding.UTF8 );
+        }
+
+        internal void Move( string dir ) {
+            RT.var( "WordDatabase", "move-cursor!" ).invoke( dir );
+            WordsChanges.OnNext( Words );
         }
     } // class
 

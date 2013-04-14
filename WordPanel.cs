@@ -104,7 +104,7 @@ namespace ChineseWriter {
                         Text = " " + c.Pinyin().AddDiacritics( ) + " ",
                         Foreground = new SolidColorBrush( ToneColor( c.Pinyin( ) ) )
                     } ).ToArray( ) ),
-                word.Get<bool>("known") ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
+                word.Known() ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
             panel.ToolTip = CreateExplanationPanel( word );
             panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             return panel;
