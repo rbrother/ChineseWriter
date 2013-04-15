@@ -202,6 +202,7 @@ namespace ChineseWriter {
             if (e.Key == Key.Enter) {
                 if (Suggestions.Items.Count == 0) {
                     _writingState.LiteralInput( _pinyinInput.Text );
+                    _pinyinInput.Text = "";
                 } else {
                     SelectSuggestion( (SuggestionWord)Suggestions.Items[0] );
                 }
@@ -250,11 +251,14 @@ namespace ChineseWriter {
         }
 
         private void Copy_Plain_Click( object sender, RoutedEventArgs e ) {
-            Clipboard.SetText( _writingState.HanyiPinyinLines, TextDataFormat.UnicodeText );
-        }
-
-        private void Copy_Chinese_Click( object sender, RoutedEventArgs e ) {
-            ClipboardTool.CopyToClipboard( _writingState.Html, new Uri( "http://www.brotherus.net" ) );
+            if (CopyHtml.IsChecked ?? false) {
+                ClipboardTool.CopyToClipboard( _writingState.Html, new Uri( "http://www.brotherus.net" ) );
+            } else {
+                var data = _writingState.HanyiPinyinLines(
+                    CopyPinyin.IsChecked ?? false,
+                    CopyEnglish.IsChecked ?? false );
+                Clipboard.SetText( data, TextDataFormat.UnicodeText );
+            }
         }
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {

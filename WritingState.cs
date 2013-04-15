@@ -100,7 +100,7 @@ namespace ChineseWriter {
         }
 
         public void ExpandChars( ) {
-            RT.var( "WordDatabase", "expand-text-words" ).invoke( );
+            RT.var( "WordDatabase", "expand-text-words!" ).invoke( );
             WordsChanges.OnNext( Words );
         }
 
@@ -109,18 +109,24 @@ namespace ChineseWriter {
             return s.PadRight( latinLength - hanyuExtraLen );
         }
 
-        public string HanyiPinyinLines { 
-            get {
-                var hanyus = Words.Select( word => word.Hanyu());
-                var pinyins = Words.Select( word => word.PinyinDiacritics());
-                var english = Words.Select( word => word.ShortEnglish()); 
-                var lengths = hanyus.Select( word => word.Length + 1 )
-                    .Zip( pinyins, (l1,s2) => Math.Max(l1, s2.Length + 1))
-                    .Zip( english, (l1,s2) => Math.Max(l1, s2.Length + 1));
+        public string HanyiPinyinLines( bool copyPinyin, bool copyEnglish) {
+            var hanyus = Words.Select( word => word.Hanyu( ) );
+            if (!copyPinyin && !copyEnglish) {
+                // simple case: only hanyu
+                return string.Join( " ", hanyus.ToArray( ) );
+            } else { // complex case: aligned lines (use monospaced font)
+                var pinyins = Words.Select( word => word.PinyinDiacritics( ) );
+                var english = Words.Select( word => word.ShortEnglish( ) );
+                var hanyuLengths = hanyus.Select( word => word.Length + 1 );
+                var pinyinLengths = pinyins.Select( word => word.Length + 1 );
+                var englishLengths = english.Select( word => word.Length + 1 );
+                var lengths = hanyuLengths;
+                if (copyPinyin) lengths = lengths.Zip( pinyinLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
+                if (copyEnglish) lengths = lengths.Zip( englishLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
                 // could not think of way to do this with the base LINQ funcs:
-                var cumulativeLengths = new List<int>();
+                var cumulativeLengths = new List<int>( );
                 int cumulativeLength = 0;
-                foreach( int length in lengths) {
+                foreach (int length in lengths) {
                     cumulativeLength += length;
                     cumulativeLengths.Add( cumulativeLength );
                 }
@@ -129,10 +135,11 @@ namespace ChineseWriter {
                 var hanyuLine = hanyus
                     .Zip( cumulativeLengths, ( h, len ) => Tuple.Create( h, len ) )
                     .Aggregate( "", ( hanyu, tuple ) => PadHanyu( hanyu + tuple.Item1, tuple.Item2 ) );
-                var pinyinLine = string.Join( "", pinyins.Zip(lengths, (h,len) => h.PadRight(len)));
-                var englishLine = string.Join( "", english.Zip(lengths, (h,len) => h.PadRight(len)));
-                return hanyuLine + "\n" + pinyinLine + "\n" + englishLine;
-            } 
+                var pinyinLine = string.Join( "", pinyins.Zip( lengths, ( h, len ) => h.PadRight( len ) ) );
+                var englishLine = string.Join( "", english.Zip( lengths, ( h, len ) => h.PadRight( len ) ) );
+                return hanyuLine + ( copyPinyin ? "\n" + pinyinLine : "" ) +
+                    ( copyEnglish ? "\n" + englishLine : "" );
+            }
         }
 
         public string Html {
@@ -172,6 +179,7 @@ namespace ChineseWriter {
 
         internal void Clear( ) {
             RT.var( "WordDatabase", "clear-current-text!" ).invoke( );
+            WordsChanges.OnNext( Words );
         }
 
         internal string Hanyu {

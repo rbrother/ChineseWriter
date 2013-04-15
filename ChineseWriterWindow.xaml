@@ -10,6 +10,9 @@
         <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource WidgetStyle}">
             <Setter Property="Padding" Value="16,0,16,0"/>            
         </Style>
+        <Style x:Key="CheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource WidgetStyle}">
+            <Setter Property="VerticalAlignment" Value="Center"/>            
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -31,16 +34,20 @@
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </StackPanel.Background> 
-            <StackPanel Orientation="Horizontal" Name="Buttons">
+            <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource ButtonStyle}" 
                         Click="Clear_Text_Click">C_lear Text</Button>
-                <Button Click="Copy_Chinese_Click" Style="{StaticResource ButtonStyle}">Copy _Html</Button>
-                <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}">Copy _Chinese</Button>
-                <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False" VerticalAlignment="Center"
-                              Style="{StaticResource WidgetStyle}">_English</CheckBox>
+                <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}" Content="_Copy"></Button>
+                <CheckBox Name="CopyPinyin" Content="Pinyin" IsChecked="True" Style="{StaticResource CheckBoxStyle}" />
+                <CheckBox Name="CopyEnglish" Content="English" IsChecked="True" Style="{StaticResource CheckBoxStyle}"/>
+                <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Style="{StaticResource CheckBoxStyle}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
                 <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}" 
-                          Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>            
+                          Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>
+                <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False"
+                              Style="{StaticResource CheckBoxStyle}" Content="Suggest _English"></CheckBox>
                 <Border BorderThickness="1" BorderBrush="Black">
                     <Label Name="ProcessingLabel">Suggestions</Label>
                 </Border>
