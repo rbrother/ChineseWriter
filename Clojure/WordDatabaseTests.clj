@@ -1,6 +1,7 @@
 (ns WordDatabaseTests
   (:use Utils)
   (:use WordDatabase)
+  (:require WritingState)
   (:use clojure.set)
   (:use clojure.pprint)
   (:use clojure.test))
@@ -155,12 +156,12 @@
 
 (deftest current-text-test
   (are [ expected calculated ] (= expected calculated)
-     3 (moved-cursor-pos current-text-data "Right" )
-     3 (moved-cursor-pos current-text-data "Right" )
-     1 (moved-cursor-pos current-text-data "Left" )
-     1 (moved-cursor-pos current-text-data "Left" )
-     0 (moved-cursor-pos current-text-data "Home" )
-     5 (moved-cursor-pos current-text-data "End" )
+     3 (WritingState/moved-cursor-pos current-text-data "Right" )
+     3 (WritingState/moved-cursor-pos current-text-data "Right" )
+     1 (WritingState/moved-cursor-pos current-text-data "Left" )
+     1 (WritingState/moved-cursor-pos current-text-data "Left" )
+     0 (WritingState/moved-cursor-pos current-text-data "Home" )
+     5 (WritingState/moved-cursor-pos current-text-data "End" )
 ))
 
 (run-tests)

@@ -32,6 +32,8 @@ namespace ChineseWriter {
                 @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
             try {
                 RT.load( "WordDatabase" );
+                RT.load( "WritingState" );
+
                 _writingState = new WritingState( );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };

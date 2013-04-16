@@ -17,8 +17,6 @@
 
 (def word-info-dict (atom {})) ; retain so that properties like usage-count can be changed at runtime
 
-(def writing-state (atom { :text [] :cursor-pos 0 }))
-
 ;----------------------- Dictionary accessors ----------------------------------
 
 (defn get-word [ key ] (@word-dict key))
@@ -56,7 +54,7 @@
     (merge 
       (get-word key)
       (word-info key) ; info has been already merged at load, but re-merge as it might change runtime
-      { :characters (characters key)})))
+      { :characters (characters key )})))
 
 (defn expand-char [ {:keys [hanyu pinyin] :as word} ]
   (if (and hanyu pinyin)
@@ -65,59 +63,6 @@
 
 (defn expand-all-words [ words ]
   (map expand-char words))
-
-;----------------------- writing-state manipulation  ----------------------------
-; (def writing-state (atom { :text [] :cursor-pos 0 }))
-
-(defn cursor-pos [] (@writing-state :cursor-pos))
-
-(defn current-text [] (@writing-state :text))
-
-(defn clear-current-text! []
-  (reset! writing-state { :text [] :cursor-pos 0 } ))
-
-(defn load-current-text [path]
-  (let [ text (load-from-file path) ]
-    (reset! writing-state { :text text :cursor-pos (count text) } )))
-
-(defn word-deleted [ text pos ] 
-  (concat
-    (take pos text)
-    (drop (inc pos) text)))
-
-(defn delete-word [ cursor-pos ]
-  (let [ new (word-deleted (current-text) cursor-pos) ]
-    (reset! writing-state
-      { :text new :cursor-pos (min cursor-pos (count new)) } )))
-
-(defn word-inserted [ original new-words position ]
-  (concat 
-    (take position original)
-    (expand-all-words new-words)
-    (drop position original)))
-
-(defn insert-text-words! [ words ]
-  (let [ pos (cursor-pos) ]
-    (reset! writing-state
-      { :text (word-inserted (@writing-state :text) words pos) 
-        :cursor-pos (+ pos (count words)) } )))
-
-(defn expand-text-words! [] 
-  (reset! writing-state
-     (assoc @writing-state :text (expand-all-words (@writing-state :text))))) 
-
-(defn moved-cursor-pos [ { :keys [ text cursor-pos ] } dir ]
-  (case dir
-    "Left" (max (dec cursor-pos) 0)
-    "Right" (min (inc cursor-pos) (count text))
-    "Home" 0
-    "End" (count text)))
-
-(defn moved-cursor-state [ state dir ]
-  (assoc state :cursor-pos (moved-cursor-pos state dir)))
-
-(defn move-cursor! [ dir ]
-  (reset! writing-state (moved-cursor-state @writing-state dir))) 
 
 ;--------------- Loading database -------------------------------------
 

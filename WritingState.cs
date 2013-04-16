@@ -23,7 +23,7 @@ namespace ChineseWriter {
         private IDictionary<object, object> WritingStateData {
             get {
                 return (IDictionary<object, object>) 
-                    ( (clojure.lang.Atom)RT.var( "WordDatabase", "writing-state" ).deref( ) ).deref( );
+                    ( (clojure.lang.Atom)RT.var( "WritingState", "state" ).deref( ) ).deref( );
             }
         }
 
@@ -46,7 +46,7 @@ namespace ChineseWriter {
 
         public void LoadText() {
             if (File.Exists( TextSaveFileName )) {
-                var data = RT.var( "WordDatabase", "load-current-text" ).invoke( TextSaveFileName );
+                var data = RT.var( "WritingState", "load-current-text" ).invoke( TextSaveFileName );
                 WordsChanges.OnNext( Words );
             }
         }
@@ -77,7 +77,7 @@ namespace ChineseWriter {
         }
 
         public void DeleteWordInner( int pos ) {
-            RT.var( "WordDatabase", "delete-word" ).invoke( pos );
+            RT.var( "WritingState", "delete-word" ).invoke( pos );
             WordsChanges.OnNext( Words );
         }
 
@@ -95,12 +95,12 @@ namespace ChineseWriter {
 
         /// <returns>New cursor position</returns>
         private void InsertWords( IDictionary<object, object>[] newWords ) {
-            RT.var( "WordDatabase", "insert-text-words!" ).invoke( newWords );
+            RT.var( "WritingState", "insert-text-words!" ).invoke( newWords );
             WordsChanges.OnNext( Words );
         }
 
         public void ExpandChars( ) {
-            RT.var( "WordDatabase", "expand-text-words!" ).invoke( );
+            RT.var( "WritingState", "expand-text-words!" ).invoke( );
             WordsChanges.OnNext( Words );
         }
 
@@ -178,7 +178,7 @@ namespace ChineseWriter {
         }
 
         internal void Clear( ) {
-            RT.var( "WordDatabase", "clear-current-text!" ).invoke( );
+            RT.var( "WritingState", "clear-current-text!" ).invoke( );
             WordsChanges.OnNext( Words );
         }
 
@@ -198,7 +198,7 @@ namespace ChineseWriter {
         }
 
         internal void Move( string dir ) {
-            RT.var( "WordDatabase", "move-cursor!" ).invoke( dir );
+            RT.var( "WritingState", "move-cursor!" ).invoke( dir );
             WordsChanges.OnNext( Words );
         }
     } // class
