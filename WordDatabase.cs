@@ -59,6 +59,20 @@ namespace ChineseWriter {
                     Encoding.UTF8 );
             }
         }
+
+        public static IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {
+            var findWords = RT.var( "WordDatabase", "find-words" );
+            if (findWords.isBound) {
+                var method = english ? "find-words-english" : "find-words";
+                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", method ).invoke( input );
+                // Do *not* cast suggestions to list or Array here! That kills the performance since it forces
+                // the lazy list to be fully evaluated
+                return suggestions.Cast<IDictionary<object, object>>( );
+            } else {
+                return new IDictionary<object, object>[] { };
+            }
+        }
+
     } // class
 
 } // namespace

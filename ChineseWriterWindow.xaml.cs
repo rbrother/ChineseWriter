@@ -19,7 +19,6 @@ namespace ChineseWriter {
 
     public partial class ChineseWriterWindow : Window {
 
-        private WritingState _writingState;
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
 
@@ -33,8 +32,6 @@ namespace ChineseWriter {
             try {
                 RT.load( "WordDatabase" );
                 RT.load( "WritingState" );
-
-                _writingState = new WritingState( );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
@@ -61,11 +58,11 @@ namespace ChineseWriter {
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     CombineLatest( PinyinChanges, (english,input) => Tuple.Create(english,input) ).
                     ObserveOnDispatcher( ).
-                    Subscribe( tuple => UpdateSuggestions( _writingState.Suggestions( tuple.Item2, tuple.Item1 ) ) );
-                _writingState.WordsChanges.
-                    ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, _writingState.CursorPos ) );
+                    Subscribe( tuple => UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
+                WritingState.WordsChanges.
+                    ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
 
-                _writingState.LoadText( );
+                WritingState.LoadText( );
                 _pinyinInput.Focus( );
 
             } catch (Exception ex) {
@@ -79,19 +76,19 @@ namespace ChineseWriter {
                 case Key.Right:
                 case Key.Home:
                 case Key.End:
-                    _writingState.Move( key.ToString( ) );
+                    WritingState.Move( key.ToString( ) );
                     break;
-                case Key.Back: 
-                    _writingState.BackSpace();
+                case Key.Back:
+                    WritingState.BackSpace( );
                     break;
-                case Key.Delete: 
-                    _writingState.Delete(); 
+                case Key.Delete:
+                    WritingState.Delete( ); 
                     break;
             }
         }
 
         public int CursorPos {
-            get { return _writingState.CursorPos; }
+            get { return WritingState.CursorPos; }
         }
 
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
@@ -203,7 +200,7 @@ namespace ChineseWriter {
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if (e.Key == Key.Enter) {
                 if (Suggestions.Items.Count == 0) {
-                    _writingState.LiteralInput( _pinyinInput.Text );
+                    WritingState.LiteralInput( _pinyinInput.Text );
                     _pinyinInput.Text = "";
                 } else {
                     SelectSuggestion( (SuggestionWord)Suggestions.Items[0] );
@@ -217,7 +214,7 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestion(SuggestionWord word) {
-            _writingState.SelectWord( word.Word );
+            WritingState.SelectWord( word.Word );
             ShowEnglish.IsChecked = false;
             _pinyinInput.Text = "";
         }
@@ -225,7 +222,7 @@ namespace ChineseWriter {
         private void PopulateCharGrid( IEnumerable<IDictionary<object,object>> words, int cursorPos ) {
             Characters.Children.Clear( );
             int pos = 0;
-            foreach (IDictionary<object,object> word in _writingState.Words) {
+            foreach (IDictionary<object, object> word in WritingState.Words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
@@ -247,16 +244,16 @@ namespace ChineseWriter {
                 if (result.HasValue && result.Value) {
                     WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text, 
                         editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value);
-                    _writingState.ExpandChars( );
+                    WritingState.ExpandChars( );
                 }
             }
         }
 
         private void Copy_Plain_Click( object sender, RoutedEventArgs e ) {
             if (CopyHtml.IsChecked ?? false) {
-                ClipboardTool.CopyToClipboard( _writingState.Html, new Uri( "http://www.brotherus.net" ) );
+                ClipboardTool.CopyToClipboard( WritingState.Html, new Uri( "http://www.brotherus.net" ) );
             } else {
-                var data = _writingState.HanyiPinyinLines(
+                var data = WritingState.HanyiPinyinLines(
                     CopyPinyin.IsChecked ?? false,
                     CopyEnglish.IsChecked ?? false );
                 Clipboard.SetText( data, TextDataFormat.UnicodeText );
@@ -264,13 +261,13 @@ namespace ChineseWriter {
         }
 
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
-            _writingState.Clear( );
+            WritingState.Clear( );
             _pinyinInput.Text = "";
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
             WordDatabase.SaveWordsInfo( );
-            _writingState.SaveCurrentText( );
+            WritingState.SaveCurrentText( );
         }
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {

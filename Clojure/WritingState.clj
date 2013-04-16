@@ -22,10 +22,12 @@
     (take pos text)
     (drop (inc pos) text)))
 
-(defn delete-word [ cursor-pos ]
-  (let [ new (word-deleted (current-text) cursor-pos) ]
-    (set-state!
-      { :text new :cursor-pos (min cursor-pos (count new)) } )))
+(defn delete-word! [ pos ]
+  (if (and (>= pos 0) (< pos (count (current-text))))
+    (let [ new (word-deleted (current-text) pos) ]
+      (do (set-state! { :text new :cursor-pos (min pos (count new)) } )
+        true ))
+    false ))
 
 (defn word-inserted [ original new-words position ]
   (concat 
