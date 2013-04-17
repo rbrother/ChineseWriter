@@ -32,6 +32,7 @@ namespace ChineseWriter {
             try {
                 RT.load( "WordDatabase" );
                 RT.load( "WritingState" );
+                RT.load( "ExportText" );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
@@ -222,7 +223,7 @@ namespace ChineseWriter {
         private void PopulateCharGrid( IEnumerable<IDictionary<object,object>> words, int cursorPos ) {
             Characters.Children.Clear( );
             int pos = 0;
-            foreach (IDictionary<object, object> word in WritingState.Words) {
+            foreach (var word in words) {
                 if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
@@ -249,9 +250,11 @@ namespace ChineseWriter {
             }
         }
 
-        private void Copy_Plain_Click( object sender, RoutedEventArgs e ) {
+        private void CopyClick( object sender, RoutedEventArgs e ) {
             if (CopyHtml.IsChecked ?? false) {
-                ClipboardTool.CopyToClipboard( WritingState.Html, new Uri( "http://www.brotherus.net" ) );
+                ClipboardTool.CopyToClipboard( 
+                    (string) RT.var( "ExportText", "html" ).invoke( StringUtils.AddDiacriticsFunc ), 
+                    new Uri( "http://www.brotherus.net" ) );
             } else {
                 var data = WritingState.HanyiPinyinLines(
                     CopyPinyin.IsChecked ?? false,

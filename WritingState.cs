@@ -21,7 +21,7 @@ namespace ChineseWriter {
             }
         }
 
-        public static IDictionary<object, object>[] Words {
+        private static IDictionary<object, object>[] Words {
             get {
                 // TODO: remove array cast
                 return WritingStateData.GetList( "text" ).Cast<IDictionary<object, object>>( ).ToArray( );
@@ -111,41 +111,6 @@ namespace ChineseWriter {
                 return hanyuLine + ( copyPinyin ? "\n" + pinyinLine : "" ) +
                     ( copyEnglish ? "\n" + englishLine : "" );
             }
-        }
-
-        public static string Html {
-            get {
-                return "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;' cellpadding='4'>" +
-                    "<tr>" + HanyuHtml + "</tr>" +
-                    "<tr>" + PinyinHtml + "</tr>" +
-                    "<tr>" + EnglishHtml +"</tr>" +
-                    "</table>";
-            }
-        }
-
-        private static string HanyuHtml {
-            get {
-                return string.Join( "", 
-                    Words.Select( word => WordCell( word.HanyuHtml(), "font-size:20pt;" ) ).ToArray() );
-            }
-        }
-
-        private static string PinyinHtml {
-            get {
-                return string.Join( "", 
-                    Words.Select( word => WordCell( word.PinyinHtml() ) ).ToArray( ) );
-            }
-        }
-
-        private static string EnglishHtml {
-            get {
-                return string.Join( "",
-                    Words.Select( word => WordCell( word.EnglishHtml(), "color:#808080; font-size:9pt;" ) ).ToArray( ) );
-            }
-        }
-
-        public static string WordCell( string content, string attr = "" ) {
-            return string.Format("<td style='{0}'>{1} </td>", attr, content);
         }
 
         internal static void Clear( ) {

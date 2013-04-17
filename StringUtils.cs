@@ -9,9 +9,17 @@ using System.Text.RegularExpressions;
 
 namespace ChineseWriter {
 
+    class DiacriticsAdderFunc : clojure.lang.AFn {
+        public override object invoke( object pinyin ) {
+            return ( (string)pinyin ).AddDiacritics( );
+        }
+    }
+
     static class StringUtils {
 
         private static readonly int[] TONE_DIACRITICS = new int[] { 772, 769, 780, 768 };
+
+        public static clojure.lang.IFn AddDiacriticsFunc = new DiacriticsAdderFunc( );
 
         public static string AddDiacritics( this string pinyin ) {
             return string.Join( " ", pinyin.Replace( "u:", "ü" ).Split( ' ' ).

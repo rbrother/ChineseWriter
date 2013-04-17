@@ -2,6 +2,7 @@
   (:use Utils)
   (:use WordDatabase)
   (:require WritingState)
+  (:require ExportText)
   (:use clojure.set)
   (:use clojure.pprint)
   (:use clojure.test))
@@ -162,6 +163,14 @@
      1 (WritingState/moved-cursor-pos current-text-data "Left" )
      0 (WritingState/moved-cursor-pos current-text-data "Home" )
      5 (WritingState/moved-cursor-pos current-text-data "End" )
+))
+
+(deftest export-test
+  (are [ expected calculated ] (= expected calculated)
+       "<span style='color: #00B000;'>我</span><span style='color: #808080;'>们</span>" 
+       (ExportText/word-hanyu-html wo-men-word-expanded nil)
+       "<span style='color: #00B000;'>wo3</span> <span style='color: #808080;'>men5</span>" 
+       (ExportText/word-pinyin-html wo-men-word-expanded identity)
 ))
 
 (run-tests)

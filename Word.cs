@@ -65,39 +65,11 @@ namespace ChineseWriter {
                 Convert.ToString( word.Get<int>("usage-count") ) : "";
         }
 
-        public static string HanyuHtml( this IDictionary<object, object> word ) {
-            return HtmlPart( word, "", c => c.Hanyu( ) );
-        }
-
-        public static string PinyinHtml( this IDictionary<object, object> word ) {
-            return HtmlPart( word, " ", c => c.Pinyin( ).AddDiacritics( ) );
-        }
-
-        public static string HtmlPart( this IDictionary<object, object> word, string separator, Func<IDictionary<object, object>,string> charToPart ) {
-            return word.HasKeyword( "characters" ) ?
-                string.Join( separator,
-                    word.Characters( ).Select( c =>
-                        string.Format( "<span style='color: {0};'>{1}</span>",
-                            HtmlColor( c.Pinyin( ) ), charToPart( c ) ) ).ToArray( ) ) :
-                word.Get<string>( "text" );
-        }
-
-
-        private static string HtmlColor( string pinyin ) {
-            var color = WordPanel.ToneColor( pinyin ).ToString( );
-            // remove the alpha value
-            return "#" + color.Substring( 3 );
-        }
-
-        public static string EnglishHtml( this IDictionary<object, object> word ) {
-            return word.Known( ) ? "" : word.ShortEnglish();
-        }
-
         public static SuggestionWord ToDataTableWord( this IDictionary<object, object> word, string shortCut ) {
             return new SuggestionWord {
                 Word = word, // for later retrieval when suggetion used
                 Shortcut = shortCut,
-                Pinyin = ( word.Pinyin( ) ).AddDiacritics( ),
+                Pinyin = word.PinyinDiacritics(),
                 Hanyu = word.Hanyu( ),
                 English = word.Get<string>( "english" ),
                 UsageCountString = word.UsageCountStr( )

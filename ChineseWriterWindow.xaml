@@ -37,7 +37,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource ButtonStyle}" 
                         Click="Clear_Text_Click">C_lear Text</Button>
-                <Button Click="Copy_Plain_Click" Style="{StaticResource ButtonStyle}" Content="_Copy"></Button>
+                <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy"></Button>
                 <CheckBox Name="CopyPinyin" Content="Pinyin" IsChecked="True" Style="{StaticResource CheckBoxStyle}" />
                 <CheckBox Name="CopyEnglish" Content="English" IsChecked="True" Style="{StaticResource CheckBoxStyle}"/>
                 <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Style="{StaticResource CheckBoxStyle}"/>

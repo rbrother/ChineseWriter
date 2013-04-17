@@ -86,7 +86,7 @@ namespace ChineseWriter {
                         Text = character.Hanyu( ),
                         Foreground = foreground } ), 
                     CreateTextBlock( "Times New Roman", 40, new Run {
-                        Text = " " + character.Pinyin( ).AddDiacritics( ) + " ",
+                        Text = " " + character.PinyinDiacritics() + " ",
                         Foreground = foreground } ), 
                     CreateEnglishPanel( character, true ) ) );
         }
@@ -101,7 +101,7 @@ namespace ChineseWriter {
                     } ).ToArray( ) ),
                 CreateTextBlock( "Times New Roman", 20,
                     chars.Select( c => new Run {
-                        Text = " " + c.Pinyin().AddDiacritics( ) + " ",
+                        Text = " " + c.PinyinDiacritics() + " ",
                         Foreground = new SolidColorBrush( ToneColor( c.Pinyin( ) ) )
                     } ).ToArray( ) ),
                 word.Known() ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
