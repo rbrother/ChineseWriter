@@ -23,7 +23,7 @@
 
 (defn word-pinyin-html [ word ] (html-part word " " :pinyin-diacritics))
 
-(defn word-english-html [ word ] (if (word :known) "" (word :short-english)))
+(defn word-english-html [ word ] (if (word :known) "" (or (word :short-english) "")))
 
 (defn html-row [ words selector attr ]
   (->> words

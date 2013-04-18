@@ -5,7 +5,7 @@
   (:use clojure.set)
   (:use clojure.clr.io))
 
-;----------------------- Atoms for the dictionary data ----------------------------------
+;----------------------- Atoms for the dictionary data etc. ----------------------------------
 
 (def all-words (atom []))
 
@@ -17,9 +17,12 @@
 
 (def word-info-dict (atom {})) ; retain so that properties like usage-count can be changed at runtime
 
+(def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
+
 (def add-diacritics-func (atom identity)) ; set this to proper diacritics expander from C#
 
 (defn set-add-diacritics-func! [ f ] (reset! add-diacritics-func f))
+
 
 ;----------------------- Dictionary accessors ----------------------------------
 
@@ -40,12 +43,12 @@
       (let [ hanyu-matches (get-word { :hanyu hanyu }) 
             caseless-match (filter #(equal-caseless (% :pinyin) pinyin) hanyu-matches)
             toneless-matches (filter #(toneless-equal (% :pinyin) pinyin) hanyu-matches)]
-        (cond
-          (not-empty caseless-match) (first caseless-match)
-          (not-empty toneless-matches) (first toneless-matches)
-          (not-empty hanyu-matches) (first hanyu-matches)
+        (or
+          (first caseless-match)
+          (first toneless-matches)
+          (first hanyu-matches)
           ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
-          :else { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))))
+          { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))))
 
 (defn add-diacritics-to-word [ { pinyin :pinyin :as word } ]
   (assoc word :pinyin-diacritics (@add-diacritics-func pinyin)))
@@ -99,9 +102,19 @@
     (map-values sort-suggestions (index words [ :hanyu ]))
     (map-values first (index words [ :hanyu :pinyin ]))))
 
+; TODO: Now these global fields are set almost at the same time, so
+; possibility of mismatch should be minimal, 
+; but consider if we should set all of the following atoms in one go, i.e. make them
+; part of a single global atom that is reset in one operation. 
+(defn set-word-database-inner-2! [ sorted-words dictionary ]
+  (reset! word-search-cache {})
+  (reset! all-words sorted-words)
+  (reset! word-dict dictionary))
+
 (defn set-word-database-inner! [words]
-  (reset! all-words (sort-suggestions words))
-  (reset! word-dict (create-word-dict words)))
+  (set-word-database-inner-2! 
+    (sort-suggestions words) 
+    (create-word-dict words)))
 
 (defn set-word-database! [words-raw info-dict]
   (do
@@ -151,16 +164,32 @@
   (fn [ { english :english } ]
     (some #(starts-with % english-start) (str/split english #" "))))
 
+(defn find-words-cached [ input english ]
+  (let [ key { :input input :english english } ]
+    (or (@word-search-cache key)
+      (let [ key-shorter { :input (apply str (drop-last input)) :english english }
+             source (or (@word-search-cache key-shorter) @all-words)
+             matcher ((if english english-matcher pinyin-matcher) input)
+             res (filter matcher source) ]
+        (do
+          ; TODO: Now we "memoize" without limit. If this seems to lead to too high memory consumption,
+          ; make a more intelligent cache limiting the contained data
+          (reset! word-search-cache (assoc @word-search-cache key res))
+          res )))))
+
 ; Although filtering the whole dictionary is slowish, this function quickly returns
 ; a lazy-seq which we process in background-thread in the UI, so no delay is noticeable.
 ; The key here is to have all-words pre-sorted in order of usage-count, so no new sorting is needed:
 ; Top results come quickly from top of the list.
 ; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
 ; to consume processor power, limit to 1000
+
+;(def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
+;
+
 (defn find-words [ input english ] 
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
-    (->> @all-words
-      (filter matcher)
+    (->> (find-words-cached input english)
       (map expand-word) 
       (take 1000))))
 
