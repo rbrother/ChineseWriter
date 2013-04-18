@@ -3,6 +3,7 @@
   (:use WordDatabase)
   (:require WritingState)
   (:require ExportText)
+  (:use ParseChinese)
   (:use clojure.set)
   (:use clojure.pprint)
   (:use clojure.test))

@@ -30,9 +30,9 @@ namespace ChineseWriter {
             System.Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH",
                 @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
             try {
-                RT.load( "WordDatabase" );
                 RT.load( "WritingState" );
                 RT.load( "ExportText" );
+                RT.load( "ParseChinese" );
                 RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };

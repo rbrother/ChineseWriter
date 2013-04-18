@@ -56,7 +56,7 @@ namespace ChineseWriter {
         }
 
         internal static void LiteralInput( string text ) {
-            var words = (IEnumerable<object>)RT.var( "WordDatabase", "hanyu-to-words" ).invoke( text );
+            var words = (IEnumerable<object>)RT.var( "ParseChinese", "hanyu-to-words" ).invoke( text );
             InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
         }
 
