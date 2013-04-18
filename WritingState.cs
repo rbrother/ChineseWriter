@@ -71,7 +71,7 @@ namespace ChineseWriter {
         }
 
         public static void ExpandChars( ) {
-            RT.var( "WritingState", "expand-text-words!" ).invoke( );
+            RT.var( "WritingState", "expand-text-words!" ).invoke( StringUtils.AddDiacriticsFunc );
             WordsChanges.OnNext( Words );
         }
 

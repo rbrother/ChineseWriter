@@ -33,6 +33,7 @@ namespace ChineseWriter {
                 RT.load( "WordDatabase" );
                 RT.load( "WritingState" );
                 RT.load( "ExportText" );
+                RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
@@ -253,7 +254,7 @@ namespace ChineseWriter {
         private void CopyClick( object sender, RoutedEventArgs e ) {
             if (CopyHtml.IsChecked ?? false) {
                 ClipboardTool.CopyToClipboard( 
-                    (string) RT.var( "ExportText", "html" ).invoke( StringUtils.AddDiacriticsFunc ), 
+                    (string) RT.var( "ExportText", "html" ).invoke(), 
                     new Uri( "http://www.brotherus.net" ) );
             } else {
                 var data = WritingState.HanyiPinyinLines(

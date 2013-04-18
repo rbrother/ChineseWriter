@@ -51,8 +51,9 @@ namespace ChineseWriter {
         }
 
         public static string PinyinDiacritics( this IDictionary<object,object> word ) {
-            return word.HasKeyword( "pinyin" ) ?
-                word.Pinyin( ).AddDiacritics( ) : word.Get<string>( "text" );
+            return word.HasKeyword( "pinyin-diacritics" ) ? word.Get<string>("pinyin-diacritics") :
+                word.HasKeyword( "pinyin" ) ? word.Get<string>("pinyin") : 
+                word.Get<string>( "text" );
         }
 
         public static string Hanyu( this IDictionary<object,object> word ) {

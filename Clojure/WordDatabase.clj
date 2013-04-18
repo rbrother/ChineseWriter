@@ -17,6 +17,10 @@
 
 (def word-info-dict (atom {})) ; retain so that properties like usage-count can be changed at runtime
 
+(def add-diacritics-func (atom identity)) ; set this to proper diacritics expander from C#
+
+(defn set-add-diacritics-func! [ f ] (reset! add-diacritics-func f))
+
 ;----------------------- Dictionary accessors ----------------------------------
 
 (defn get-word [ key ] (@word-dict key))
@@ -43,26 +47,30 @@
           ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
           :else { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))))
 
+(defn add-diacritics-to-word [ { pinyin :pinyin :as word } ]
+  (assoc word :pinyin-diacritics (@add-diacritics-func pinyin)))
+
 ; This is slow, so do only for a word when needed (mainly when fetched to form current sentence words), not for all words in dictionary
 (defn characters [ { hanyu :hanyu pinyin :pinyin } ] 
   (->> (zip (map str hanyu) (str/split pinyin #" "))
     (map (fn [ [h p] ] (find-char h p)))
+    (map add-diacritics-to-word)
     (vec)))
 
-(defn expanded-word [ hanyu pinyin ]
+(defn expand-hanyu-word [ { :keys [hanyu pinyin] } ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (merge 
       (get-word key)
+      { :pinyin-diacritics (@add-diacritics-func pinyin) }
       (word-info key) ; info has been already merged at load, but re-merge as it might change runtime
-      { :characters (characters key )})))
+      { :characters (characters key) })))
 
-(defn expand-char [ {:keys [hanyu pinyin] :as word} ]
+(defn expand-word [ {:keys [hanyu pinyin] :as word} ]
   (if (and hanyu pinyin)
-    (expanded-word hanyu pinyin)
+    (expand-hanyu-word word)
     word )) ; can be literal text
 
-(defn expand-all-words [ words ]
-  (map expand-char words))
+(defn expand-all-words [ words ] (map expand-word words))
 
 ;--------------- Loading database -------------------------------------
 
@@ -149,9 +157,12 @@
 ; Top results come quickly from top of the list.
 ; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
 ; to consume processor power, limit to 1000
-(defn find-words [ pinyin ] (take 1000 (filter (pinyin-matcher pinyin) @all-words)))
-
-(defn find-words-english [ english ] (take 1000 (filter (english-matcher english) @all-words)))
+(defn find-words [ input english ] 
+  (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
+    (->> @all-words
+      (filter matcher)
+      (map expand-word) 
+      (take 1000))))
 
 ; -------------------- Parsing chinese text to words ---------------------
 

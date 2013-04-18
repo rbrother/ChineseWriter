@@ -66,11 +66,13 @@
   {:hanyu "我", :pinyin "wo3", :english "I, me, my",
    :pinyin-no-spaces-no-tones "wo",
    :pinyin-no-spaces "wo3",
+   :pinyin-diacritics "wo3",
    :short-english "I", :known true, :usage-count 112,
    :characters 
    [ {:hanyu "我", :pinyin "wo3", :english "I, me, my",
       :pinyin-no-spaces-no-tones "wo",
       :pinyin-no-spaces "wo3",
+      :pinyin-diacritics "wo3",
       :short-english "I", :known true, :usage-count 112} ]} )
   
 (def wo-men-word-expanded 
@@ -82,6 +84,7 @@
      :usage-count 112 
      :hanyu "我",
      :pinyin "wo3",
+     :pinyin-diacritics "wo3",
      :english "I, me, my" }
     {:short-english "plural marker for pronouns"
      :pinyin-no-spaces-no-tones "men",
@@ -90,12 +93,14 @@
      :usage-count 0,
      :hanyu "们",
      :pinyin "men5",
+     :pinyin-diacritics "men5",
      :english "plural marker for pronouns, and nouns referring to individuals" }]
    :pinyin-no-spaces-no-tones "women",
    :pinyin-no-spaces "wo3men5",
    :known true,
    :hanyu "我们",
    :pinyin "wo3 men5",
+   :pinyin-diacritics "wo3 men5",
    :english "we, us, ourselves, our",
    :short-english "xxx", ; by the time we get to test this, we have changed it
    :usage-count 8 ; by the time we get to test this, we have increased it
@@ -121,7 +126,7 @@
 
 (def women-word-calculated (first (get-word { :hanyu "我们" })))
 
-(def airen-chars ((expanded-word "爱人" "ai4 ren5") :characters))
+(def airen-chars ((expand-word { :hanyu "爱人" :pinyin "ai4 ren5" } ) :characters))
 
 (def xiang-words (get-word { :hanyu "向" } ))
 
@@ -135,18 +140,18 @@
            (inc-usage-count "我们" "wo3 men5" ) 
            (set-word-info "我们" "wo3 men5" "xxx" true) 
            @word-info-dict)
-  2 (count (find-words "wo3"))
-  1 (count (find-words-english "girlfriend"))
-  1 (count (find-words-english "people"))
-  0 (count (find-words-english "zoobaba"))
+  2 (count (find-words "wo3" false))
+  1 (count (find-words "girlfriend" true))
+  1 (count (find-words "people" true))
+  0 (count (find-words "zoobaba" true))
   wo-men-word women-word-calculated
-  wo-men-word-expanded (expanded-word "我们" "wo3 men5")
+  wo-men-word-expanded (expand-word { :hanyu "我们" :pinyin "wo3 men5" } )
   "ren2" ((find-char "人" "ren2") :pinyin)
   "ren2" ((find-char "人" "Ren2") :pinyin)
   "ren2" ((find-char "人" "ren5") :pinyin)
   2 (count airen-chars)
   "人" (second-airen-char :hanyu)
-  wo-expanded (expanded-word "我" "wo3")
+  wo-expanded (expand-word { :hanyu "我" :pinyin "wo3" } )
   2 (count xiang-words)
   2 (count (hanyu-to-words "我们女友" ))
   3 (count (hanyu-to-words "我们QQ女友" ))
@@ -168,9 +173,9 @@
 (deftest export-test
   (are [ expected calculated ] (= expected calculated)
        "<span style='color: #00B000;'>我</span><span style='color: #808080;'>们</span>" 
-       (ExportText/word-hanyu-html wo-men-word-expanded nil)
+       (ExportText/word-hanyu-html wo-men-word-expanded)
        "<span style='color: #00B000;'>wo3</span> <span style='color: #808080;'>men5</span>" 
-       (ExportText/word-pinyin-html wo-men-word-expanded identity)
+       (ExportText/word-pinyin-html wo-men-word-expanded)
 ))
 
 (run-tests)

@@ -19,22 +19,22 @@
       (apply str))
     (word :text)))
 
-(defn word-hanyu-html [ word _ ] (html-part word "" #(% :hanyu)))
+(defn word-hanyu-html [ word ] (html-part word "" :hanyu))
 
-(defn word-pinyin-html [ word add-diacritics-func ] (html-part word " " #(add-diacritics-func (% :pinyin))))
+(defn word-pinyin-html [ word ] (html-part word " " :pinyin-diacritics))
 
-(defn word-english-html [ word _ ] (if (word :known) "" (word :short-english)))
+(defn word-english-html [ word ] (if (word :known) "" (word :short-english)))
 
-(defn html-row [ words selector attr add-diacritics-func ]
+(defn html-row [ words selector attr ]
   (->> words
-    (map #(selector % add-diacritics-func))
+    (map selector)
     (map #(format "<td style='%s'>%s </td>" attr %))
     (apply str)))
 
 (defn html 
-  ([ add-diacritics-func ] (html add-diacritics-func (current-text)))
-  ([ add-diacritics-func words]
-    (let [ html-row2 (fn [selector attr] (html-row words selector attr add-diacritics-func)) ]
+  ([ ] (html (current-text)))
+  ([ words ]
+    (let [ html-row2 (fn [selector attr] (html-row words selector attr)) ]
       (format 
         "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;' cellpadding='4'>
          <tr>%s</tr> <tr>%s</tr> <tr>%s</tr>
