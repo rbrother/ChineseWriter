@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,23 @@ namespace ChineseWriter {
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
 
+
+        public void InitClojureLoadPath() {
+            var loadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH") ?? "";
+            var gd = Environment.GetEnvironmentVariable("GD") ?? "";
+            loadPath = AppendToPath( loadPath, Path.Combine( gd, "programs/clojure-clr"));
+            loadPath = AppendToPath( loadPath, Path.Combine( "C:/Google Drive", "programs/clojure-clr"));
+            loadPath = AppendToPath( loadPath, "c:/github/ChineseWriter/Clojure" );
+            Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath);
+        }
+
+        private string AppendToPath( string path, string newDir) {
+            return path + (Directory.Exists(newDir) ? ";" + newDir : "");
+        }
+
         public ChineseWriterWindow( ) {
             InitializeComponent( );
-            System.Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH",
-                @"C:/Google Drive/programs/clojure-clr;c:/github/ChineseWriter/Clojure" );
+            InitClojureLoadPath();
             try {
                 RT.load( "WritingState" );
                 RT.load( "ExportText" );
