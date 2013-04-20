@@ -124,7 +124,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Clojure\convert.cmd" />
+    <None Include="Clojure\ConvertCCDict.clj" />
+    <None Include="Clojure\ExportText.clj" />
+    <None Include="Clojure\ParseChinese.clj" />
+    <None Include="Clojure\Utils.clj" />
     <None Include="Clojure\WordDatabase.clj" />
+    <None Include="Clojure\WordDatabaseTests.clj" />
+    <None Include="Clojure\WritingState.clj" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

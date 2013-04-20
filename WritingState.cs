@@ -35,10 +35,10 @@ namespace ChineseWriter {
         }
 
         public static void LoadText( ) {
-            if (File.Exists( TextSaveFileName )) {
-                var data = RT.var( "WritingState", "load-current-text" ).invoke( TextSaveFileName );
-                WordsChanges.OnNext( Words );
+            if (File.Exists(TextSaveFileName)) {
+                RT.var("WritingState", "load-current-text").invoke(TextSaveFileName);                
             }
+            WordsChanges.OnNext(Words);
         }
 
         public static void Delete( ) {
