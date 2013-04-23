@@ -10,9 +10,8 @@ namespace ChineseWriter {
 
     internal static class WritingState {
 
-        // Observables
-        public static Subject<IDictionary<object, object>[]> WordsChanges =
-            new Subject<IDictionary<object, object>[]>( );
+        public static Subject<IEnumerable<IDictionary<object, object>>> WordsChanges =
+            new Subject<IEnumerable<IDictionary<object, object>>>();
 
         private static IDictionary<object, object> WritingStateData {
             get {
@@ -21,10 +20,9 @@ namespace ChineseWriter {
             }
         }
 
-        private static IDictionary<object, object>[] Words {
+        private static IEnumerable<IDictionary<object, object>> Words {
             get {
-                // TODO: remove array cast
-                return WritingStateData.GetList( "text" ).Cast<IDictionary<object, object>>( ).ToArray( );
+                return WritingStateData.GetList( "text" ).Cast<IDictionary<object, object>>( );
             }
         }
 
