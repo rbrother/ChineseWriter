@@ -274,7 +274,7 @@ namespace ChineseWriter {
                 var data = WritingState.HanyiPinyinLines(
                     CopyPinyin.IsChecked ?? false,
                     CopyEnglish.IsChecked ?? false );
-                Clipboard.SetText( data, TextDataFormat.UnicodeText );
+                HandleExceptions( () => Clipboard.SetText( data, TextDataFormat.UnicodeText ) );
             }
         }
 
@@ -296,6 +296,14 @@ namespace ChineseWriter {
 
         private void StayOnTop_Checked( object sender, RoutedEventArgs e ) {
             this.Topmost = StayOnTop.IsChecked ?? false;
+        }
+
+        private void HandleExceptions(Action action) {
+            try {
+                action.Invoke();
+            } catch (Exception ex) {
+                MessageBox.Show(this, ex.Message, "Exception in ChineseWriter", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
+            }
         }
 
     } // class
