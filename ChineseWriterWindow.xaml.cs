@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -9,12 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using RT = clojure.lang.RT;
-using Keyword = clojure.lang.Keyword;
 
 namespace ChineseWriter {
 
@@ -25,7 +21,6 @@ namespace ChineseWriter {
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
-
 
         public void InitClojureLoadPath() {
             var loadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH") ?? "";
@@ -122,15 +117,15 @@ namespace ChineseWriter {
                 string status;
                 if (RT.var( "WordDatabase", "all-words").isBound) {
                     var wordsList = (IList<object>) ((clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( )).deref();
-                    var dict = (IDictionary<object,object>) ((clojure.lang.Atom) RT.var( "WordDatabase", "word-dict" ).deref( )).deref();
                     status = wordsList.Count == 0 ? "Loading word list..." :
                         wordsList.Count < 10000 ? "Short word list loaded (start writing!), loading full dictionary..." :
-                        string.Format("ChineseWriter, {0} words. All ready", wordsList.Count);
+                        string.Format( "ChineseWriter, {0} words, {1} known. All ready", wordsList.Count, 
+                            wordsList.Count(word => ((IDictionary<object,object>) word).Known()));
                 } else {
                     status = "Loading Clojure runtime...";
                 }
                 var dur = DateTime.Now - start;
-                SetTitleThreadsafe( string.Format("{0} {1:0.0} s", status, dur.TotalSeconds ) );
+                SetTitleThreadsafe( string.Format("{0} {1:0} s", status, dur.TotalSeconds ) );
                 if (status.StartsWith( "ChineseWriter" )) return;
                 Thread.Sleep(100);
             }
