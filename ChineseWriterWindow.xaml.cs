@@ -267,8 +267,8 @@ namespace ChineseWriter {
 
         private void CopyClick( object sender, RoutedEventArgs e ) {
             if (CopyHtml.IsChecked ?? false) {
-                ClipboardTool.CopyToClipboard( 
-                    (string) RT.var( "ExportText", "html" ).invoke(), 
+                ClipboardTool.CopyToClipboard(
+                    (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked ), 
                     new Uri( "http://www.brotherus.net" ) );
             } else {
                 var data = WritingState.HanyiPinyinLines(

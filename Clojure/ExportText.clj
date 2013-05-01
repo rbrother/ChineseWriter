@@ -32,8 +32,8 @@
     (apply str)))
 
 (defn html 
-  ([ ] (html (current-text)))
-  ([ words ]
+  ([ english? ] (html (current-text) english?))
+  ([ words english? ]
     (let [ html-row2 (fn [selector attr] (html-row words selector attr)) ]
       (format 
         "<table style='border: 1px solid #d0d0d0; border-collapse:collapse;' cellpadding='4'>
@@ -41,4 +41,4 @@
          </table>" 
         (html-row2 word-hanyu-html "font-size:20pt;") 
         (html-row2 word-pinyin-html "") 
-        (html-row2 word-english-html "color:#808080; font-size:9pt;")))))
+        (if english? (html-row2 word-english-html "color:#808080; font-size:9pt;") "" )))))
