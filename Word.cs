@@ -10,11 +10,18 @@ using RT = clojure.lang.RT;
 namespace ChineseWriter {
 
     public class SuggestionWord {
+
+        public SuggestionWord( IDictionary<object, object> word, string shortCut ) {
+            Word = word; // for later retrieval when suggetion used
+            Shortcut = shortCut;
+        }
+
         public string Shortcut { get; set; }
-        public string Pinyin { get; set; }
-        public string Hanyu { get; set; }
-        public string UsageCountString { get; set; }
-        public string English { get; set; }
+        public string Pinyin { get { return Word.PinyinDiacritics( ); } set { } }
+        public string Hanyu { get { return Word.Hanyu( ); } set { } }
+        public string UsageCountString { get { return Word.UsageCountStr( ); } set { } }
+        public bool Known { get { return Word.Known( ); } set { } }
+        public string English { get { return Word.Get<string>( "english" ); } set { } }
         public IDictionary<object, object> Word { set; get; }
     }
 
@@ -64,17 +71,6 @@ namespace ChineseWriter {
         public static string UsageCountStr( this IDictionary<object,object> word ) {
             return word.HasKeyword( "usage-count" ) ?
                 Convert.ToString( word.Get<int>("usage-count") ) : "";
-        }
-
-        public static SuggestionWord ToDataTableWord( this IDictionary<object, object> word, string shortCut ) {
-            return new SuggestionWord {
-                Word = word, // for later retrieval when suggetion used
-                Shortcut = shortCut,
-                Pinyin = word.PinyinDiacritics(),
-                Hanyu = word.Hanyu( ),
-                English = word.Get<string>( "english" ),
-                UsageCountString = word.UsageCountStr( )
-            };
         }
 
     }
