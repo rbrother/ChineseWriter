@@ -4,7 +4,7 @@
         Title="Chinese Writer" Background="#D0D0D0" 
         Width="800" Height="400"
         Loaded="Window_Loaded"
-        FontSize="14" Closing="Window_Closing">
+        FontSize="14" Closing="Window_Closing" Activated="Window_Activated">
     <Window.Resources>
         <Style x:Key="WidgetStyle" TargetType="FrameworkElement">
             <Setter Property="Margin" Value="2"/>
@@ -38,11 +38,11 @@
             </StackPanel.Background> 
             <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource ButtonStyle}" 
-                        Click="Clear_Text_Click">C_lear Text</Button>
-                <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy"></Button>
-                <CheckBox Name="CopyPinyin" Content="Pinyin" IsChecked="True" Style="{StaticResource CheckBoxStyle}" />
-                <CheckBox Name="CopyEnglish" Content="English" IsChecked="True" Style="{StaticResource CheckBoxStyle}"/>
-                <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Style="{StaticResource CheckBoxStyle}"/>
+                        Click="Clear_Text_Click" Focusable="False">C_lear Text</Button>
+                <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy" Focusable="False"></Button>
+                <CheckBox Name="CopyPinyin" Content="Pinyin" IsChecked="True" Focusable="False" Style="{StaticResource CheckBoxStyle}" />
+                <CheckBox Name="CopyEnglish" Content="English" IsChecked="True" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
+                <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
@@ -60,7 +60,7 @@
         </StackPanel>
         <!--                   -->
         <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
-            <DataGrid Name="Suggestions" AutoGenerateColumns="False"
+            <DataGrid Name="Suggestions" AutoGenerateColumns="False" Focusable="False"
                       AlternatingRowBackground="Gainsboro" AlternationCount="2"
                       SelectedCellsChanged="Suggestions_SelectedCellsChanged">
                 <DataGrid.Columns>

@@ -301,6 +301,10 @@ namespace ChineseWriter {
             }
         }
 
+        private void Window_Activated( object sender, EventArgs e ) {
+            this._pinyinInput.Focus( );
+        }
+
     } // class
 
 } // namespace
