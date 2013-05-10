@@ -44,13 +44,14 @@ namespace ChineseWriter {
         }
 
         public static void BackSpace( ) {
+            // TODO: Combine these to atomic swap-operation in clojure-side
             DeleteWordInner( CursorPos - 1 );
+            Move( "Left" );
         }
 
         public static void DeleteWordInner( int pos ) {
-            if ((bool)RT.var( "WritingState", "delete-word!" ).invoke( pos )) {
-                WordsChanges.OnNext( Words );
-            }
+            RT.var( "WritingState", "delete-word!" ).invoke( pos );
+            WordsChanges.OnNext( Words );
         }
 
         internal static void LiteralInput( string text ) {
@@ -64,12 +65,12 @@ namespace ChineseWriter {
         }
 
         private static void InsertWords( IDictionary<object, object>[] newWords ) {
-            RT.var( "WritingState", "insert-text-words!" ).invoke( newWords );
+            RT.var( "WritingState", "insert-words!" ).invoke( newWords );
             WordsChanges.OnNext( Words );
         }
 
         public static void ExpandChars( ) {
-            RT.var( "WritingState", "expand-text-words!" ).invoke( );
+            RT.var( "WritingState", "expand-words!" ).invoke( );
             WordsChanges.OnNext( Words );
         }
 
