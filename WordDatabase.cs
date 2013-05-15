@@ -63,7 +63,7 @@ namespace ChineseWriter {
         public static IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {
             var findWords = RT.var( "WordDatabase", "find-words" );
             if (findWords.isBound) {
-                var suggestions = (IEnumerable<object>)RT.var( "WordDatabase", "find-words" ).invoke( input, english );
+                var suggestions = (IEnumerable<object>)findWords.invoke(input, english);
                 // Do *not* cast suggestions to list or Array here! That kills the performance since it forces
                 // the lazy list to be fully evaluated
                 return suggestions.Cast<IDictionary<object, object>>( );
