@@ -221,7 +221,9 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestionIndex( int pinyinIndex ) {
-            SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex] );
+            if (pinyinIndex < Suggestions.Items.Count) {
+                SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex] );
+            }
         }
 
         private void SelectSuggestion(SuggestionWord word) {
