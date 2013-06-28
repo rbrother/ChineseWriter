@@ -15,10 +15,14 @@
 
 (defn map-values [ f m ] (zipmap (keys m) (map f (vals m))))
 
+; Use ordered serialization for word-maps for easier merging 
+(defn map-to-str [ m ]
+  (str "{ " (apply str (map #(str % " " (pr-str (m %)) " ") (sort (keys m)))) "}" ))
+
 ; pprint is very slow on large lists, so use this instead
-(defn list-to-str [ list ] 
+(defn list-to-str [ list-of-maps ] 
   (with-out-str
     (do
       (println "[")
-      (dorun (map #(do (pr %) (println ",")) list))
+      (dorun (map #(do (print (map-to-str %)) (println ",")) list-of-maps))
       (println "]") )))
