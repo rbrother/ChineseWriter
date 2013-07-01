@@ -181,7 +181,7 @@
 
 (deftest save-words-test
   (are [ expected calculated ] (= expected calculated)
-    "{ :a 666 :k \"moikka\" :x 5 }" (Utils/map-to-str { :x 5 :a 666 :k "moikka" })
-    "[\r\n{ :a 555 :k \"zelda\" :x 9 },\r\n{ :a 666 :k \"moikka\" :x 5 },\r\n]\r\n" (Utils/list-to-str [ { :x 9 :a 555 :k "zelda" } { :x 5 :a 666 :k "moikka" } ] ) ))
+    "{ :a 666, :k \"moikka\", :x 5 }" (Utils/map-to-str { :x 5 :a 666 :k "moikka" })
+    "[\r\n{ :a 555, :k \"zelda\", :x 9 }\r\n{ :a 666, :k \"moikka\", :x 5 }]\r\n" (Utils/list-to-str [ { :x 9 :a 555 :k "zelda" } { :x 5 :a 666 :k "moikka" } ] ) ))
 
 (run-tests)

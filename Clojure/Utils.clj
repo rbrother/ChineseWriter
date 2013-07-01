@@ -17,12 +17,10 @@
 
 ; Use ordered serialization for word-maps for easier merging 
 (defn map-to-str [ m ]
-  (str "{ " (apply str (map #(str % " " (pr-str (m %)) " ") (sort (keys m)))) "}" ))
+  (let [ item-str (fn [key] (str key " " (pr-str (m key))) )
+        map-to-str-inner (fn [keys] (str/join ", " (map item-str keys))) ]
+    (str "{ " (map-to-str-inner (sort (keys m))) " }" )))
 
 ; pprint is very slow on large lists, so use this instead
 (defn list-to-str [ list-of-maps ] 
-  (with-out-str
-    (do
-      (println "[")
-      (dorun (map #(do (print (map-to-str %)) (println ",")) list-of-maps))
-      (println "]") )))
+  (str "[\r\n" (str/join "\r\n" (map map-to-str list-of-maps)) "]\r\n"))
