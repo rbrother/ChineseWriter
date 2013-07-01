@@ -121,9 +121,16 @@
    {:pinyin "wo3 men5", :hanyu "我们"}
        {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8},
    {:pinyin "xiang4", :hanyu "向"} 
-       {:pinyin "xiang4", :hanyu "向", :usage-count 2} })
+       {:pinyin "xiang4", :hanyu "向", :usage-count 2}
+   { :hanyu "一代", :pinyin "yi1 dai4" }
+       { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5 } 
+   } )
 
 (set-word-database! test-words-raw test-word-info)
+
+(def yi-dai {:hanyu "一代", :pinyin "yi1 dai4" } )
+
+(update-word-props! yi-dai { :known true, :usage-count 5 } )
 
 (def women-word-calculated (first (get-word { :hanyu "我们" })))
 
@@ -135,7 +142,6 @@
 
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
-       word-info-dict-test @word-info-dict
        word-info-dict-modified 
          (do 
            (inc-usage-count "我们" "wo3 men5" ) 

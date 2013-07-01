@@ -139,19 +139,20 @@
 
 ;----------------------- Updating word info  ---------------------
 
-(defn update-word-props [ hanyu-pinyin new-props ]
-  (let [ new-word (merge (word-info hanyu-pinyin) new-props) ]
-    (reset! word-info-dict (assoc @word-info-dict hanyu-pinyin new-word ))))
-
+(defn update-word-props! [ hanyu-pinyin new-props ]
+  (let [ amend-word-info (fn [ dict hanyu-pinyin new-props ] 
+         (update-in dict [ hanyu-pinyin ] merge hanyu-pinyin (dict hanyu-pinyin) new-props) ) ]
+      (swap! word-info-dict amend-word-info hanyu-pinyin new-props)))
+  
 (defn usage-count [ hanyu-pinyin ] (get (word-info hanyu-pinyin) :usage-count 0))
 
 (defn inc-usage-count [ hanyu pinyin ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (update-word-props key { :usage-count (inc (usage-count key)) } )))
+    (update-word-props! key { :usage-count (inc (usage-count key)) } )))
 
 (defn set-word-info [hanyu pinyin short-english known ]  
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (update-word-props key { :short-english short-english :known known })))
+    (update-word-props! key { :short-english short-english :known known })))
 
 (defn word-info-string [ ] 
   (let [ sortfn (fn [ { hanyu :hanyu pinyin :pinyin } ] [ pinyin hanyu ] ) ]
@@ -177,7 +178,7 @@
         (do
           ; TODO: Now we "memoize" without limit. If this seems to lead to too high memory consumption,
           ; make a more intelligent cache limiting the contained data
-          (reset! word-search-cache (assoc @word-search-cache key res))
+          (swap! word-search-cache #(assoc % key res))
           res )))))
 
 ; Although filtering the whole dictionary is slowish, this function quickly returns
