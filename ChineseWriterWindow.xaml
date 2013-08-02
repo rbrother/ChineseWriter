@@ -42,6 +42,7 @@
                 <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy" Focusable="False"></Button>
                 <CheckBox Name="CopyPinyin" Content="Pinyin" IsChecked="True" Focusable="False" Style="{StaticResource CheckBoxStyle}" />
                 <CheckBox Name="CopyEnglish" Content="English" IsChecked="True" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
+                <CheckBox Name="CopyFullEnglish" Content="Full Definition" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
                 <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
