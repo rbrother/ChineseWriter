@@ -3,7 +3,7 @@
 { :hanyu "啊呀", :pinyin "a1 ya1", :usage-count 1 }
 { :hanyu "哎", :known true, :pinyin "ai1", :short-english "hey!", :usage-count 2 }
 { :hanyu "哎唷", :known true, :pinyin "ai1 yo1", :short-english "interjection of pain or surprise", :usage-count 2 }
-{ :hanyu "爱", :known true, :pinyin "ai4", :usage-count 18 }
+{ :hanyu "爱", :known true, :pinyin "ai4", :usage-count 19 }
 { :hanyu "爱好", :known true, :pinyin "ai4 hao4", :short-english "to like", :usage-count 3 }
 { :hanyu "爱人", :known true, :pinyin "ai4 ren5", :short-english "spouse", :usage-count 4 }
 { :hanyu "安", :known true, :pinyin "an1", :short-english "content", :usage-count 2 }
@@ -84,11 +84,13 @@
 { :hanyu "并", :pinyin "bing4", :usage-count 1 }
 { :hanyu "博客", :known true, :pinyin "bo2 ke4", :short-english "blog (loanword)", :usage-count 3 }
 { :hanyu "博物馆", :pinyin "bo2 wu4 guan3", :usage-count 1 }
-{ :hanyu "不", :known true, :pinyin "bu4", :usage-count 53 }
+{ :hanyu "补药", :pinyin "bu3 yao4", :usage-count 1 }
+{ :hanyu "不", :known true, :pinyin "bu4", :usage-count 60 }
 { :hanyu "布", :pinyin "bu4", :usage-count 2 }
 { :hanyu "部", :known false, :pinyin "bu4", :short-english "department", :usage-count 1 }
-{ :hanyu "不便", :pinyin "bu4 bian4", :usage-count 1 }
-{ :hanyu "不错", :pinyin "bu4 cuo4", :usage-count 1 }
+{ :hanyu "不必", :pinyin "bu4 bi4", :usage-count 1 }
+{ :hanyu "不便", :pinyin "bu4 bian4", :usage-count 2 }
+{ :hanyu "不错", :pinyin "bu4 cuo4", :usage-count 2 }
 { :hanyu "不过", :known false, :pinyin "bu4 guo4", :short-english "but", :usage-count 1 }
 { :hanyu "不好", :known true, :pinyin "bu4 hao3", :usage-count 2 }
 { :hanyu "不久", :known true, :pinyin "bu4 jiu3", :short-english "not long (after)", :usage-count 6 }
@@ -101,6 +103,8 @@
 { :hanyu "不谢", :known true, :pinyin "bu4 xie4", :short-english "don't mention it", :usage-count 1 }
 { :hanyu "不行", :pinyin "bu4 xing2", :usage-count 1 }
 { :hanyu "不幸", :pinyin "bu4 xing4", :usage-count 1 }
+{ :hanyu "不要", :pinyin "bu4 yao4", :usage-count 1 }
+{ :hanyu "不用", :pinyin "bu4 yong4", :usage-count 1 }
 { :hanyu "猜", :pinyin "cai1", :usage-count 1 }
 { :hanyu "才能", :known false, :pinyin "cai2 neng2", :short-english "ability", :usage-count 1 }
 { :hanyu "采取", :pinyin "cai3 qu3", :usage-count 1 }
@@ -119,7 +123,7 @@
 { :hanyu "长", :pinyin "chang2", :usage-count 1 }
 { :hanyu "常常", :known false, :pinyin "chang2 chang2", :short-english "frequently", :usage-count 7 }
 { :hanyu "长城", :pinyin "Chang2 cheng2", :usage-count 1 }
-{ :hanyu "尝试", :known true, :pinyin "chang2 shi4", :short-english "to try", :usage-count 3 }
+{ :hanyu "尝试", :known true, :pinyin "chang2 shi4", :short-english "to try", :usage-count 4 }
 { :hanyu "长途", :pinyin "chang2 tu2", :usage-count 1 }
 { :hanyu "唱歌", :pinyin "chang4 ge1", :usage-count 1 }
 { :hanyu "怅然", :pinyin "chang4 ran2", :usage-count 1 }
@@ -133,6 +137,7 @@
 { :hanyu "谌", :pinyin "Chen2", :usage-count 2 }
 { :hanyu "沉默", :pinyin "chen2 mo4", :usage-count 3 }
 { :hanyu "城", :pinyin "cheng2", :usage-count 1 }
+{ :hanyu "诚", :pinyin "cheng2", :usage-count 1 }
 { :hanyu "成功", :pinyin "cheng2 gong1", :usage-count 1 }
 { :hanyu "成功", :pinyin "Cheng2 gong1", :usage-count 1 }
 { :hanyu "承诺", :pinyin "cheng2 nuo4", :usage-count 1 }
@@ -163,7 +168,7 @@
 { :hanyu "春节", :pinyin "Chun1 jie2", :usage-count 1 }
 { :hanyu "春天", :pinyin "chun1 tian1", :usage-count 1 }
 { :hanyu "春运", :pinyin "chun1 yun4", :usage-count 1 }
-{ :hanyu "词", :pinyin "ci2", :usage-count 2 }
+{ :hanyu "词", :pinyin "ci2", :usage-count 3 }
 { :hanyu "词语", :pinyin "ci2 yu3", :usage-count 1 }
 { :hanyu "此", :pinyin "ci3", :usage-count 1 }
 { :hanyu "此后", :pinyin "ci3 hou4", :usage-count 1 }
@@ -174,6 +179,7 @@
 { :hanyu "从来没", :pinyin "cong2 lai2 mei2", :usage-count 2 }
 { :hanyu "从来没有", :pinyin "cong2 lai2 mei2 you3", :usage-count 2 }
 { :hanyu "从没", :pinyin "cong2 mei2", :usage-count 1 }
+{ :hanyu "从事", :pinyin "cong2 shi4", :usage-count 3 }
 { :hanyu "脆弱", :pinyin "cui4 ruo4", :usage-count 1 }
 { :hanyu "存", :pinyin "cun2", :usage-count 1 }
 { :hanyu "错", :known true, :pinyin "cuo4", :short-english "mistake", :usage-count 2 }
@@ -199,12 +205,12 @@
 { :hanyu "单", :known true, :pinyin "dan1", :short-english "bill", :usage-count 2 }
 { :hanyu "单独", :pinyin "dan1 du2", :usage-count 1 }
 { :hanyu "单人", :pinyin "dan1 ren2", :usage-count 1 }
-{ :hanyu "担心", :pinyin "dan1 xin1", :usage-count 1 }
+{ :hanyu "担心", :pinyin "dan1 xin1", :usage-count 4 }
 { :hanyu "单字", :pinyin "dan1 zi4", :usage-count 1 }
 { :hanyu "但", :known true, :pinyin "dan4", :short-english "but", :usage-count 2 }
 { :hanyu "蛋", :known true, :pinyin "dan4", :short-english "egg", :usage-count 2 }
 { :hanyu "蛋糕", :pinyin "dan4 gao1", :usage-count 1 }
-{ :hanyu "但是", :known true, :pinyin "dan4 shi4", :usage-count 40 }
+{ :hanyu "但是", :known true, :pinyin "dan4 shi4", :usage-count 45 }
 { :hanyu "当", :known false, :pinyin "dang1", :short-english "when", :usage-count 5 }
 { :hanyu "当然", :known true, :pinyin "dang1 ran2", :short-english "only natural", :usage-count 2 }
 { :hanyu "当时", :pinyin "dang1 shi2", :usage-count 1 }
@@ -215,7 +221,7 @@
 { :hanyu "得到", :known true, :pinyin "de2 dao4", :short-english "to get", :usage-count 3 }
 { :hanyu "地", :known true, :pinyin "de5", :short-english "-ly", :usage-count 2 }
 { :hanyu "得", :pinyin "de5", :short-english "(verb specifier)", :usage-count 9 }
-{ :hanyu "的", :known true, :pinyin "de5", :usage-count 157 }
+{ :hanyu "的", :known true, :pinyin "de5", :usage-count 178 }
 { :hanyu "灯", :known true, :pinyin "deng1", :short-english "lamp", :usage-count 2 }
 { :hanyu "登陆", :pinyin "deng1 lu4", :usage-count 1 }
 { :hanyu "等", :known true, :pinyin "deng3", :short-english "wait for", :usage-count 6 }
@@ -229,11 +235,11 @@
 { :hanyu "地铁", :pinyin "di4 tie3", :usage-count 3 }
 { :hanyu "地图", :pinyin "di4 tu2", :usage-count 1 }
 { :hanyu "第一次", :pinyin "di4 yi1 ci4", :usage-count 1 }
-{ :hanyu "地址", :known true, :pinyin "di4 zhi3", :short-english "address", :usage-count 5 }
+{ :hanyu "地址", :known true, :pinyin "di4 zhi3", :short-english "address", :usage-count 6 }
 { :hanyu "典", :pinyin "dian3", :usage-count 1 }
 { :hanyu "点", :known true, :pinyin "dian3", :short-english "point", :usage-count 4 }
 { :hanyu "店", :known true, :pinyin "dian4", :short-english "inn", :usage-count 2 }
-{ :hanyu "电话", :pinyin "dian4 hua4", :usage-count 1 }
+{ :hanyu "电话", :pinyin "dian4 hua4", :usage-count 3 }
 { :hanyu "电脑", :known true, :pinyin "dian4 nao3", :short-english "computer", :usage-count 6 }
 { :hanyu "电脑业者", :pinyin "dian4 nao3 ye4 zhe3", :usage-count 1 }
 { :hanyu "电影", :pinyin "dian4 ying3", :usage-count 1 }
@@ -246,14 +252,14 @@
 { :hanyu "冬季", :pinyin "dong1 ji4", :usage-count 1 }
 { :hanyu "冬天", :known true, :pinyin "dong1 tian1", :short-english "winter", :usage-count 2 }
 { :hanyu "东西", :known true, :pinyin "dong1 xi5", :short-english "thing", :usage-count 4 }
-{ :hanyu "懂", :pinyin "dong3", :usage-count 1 }
+{ :hanyu "懂", :known true, :pinyin "dong3", :short-english "to understand", :usage-count 1 }
 { :hanyu "动物", :pinyin "dong4 wu4", :usage-count 1 }
-{ :hanyu "都", :known true, :pinyin "dou1", :short-english "all", :usage-count 10 }
+{ :hanyu "都", :known true, :pinyin "dou1", :short-english "all", :usage-count 13 }
 { :hanyu "独自", :pinyin "du2 zi4", :usage-count 1 }
 { :hanyu "度", :pinyin "du4", :usage-count 1 }
 { :hanyu "肚子", :pinyin "du4 zi5", :usage-count 1 }
 { :hanyu "短", :pinyin "duan3", :usage-count 1 }
-{ :hanyu "短信", :pinyin "duan3 xin4", :usage-count 1 }
+{ :hanyu "短信", :pinyin "duan3 xin4", :usage-count 2 }
 { :hanyu "短暂", :pinyin "duan3 zan4", :usage-count 1 }
 { :hanyu "对", :known true, :pinyin "dui4", :short-english "right", :usage-count 14 }
 { :hanyu "对不起", :known true, :pinyin "dui4 bu5 qi3", :short-english "sorry", :usage-count 6 }
@@ -275,10 +281,11 @@
 { :hanyu "发", :known true, :pinyin "fa1", :short-english "send", :usage-count 8 }
 { :hanyu "发车", :pinyin "fa1 che1", :usage-count 1 }
 { :hanyu "发出", :known false, :pinyin "fa1 chu1", :short-english "send out", :usage-count 1 }
-{ :hanyu "发给", :known true, :pinyin "fa1 gei3", :short-english "to issue", :usage-count 6 }
+{ :hanyu "发给", :known true, :pinyin "fa1 gei3", :short-english "to issue", :usage-count 7 }
 { :hanyu "发生", :pinyin "fa1 sheng1", :usage-count 1 }
 { :hanyu "发送", :pinyin "fa1 song4", :usage-count 1 }
 { :hanyu "发现", :pinyin "fa1 xian4", :usage-count 1 }
+{ :hanyu "翻遍", :pinyin "fan1 bian4", :usage-count 1 }
 { :hanyu "翻译", :pinyin "fan1 yi4", :usage-count 1 }
 { :hanyu "烦恼", :pinyin "fan2 nao3", :usage-count 1 }
 { :hanyu "烦人", :pinyin "fan2 ren2", :usage-count 1 }
@@ -287,7 +294,7 @@
 { :hanyu "饭店", :pinyin "fan4 dian4", :usage-count 1 }
 { :hanyu "饭馆", :known true, :pinyin "fan4 guan3", :short-english "restaurant", :usage-count 4 }
 { :hanyu "方", :pinyin "fang1", :usage-count 1 }
-{ :hanyu "方便", :known true, :pinyin "fang1 bian4", :short-english "convenient", :usage-count 3 }
+{ :hanyu "方便", :known true, :pinyin "fang1 bian4", :short-english "convenient", :usage-count 4 }
 { :hanyu "房", :pinyin "fang2", :usage-count 1 }
 { :hanyu "房", :pinyin "Fang2", :usage-count 1 }
 { :hanyu "房间", :known true, :pinyin "fang2 jian1", :short-english "room", :usage-count 5 }
@@ -295,7 +302,7 @@
 { :hanyu "放", :pinyin "fang4", :usage-count 1 }
 { :hanyu "放假", :pinyin "fang4 jia4", :usage-count 1 }
 { :hanyu "放松", :pinyin "fang4 song1", :usage-count 1 }
-{ :hanyu "非常", :known true, :pinyin "fei1 chang2", :short-english "unusual", :usage-count 7 }
+{ :hanyu "非常", :known true, :pinyin "fei1 chang2", :short-english "unusual", :usage-count 8 }
 { :hanyu "飞机", :known true, :pinyin "fei1 ji1", :usage-count 1 }
 { :hanyu "飞机场", :known true, :pinyin "fei1 ji1 chang3", :usage-count 1 }
 { :hanyu "飞机票", :known true, :pinyin "fei1 ji1 piao4", :short-english "air ticket", :usage-count 3 }
@@ -303,7 +310,7 @@
 { :hanyu "分", :pinyin "fen1", :usage-count 1 }
 { :hanyu "分开", :known true, :pinyin "fen1 kai1", :short-english "to separate", :usage-count 5 }
 { :hanyu "芬兰", :known true, :pinyin "Fen1 lan2", :short-english "Finland", :usage-count 44 }
-{ :hanyu "芬兰语", :known true, :pinyin "Fen1 lan2 yu3", :short-english "Finnish (language)", :usage-count 4 }
+{ :hanyu "芬兰语", :known true, :pinyin "Fen1 lan2 yu3", :short-english "Finnish (language)", :usage-count 5 }
 { :hanyu "分钟", :pinyin "fen1 zhong1", :usage-count 1 }
 { :hanyu "愤怒", :pinyin "fen4 nu4", :usage-count 1 }
 { :hanyu "封", :pinyin "feng1", :usage-count 1 }
@@ -315,7 +322,7 @@
 { :hanyu "付", :pinyin "Fu4", :usage-count 1 }
 { :hanyu "副本", :pinyin "fu4 ben3", :usage-count 1 }
 { :hanyu "附近", :pinyin "fu4 jin4", :usage-count 1 }
-{ :hanyu "父母", :pinyin "fu4 mu3", :usage-count 1 }
+{ :hanyu "父母", :known true, :pinyin "fu4 mu3", :short-english "father and mother", :usage-count 3 }
 { :hanyu "付钱", :pinyin "fu4 qian2", :usage-count 1 }
 { :hanyu "父亲", :pinyin "fu4 qin1", :usage-count 1 }
 { :hanyu "富裕", :pinyin "fu4 yu4", :usage-count 1 }
@@ -330,22 +337,22 @@
 { :hanyu "感觉", :pinyin "gan3 jue2", :usage-count 1 }
 { :hanyu "感冒", :pinyin "gan3 mao4", :usage-count 1 }
 { :hanyu "感情", :pinyin "gan3 qing2", :usage-count 1 }
-{ :hanyu "感谢", :pinyin "gan3 xie4", :usage-count 1 }
+{ :hanyu "感谢", :pinyin "gan3 xie4", :usage-count 2 }
 { :hanyu "刚", :pinyin "gang1", :usage-count 1 }
 { :hanyu "高", :pinyin "gao1", :usage-count 1 }
 { :hanyu "高", :pinyin "Gao1", :usage-count 1 }
 { :hanyu "高速", :pinyin "gao1 su4", :usage-count 1 }
 { :hanyu "高速路", :pinyin "gao1 su4 lu4", :usage-count 1 }
 { :hanyu "高兴", :known true, :pinyin "gao1 xing4", :short-english "happy", :usage-count 3 }
-{ :hanyu "告诉", :known true, :pinyin "gao4 su5", :short-english "to tell", :usage-count 16 }
+{ :hanyu "告诉", :known true, :pinyin "gao4 su5", :short-english "to tell", :usage-count 17 }
 { :hanyu "歌", :pinyin "ge1", :usage-count 1 }
 { :hanyu "歌词", :pinyin "ge1 ci2", :usage-count 1 }
 { :hanyu "格", :pinyin "ge2", :usage-count 1 }
 { :hanyu "格林", :known false, :pinyin "Ge2 lin2", :short-english "Green (translit.)", :usage-count 1 }
-{ :hanyu "个", :known true, :pinyin "ge4", :short-english "individual", :usage-count 11 }
-{ :hanyu "给", :known true, :pinyin "gei3", :usage-count 21 }
+{ :hanyu "个", :known true, :pinyin "ge4", :short-english "individual", :usage-count 12 }
+{ :hanyu "给", :known true, :pinyin "gei3", :usage-count 25 }
 { :hanyu "跟", :pinyin "gen1", :usage-count 1 }
-{ :hanyu "更", :known true, :pinyin "geng4", :short-english "more", :usage-count 17 }
+{ :hanyu "更", :known true, :pinyin "geng4", :short-english "more", :usage-count 23 }
 { :hanyu "公共", :pinyin "gong1 gong4", :usage-count 1 }
 { :hanyu "公共汽车", :pinyin "gong1 gong4 qi4 che1", :usage-count 1 }
 { :hanyu "公斤", :pinyin "gong1 jin1", :usage-count 1 }
@@ -379,7 +386,7 @@
 { :hanyu "国家", :pinyin "guo2 jia1", :usage-count 1 }
 { :hanyu "果", :pinyin "guo3", :usage-count 1 }
 { :hanyu "果汁", :pinyin "guo3 zhi1", :usage-count 2 }
-{ :hanyu "过", :known true, :pinyin "guo4", :short-english "(experienced)", :usage-count 9 }
+{ :hanyu "过", :known true, :pinyin "guo4", :short-english "(experienced)", :usage-count 10 }
 { :hanyu "过", :pinyin "Guo4", :usage-count 1 }
 { :hanyu "过度", :pinyin "guo4 du4", :usage-count 1 }
 { :hanyu "过年", :pinyin "guo4 nian2", :usage-count 1 }
@@ -392,21 +399,25 @@
 { :hanyu "还是", :known true, :pinyin "hai2 shi5", :short-english "or", :usage-count 9 }
 { :hanyu "还有", :known true, :pinyin "hai2 you3", :short-english "furthermore", :usage-count 3 }
 { :hanyu "孩子", :known true, :pinyin "hai2 zi5", :short-english "child", :usage-count 2 }
-{ :hanyu "孩子们", :known true, :pinyin "hai2 zi5 men5", :short-english "children", :usage-count 11 }
+{ :hanyu "孩子们", :known true, :pinyin "hai2 zi5 men5", :short-english "children", :usage-count 12 }
 { :hanyu "海", :pinyin "hai3", :usage-count 1 }
 { :hanyu "海", :pinyin "Hai3", :usage-count 1 }
 { :hanyu "害怕", :pinyin "hai4 pa4", :usage-count 1 }
 { :hanyu "害羞", :pinyin "hai4 xiu1", :usage-count 1 }
 { :hanyu "憨实", :pinyin "han1 shi2", :usage-count 1 }
+{ :hanyu "蚶子", :pinyin "han1 zi5", :usage-count 1 }
 { :hanyu "寒冷", :pinyin "han2 leng3", :usage-count 1 }
 { :hanyu "汉语", :known true, :pinyin "Han4 yu3", :short-english "Chinese language", :usage-count 4 }
+{ :hanyu "汉字", :known true, :pinyin "han4 zi4", :short-english "Chinese character", :usage-count 5 }
+{ :hanyu "汉字查字法", :pinyin "han4 zi4 cha2 zi4 fa3", :usage-count 1 }
+{ :hanyu "汉字字体", :pinyin "han4 zi4 zi4 ti3", :usage-count 1 }
 { :hanyu "号", :pinyin "hao2", :usage-count 1 }
-{ :hanyu "好", :known true, :pinyin "hao3", :short-english "good", :usage-count 61 }
+{ :hanyu "好", :known true, :pinyin "hao3", :short-english "good", :usage-count 68 }
 { :hanyu "好吃", :known true, :pinyin "hao3 chi1", :short-english "tasty", :usage-count 2 }
 { :hanyu "好多", :known true, :pinyin "hao3 duo1", :short-english "many", :usage-count 1 }
 { :hanyu "好好", :pinyin "hao3 hao3", :usage-count 1 }
 { :hanyu "好看", :known true, :pinyin "hao3 kan4", :short-english "good-looking", :usage-count 4 }
-{ :hanyu "号", :known true, :pinyin "hao4", :short-english "number", :usage-count 2 }
+{ :hanyu "号", :known true, :pinyin "hao4", :short-english "number", :usage-count 3 }
 { :hanyu "好", :pinyin "hao4", :usage-count 1 }
 { :hanyu "号码", :pinyin "hao4 ma3", :usage-count 1 }
 { :hanyu "喝", :pinyin "he1", :usage-count 1 }
@@ -423,7 +434,7 @@
 { :hanyu "黑", :pinyin "hei1", :usage-count 1 }
 { :hanyu "黑", :pinyin "Hei1", :usage-count 1 }
 { :hanyu "黑色", :pinyin "hei1 se4", :usage-count 1 }
-{ :hanyu "很", :known true, :pinyin "hen3", :short-english "very", :usage-count 84 }
+{ :hanyu "很", :known true, :pinyin "hen3", :short-english "very", :usage-count 92 }
 { :hanyu "恨", :pinyin "hen4", :usage-count 1 }
 { :hanyu "宏", :pinyin "hong2", :usage-count 1 }
 { :hanyu "红", :known true, :pinyin "hong2", :short-english "red", :usage-count 1 }
@@ -434,8 +445,8 @@
 { :hanyu "喉咙", :pinyin "hou2 long2", :usage-count 1 }
 { :hanyu "后", :pinyin "hou4", :usage-count 3 }
 { :hanyu "后", :pinyin "Hou4", :usage-count 1 }
-{ :hanyu "后来", :known true, :pinyin "hou4 lai2", :short-english "afterwards", :usage-count 12 }
-{ :hanyu "后面", :pinyin "hou4 mian5", :usage-count 5 }
+{ :hanyu "后来", :known true, :pinyin "hou4 lai2", :short-english "afterwards", :usage-count 14 }
+{ :hanyu "后面", :pinyin "hou4 mian5", :usage-count 6 }
 { :hanyu "后天", :pinyin "hou4 tian1", :usage-count 1 }
 { :hanyu "蝴蝶", :pinyin "hu2 die2", :usage-count 1 }
 { :hanyu "胡子", :pinyin "hu2 zi5", :usage-count 1 }
@@ -467,10 +478,10 @@
 { :hanyu "灰", :pinyin "hui1", :usage-count 1 }
 { :hanyu "灰色", :pinyin "hui1 se4", :usage-count 1 }
 { :hanyu "回", :known true, :pinyin "hui2", :short-english "to circle", :usage-count 6 }
-{ :hanyu "回答", :pinyin "hui2 da2", :usage-count 6 }
-{ :hanyu "回复", :pinyin "hui2 fu4", :usage-count 1 }
+{ :hanyu "回答", :pinyin "hui2 da2", :usage-count 8 }
+{ :hanyu "回复", :pinyin "hui2 fu4", :usage-count 2 }
 { :hanyu "回家", :pinyin "hui2 jia1", :usage-count 1 }
-{ :hanyu "会", :known true, :pinyin "hui4", :short-english "can", :usage-count 35 }
+{ :hanyu "会", :known true, :pinyin "hui4", :short-english "can", :usage-count 46 }
 { :hanyu "绘画", :pinyin "hui4 hua4", :usage-count 1 }
 { :hanyu "活动", :pinyin "huo2 dong4", :usage-count 1 }
 { :hanyu "火车", :pinyin "huo3 che1", :usage-count 1 }
@@ -489,6 +500,7 @@
 { :hanyu "几", :known true, :pinyin "ji3", :short-english "how much", :usage-count 4 }
 { :hanyu "几天", :pinyin "ji3 tian1", :usage-count 1 }
 { :hanyu "寄", :pinyin "ji4", :usage-count 5 }
+{ :hanyu "既", :known false, :pinyin "ji4", :short-english "both", :usage-count 1 }
 { :hanyu "记得", :pinyin "ji4 de5", :usage-count 1 }
 { :hanyu "计划", :known true, :pinyin "ji4 hua4", :short-english "plan", :usage-count 7 }
 { :hanyu "季节", :pinyin "ji4 jie2", :usage-count 1 }
@@ -510,7 +522,7 @@
 { :hanyu "兼职", :pinyin "jian1 zhi2", :usage-count 1 }
 { :hanyu "检查", :pinyin "jian3 cha2", :usage-count 1 }
 { :hanyu "减肥", :pinyin "jian3 fei2", :usage-count 2 }
-{ :hanyu "减少", :pinyin "jian3 shao3", :usage-count 1 }
+{ :hanyu "减少", :pinyin "jian3 shao3", :usage-count 2 }
 { :hanyu "件", :pinyin "jian4", :usage-count 2 }
 { :hanyu "见", :pinyin "jian4", :usage-count 1 }
 { :hanyu "见面", :known true, :pinyin "jian4 mian4", :short-english "to meet", :usage-count 6 }
@@ -535,13 +547,13 @@
 { :hanyu "结婚", :known true, :pinyin "jie2 hun1", :short-english "to marry", :usage-count 2 }
 { :hanyu "结束", :pinyin "jie2 shu4", :usage-count 1 }
 { :hanyu "解答", :pinyin "jie3 da2", :usage-count 1 }
-{ :hanyu "姐姐", :known true, :pinyin "jie3 jie5", :short-english "older sister", :usage-count 1 }
+{ :hanyu "姐姐", :known true, :pinyin "jie3 jie5", :short-english "older sister", :usage-count 3 }
 { :hanyu "解决", :pinyin "jie3 jue2", :usage-count 1 }
 { :hanyu "介绍", :pinyin "jie4 shao4", :usage-count 1 }
 { :hanyu "借用", :known false, :pinyin "jie4 yong4", :short-english "to borrow sth", :usage-count 1 }
 { :hanyu "今", :pinyin "jin1", :usage-count 1 }
-{ :hanyu "斤", :known false, :pinyin "jin1", :short-english "0.5 kg", :usage-count 1 }
-{ :hanyu "金", :pinyin "jin1", :usage-count 1 }
+{ :hanyu "斤", :known false, :pinyin "jin1", :short-english "0.5 kg", :usage-count 2 }
+{ :hanyu "金", :pinyin "jin1", :usage-count 4 }
 { :hanyu "金", :pinyin "Jin1", :usage-count 1 }
 { :hanyu "今年", :pinyin "jin1 nian2", :usage-count 1 }
 { :hanyu "金钱", :pinyin "jin1 qian2", :usage-count 1 }
@@ -569,7 +581,7 @@
 { :hanyu "就是", :pinyin "jiu4 shi4", :usage-count 1 }
 { :hanyu "距离", :pinyin "ju4 li2", :usage-count 1 }
 { :hanyu "觉", :pinyin "jue2", :usage-count 1 }
-{ :hanyu "觉得", :known true, :pinyin "jue2 de5", :short-english "to think", :usage-count 6 }
+{ :hanyu "觉得", :known true, :pinyin "jue2 de5", :short-english "to think", :usage-count 7 }
 { :hanyu "决定", :known false, :pinyin "jue2 ding4", :short-english "decide", :usage-count 1 }
 { :hanyu "军队", :pinyin "jun1 dui4", :usage-count 1 }
 { :hanyu "咖啡", :known true, :pinyin "ka1 fei1", :usage-count 1 }
@@ -579,7 +591,7 @@
 { :hanyu "开会", :known true, :pinyin "kai1 hui4", :short-english "to hold a meeting", :usage-count 2 }
 { :hanyu "开口", :known false, :pinyin "kai1 kou3", :short-english "open mouth", :usage-count 1 }
 { :hanyu "开始", :pinyin "kai1 shi3", :usage-count 1 }
-{ :hanyu "开心", :known true, :pinyin "kai1 xin1", :short-english "to feel happy", :usage-count 18 }
+{ :hanyu "开心", :known true, :pinyin "kai1 xin1", :short-english "to feel happy", :usage-count 20 }
 { :hanyu "开学", :pinyin "kai1 xue2", :usage-count 1 }
 { :hanyu "看", :known true, :pinyin "kan4", :short-english "to see", :usage-count 17 }
 { :hanyu "看见", :pinyin "kan4 jian4", :usage-count 2 }
@@ -593,10 +605,10 @@
 { :hanyu "可爱", :known true, :pinyin "ke3 ai4", :short-english "adorable", :usage-count 4 }
 { :hanyu "可悲", :pinyin "ke3 bei1", :usage-count 2 }
 { :hanyu "可怜", :pinyin "ke3 lian2", :usage-count 1 }
-{ :hanyu "可能", :known true, :pinyin "ke3 neng2", :short-english "might (happen)", :usage-count 16 }
+{ :hanyu "可能", :known true, :pinyin "ke3 neng2", :short-english "might (happen)", :usage-count 18 }
 { :hanyu "可是", :known true, :pinyin "ke3 shi4", :short-english "but", :usage-count 4 }
 { :hanyu "可惜", :pinyin "ke3 xi1", :usage-count 3 }
-{ :hanyu "可以", :known true, :pinyin "ke3 yi3", :short-english "can", :usage-count 34 }
+{ :hanyu "可以", :known true, :pinyin "ke3 yi3", :short-english "can", :usage-count 37 }
 { :hanyu "课", :known true, :pinyin "ke4", :short-english "subject", :usage-count 3 }
 { :hanyu "客气", :pinyin "ke4 qi5", :usage-count 3 }
 { :hanyu "课堂", :pinyin "ke4 tang2", :usage-count 1 }
@@ -609,7 +621,7 @@
 { :hanyu "口", :pinyin "kou3", :usage-count 1 }
 { :hanyu "哭", :pinyin "ku1", :usage-count 1 }
 { :hanyu "块", :known true, :pinyin "kuai4", :short-english "piece", :usage-count 3 }
-{ :hanyu "快", :known true, :pinyin "kuai4", :short-english "rapid", :usage-count 6 }
+{ :hanyu "快", :known true, :pinyin "kuai4", :short-english "rapid", :usage-count 8 }
 { :hanyu "快点", :pinyin "kuai4 dian3", :usage-count 1 }
 { :hanyu "快捷", :pinyin "kuai4 jie2", :usage-count 1 }
 { :hanyu "快乐", :known true, :pinyin "kuai4 le4", :short-english "happy", :usage-count 2 }
@@ -620,7 +632,7 @@
 { :hanyu "拉面", :pinyin "la1 mian4", :usage-count 1 }
 { :hanyu "辣", :known true, :pinyin "la4", :short-english "hot (spicy)", :usage-count 2 }
 { :hanyu "蜡烛", :pinyin "la4 zhu2", :usage-count 1 }
-{ :hanyu "来", :known true, :pinyin "lai2", :short-english "to come", :usage-count 20 }
+{ :hanyu "来", :known true, :pinyin "lai2", :short-english "to come", :usage-count 21 }
 { :hanyu "来临", :pinyin "lai2 lin2", :usage-count 1 }
 { :hanyu "蓝色", :pinyin "lan2 se4", :usage-count 1 }
 { :hanyu "狼", :pinyin "lang2", :usage-count 1 }
@@ -630,7 +642,7 @@
 { :hanyu "老师", :known true, :pinyin "lao3 shi1", :short-english "teacher", :usage-count 5 }
 { :hanyu "乐", :pinyin "le4", :usage-count 1 }
 { :hanyu "乐", :pinyin "Le4", :usage-count 1 }
-{ :hanyu "了", :known true, :pinyin "le5", :short-english "(past)", :usage-count 44 }
+{ :hanyu "了", :known true, :pinyin "le5", :short-english "(past)", :usage-count 45 }
 { :hanyu "累", :known true, :pinyin "lei4", :short-english "tired", :usage-count 3 }
 { :hanyu "类似", :pinyin "lei4 si4", :usage-count 1 }
 { :hanyu "冷", :known true, :pinyin "leng3", :short-english "cold", :usage-count 4 }
@@ -658,7 +670,7 @@
 { :hanyu "联系", :pinyin "lian2 xi4", :usage-count 3 }
 { :hanyu "帘子", :pinyin "lian2 zi5", :usage-count 1 }
 { :hanyu "脸", :pinyin "lian3", :usage-count 1 }
-{ :hanyu "练习", :known true, :pinyin "lian4 xi2", :short-english "exercise", :usage-count 6 }
+{ :hanyu "练习", :known true, :pinyin "lian4 xi2", :short-english "exercise", :usage-count 8 }
 { :hanyu "凉", :pinyin "liang2", :usage-count 1 }
 { :hanyu "凉", :pinyin "Liang2", :usage-count 1 }
 { :hanyu "两", :known true, :pinyin "liang3", :short-english "two", :usage-count 5 }
@@ -668,6 +680,7 @@
 { :hanyu "聊天", :known true, :pinyin "liao2 tian1", :short-english "to chat", :usage-count 26 }
 { :hanyu "了解", :pinyin "liao3 jie3", :usage-count 1 }
 { :hanyu "林", :pinyin "lin2", :usage-count 2 }
+{ :hanyu "琳", :pinyin "lin2", :usage-count 1 }
 { :hanyu "林", :pinyin "Lin2", :usage-count 1 }
 { :hanyu "淋浴", :pinyin "lin2 yu4", :usage-count 1 }
 { :hanyu "〇", :known true, :pinyin "ling2", :short-english "zero", :usage-count 1 }
@@ -697,16 +710,16 @@
 { :hanyu "马", :pinyin "ma3", :usage-count 2 }
 { :hanyu "马路", :known true, :pinyin "ma3 lu4", :short-english "street", :usage-count 3 }
 { :hanyu "马马虎虎", :pinyin "ma3 ma5 hu1 hu1", :usage-count 1 }
-{ :hanyu "马上", :known true, :pinyin "ma3 shang4", :short-english "at once", :usage-count 4 }
+{ :hanyu "马上", :known true, :pinyin "ma3 shang4", :short-english "at once", :usage-count 5 }
 { :hanyu "骂人", :pinyin "ma4 ren2", :usage-count 1 }
 { :hanyu "么", :pinyin "ma5", :usage-count 1 }
-{ :hanyu "吗", :known true, :pinyin "ma5", :short-english "(?)", :usage-count 45 }
+{ :hanyu "吗", :known true, :pinyin "ma5", :short-english "(?)", :usage-count 46 }
 { :hanyu "买", :known true, :pinyin "mai3", :short-english "to buy", :usage-count 4 }
 { :hanyu "买卖", :pinyin "mai3 mai4", :usage-count 1 }
 { :hanyu "卖", :known true, :pinyin "mai4", :short-english "to sell", :usage-count 4 }
 { :hanyu "麦克", :pinyin "mai4 ke4", :usage-count 1 }
 { :hanyu "麦克", :pinyin "Mai4 ke4", :usage-count 1 }
-{ :hanyu "慢", :pinyin "man4", :usage-count 1 }
+{ :hanyu "慢", :known true, :pinyin "man4", :short-english "slow", :usage-count 2 }
 { :hanyu "忙", :known true, :pinyin "mang2", :short-english "busy", :usage-count 8 }
 { :hanyu "忙碌", :pinyin "mang2 lu4", :usage-count 1 }
 { :hanyu "猫", :pinyin "mao1", :usage-count 1 }
@@ -714,11 +727,11 @@
 { :hanyu "没", :known true, :pinyin "mei2", :short-english "(negative)", :usage-count 4 }
 { :hanyu "没办法", :known true, :pinyin "mei2 ban4 fa3", :short-english "there is nothing to be done", :usage-count 3 }
 { :hanyu "没错", :pinyin "mei2 cuo4", :usage-count 1 }
-{ :hanyu "没关系", :known true, :pinyin "mei2 guan1 xi5", :short-english "it doesn't matter", :usage-count 2 }
+{ :hanyu "没关系", :known true, :pinyin "mei2 guan1 xi5", :short-english "it doesn't matter", :usage-count 3 }
 { :hanyu "没劲", :known false, :pinyin "mei2 jin4", :short-english "exhausted", :usage-count 1 }
 { :hanyu "没事", :pinyin "mei2 shi4", :usage-count 1 }
 { :hanyu "没问题", :known true, :pinyin "mei2 wen4 ti2", :short-english "no problem", :usage-count 7 }
-{ :hanyu "没有", :known true, :pinyin "mei2 you3", :short-english "haven't", :usage-count 10 }
+{ :hanyu "没有", :known true, :pinyin "mei2 you3", :short-english "haven't", :usage-count 12 }
 { :hanyu "每", :pinyin "mei3", :usage-count 1 }
 { :hanyu "美", :pinyin "mei3", :usage-count 1 }
 { :hanyu "美", :pinyin "Mei3", :usage-count 1 }
@@ -741,7 +754,7 @@
 { :hanyu "庙", :pinyin "miao4", :usage-count 1 }
 { :hanyu "明", :pinyin "ming2", :usage-count 1 }
 { :hanyu "明", :pinyin "Ming2", :usage-count 1 }
-{ :hanyu "明白", :known true, :pinyin "ming2 bai5", :short-english "understand", :usage-count 25 }
+{ :hanyu "明白", :known true, :pinyin "ming2 bai5", :short-english "understand", :usage-count 33 }
 { :hanyu "明年", :pinyin "ming2 nian2", :usage-count 1 }
 { :hanyu "明天", :known true, :pinyin "ming2 tian1", :short-english "tomorrow", :usage-count 2 }
 { :hanyu "明信片", :pinyin "ming2 xin4 pian4", :usage-count 1 }
@@ -752,15 +765,16 @@
 { :hanyu "木", :pinyin "Mu4", :usage-count 1 }
 { :hanyu "拿", :pinyin "na2", :usage-count 1 }
 { :hanyu "哪", :pinyin "na3", :usage-count 1 }
-{ :hanyu "哪个", :pinyin "na3 ge5", :usage-count 1 }
+{ :hanyu "哪个", :pinyin "na3 ge5", :usage-count 2 }
 { :hanyu "哪里", :pinyin "na3 li3", :usage-count 2 }
 { :hanyu "哪儿", :pinyin "na3 r5", :usage-count 1 }
-{ :hanyu "那", :pinyin "na4", :usage-count 1 }
-{ :hanyu "那个", :pinyin "na4 ge5", :usage-count 2 }
+{ :hanyu "那", :pinyin "na4", :usage-count 2 }
+{ :hanyu "那个", :pinyin "na4 ge5", :usage-count 3 }
 { :hanyu "那里", :pinyin "na4 li5", :usage-count 2 }
 { :hanyu "那么", :known true, :pinyin "na4 me5", :short-english "like that", :usage-count 4 }
 { :hanyu "那儿", :pinyin "na4 r5", :usage-count 1 }
 { :hanyu "那些", :pinyin "na4 xie1", :usage-count 1 }
+{ :hanyu "那样", :pinyin "na4 yang4", :usage-count 2 }
 { :hanyu "南", :pinyin "nan2", :usage-count 1 }
 { :hanyu "难", :pinyin "nan2", :usage-count 1 }
 { :hanyu "南", :pinyin "Nan2", :usage-count 1 }
@@ -768,26 +782,26 @@
 { :hanyu "难过", :known true, :pinyin "nan2 guo4", :short-english "to feel sad", :usage-count 7 }
 { :hanyu "男孩", :known true, :pinyin "nan2 hai2", :short-english "boy", :usage-count 5 }
 { :hanyu "男朋友", :pinyin "nan2 peng2 you5", :usage-count 1 }
-{ :hanyu "男人", :known true, :pinyin "nan2 ren2", :short-english "a man", :usage-count 1 }
+{ :hanyu "男人", :known true, :pinyin "nan2 ren2", :short-english "a man", :usage-count 2 }
 { :hanyu "难受", :pinyin "nan2 shou4", :usage-count 1 }
 { :hanyu "南阳", :pinyin "Nan2 yang2", :usage-count 1 }
 { :hanyu "男友", :pinyin "nan2 you3", :usage-count 1 }
 { :hanyu "呢", :known true, :pinyin "ne5", :short-english "(emphasize)", :usage-count 3 }
 { :hanyu "内", :pinyin "nei4", :usage-count 1 }
 { :hanyu "内心", :pinyin "nei4 xin1", :usage-count 1 }
-{ :hanyu "能", :known true, :pinyin "neng2", :short-english "be able", :usage-count 14 }
+{ :hanyu "能", :known true, :pinyin "neng2", :short-english "be able", :usage-count 15 }
 { :hanyu "能", :pinyin "Neng2", :usage-count 1 }
 { :hanyu "泥", :pinyin "ni2", :usage-count 1 }
 { :hanyu "泥沼", :pinyin "ni2 zhao3", :usage-count 1 }
-{ :hanyu "你", :known true, :pinyin "ni3", :usage-count 252 }
+{ :hanyu "你", :known true, :pinyin "ni3", :usage-count 264 }
 { :hanyu "你等", :pinyin "ni3 deng3", :usage-count 1 }
-{ :hanyu "你好", :known true, :pinyin "ni3 hao3", :short-english "Hello!", :usage-count 12 }
-{ :hanyu "你们", :known true, :pinyin "ni3 men5", :short-english "you (plural)", :usage-count 14 }
+{ :hanyu "你好", :known true, :pinyin "ni3 hao3", :short-english "Hello!", :usage-count 16 }
+{ :hanyu "你们", :known true, :pinyin "ni3 men5", :short-english "you (plural)", :usage-count 18 }
 { :hanyu "年", :known true, :pinyin "nian2", :short-english "year", :usage-count 4 }
 { :hanyu "年", :pinyin "Nian2", :usage-count 1 }
 { :hanyu "念", :pinyin "nian4", :usage-count 1 }
 { :hanyu "鸟", :known true, :pinyin "niao3", :short-english "bird", :usage-count 4 }
-{ :hanyu "您", :known true, :pinyin "nin2", :short-english "you", :usage-count 3 }
+{ :hanyu "您", :known true, :pinyin "nin2", :short-english "you", :usage-count 4 }
 { :hanyu "您好", :known true, :pinyin "nin2 hao3", :short-english "hello (polite)", :usage-count 2 }
 { :hanyu "牛", :pinyin "niu2", :usage-count 1 }
 { :hanyu "牛", :pinyin "Niu2", :usage-count 1 }
@@ -800,9 +814,10 @@
 { :hanyu "女朋友", :known true, :pinyin "nu:3 peng2 you5", :short-english "girlfriend", :usage-count 19 }
 { :hanyu "女人", :pinyin "nu:3 ren2", :usage-count 1 }
 { :hanyu "女友", :known true, :pinyin "nu:3 you3", :short-english "girlfriend", :usage-count 3 }
-{ :hanyu "努力", :known true, :pinyin "nu3 li4", :short-english "great effort", :usage-count 9 }
+{ :hanyu "努力", :known true, :pinyin "nu3 li4", :short-english "great effort", :usage-count 10 }
 { :hanyu "暖暖", :pinyin "Nuan3 nuan3", :usage-count 1 }
 { :hanyu "诺基亚", :pinyin "Nuo4 ji1 ya4", :usage-count 1 }
+{ :hanyu "噢", :pinyin "o1", :usage-count 1 }
 { :hanyu "哦", :known false, :pinyin "o2", :short-english "oh", :usage-count 1 }
 { :hanyu "欧", :pinyin "Ou1", :usage-count 2 }
 { :hanyu "欧元", :known true, :pinyin "Ou1 yuan2", :short-english "Euro (currency)", :usage-count 3 }
@@ -819,6 +834,7 @@
 { :hanyu "便宜", :pinyin "pian2 yi5", :usage-count 1 }
 { :hanyu "票", :pinyin "piao4", :usage-count 1 }
 { :hanyu "漂亮", :known true, :pinyin "piao4 liang5", :short-english "pretty", :usage-count 8 }
+{ :hanyu "拼音", :known true, :pinyin "pin1 yin1", :short-english "phonetic writing", :usage-count 3 }
 { :hanyu "平", :pinyin "ping2", :usage-count 1 }
 { :hanyu "平板", :pinyin "ping2 ban3", :usage-count 1 }
 { :hanyu "平方米", :pinyin "ping2 fang1 mi3", :usage-count 1 }
@@ -845,7 +861,7 @@
 { :hanyu "强健", :pinyin "qiang2 jian4", :usage-count 1 }
 { :hanyu "抢劫", :pinyin "qiang3 jie2", :usage-count 1 }
 { :hanyu "巧克力", :pinyin "qiao3 ke4 li4", :usage-count 1 }
-{ :hanyu "亲爱", :known true, :pinyin "qin1 ai4", :short-english "dear", :usage-count 15 }
+{ :hanyu "亲爱", :known true, :pinyin "qin1 ai4", :short-english "dear", :usage-count 17 }
 { :hanyu "亲吻", :pinyin "qin1 wen3", :usage-count 1 }
 { :hanyu "情爱", :pinyin "qing2 ai4", :usage-count 1 }
 { :hanyu "请", :known true, :pinyin "qing3", :short-english "to ask", :usage-count 7 }
@@ -870,17 +886,17 @@
 { :hanyu "人士", :pinyin "ren2 shi4", :usage-count 1 }
 { :hanyu "忍耐", :pinyin "ren3 nai4", :usage-count 1 }
 { :hanyu "任何", :pinyin "ren4 he2", :usage-count 1 }
-{ :hanyu "认为", :known true, :pinyin "ren4 wei2", :short-english "to believe", :usage-count 11 }
+{ :hanyu "认为", :known true, :pinyin "ren4 wei2", :short-english "to believe", :usage-count 12 }
 { :hanyu "认真", :pinyin "ren4 zhen1", :usage-count 1 }
 { :hanyu "日", :pinyin "ri4", :usage-count 1 }
 { :hanyu "日本", :pinyin "Ri4 ben3", :usage-count 1 }
 { :hanyu "容易", :pinyin "rong2 yi4", :usage-count 1 }
 { :hanyu "肉", :pinyin "rou4", :usage-count 1 }
 { :hanyu "如", :pinyin "ru2", :usage-count 1 }
-{ :hanyu "如果", :known true, :pinyin "ru2 guo3", :short-english "if", :usage-count 16 }
+{ :hanyu "如果", :known true, :pinyin "ru2 guo3", :short-english "if", :usage-count 23 }
 { :hanyu "如何", :pinyin "ru2 he2", :usage-count 1 }
 { :hanyu "入睡", :pinyin "ru4 shui4", :usage-count 1 }
-{ :hanyu "软件", :known true, :pinyin "ruan3 jian4", :short-english "(computer) software", :usage-count 3 }
+{ :hanyu "软件", :known true, :pinyin "ruan3 jian4", :short-english "(computer) software", :usage-count 5 }
 { :hanyu "软件开发人员", :pinyin "ruan3 jian4 kai1 fa1 ren2 yuan2", :usage-count 1 }
 { :hanyu "撒谎", :pinyin "sa1 huang3", :usage-count 1 }
 { :hanyu "三", :known true, :pinyin "san1", :short-english "three", :usage-count 5 }
@@ -899,7 +915,7 @@
 { :hanyu "伤害", :pinyin "shang1 hai4", :usage-count 1 }
 { :hanyu "伤心", :pinyin "shang1 xin1", :usage-count 1 }
 { :hanyu "上", :known true, :pinyin "shang4", :short-english "on top", :usage-count 3 }
-{ :hanyu "上班", :known true, :pinyin "shang4 ban1", :short-english "to go to work", :usage-count 2 }
+{ :hanyu "上班", :known true, :pinyin "shang4 ban1", :short-english "to go to work", :usage-count 4 }
 { :hanyu "上传", :pinyin "shang4 chuan2", :usage-count 1 }
 { :hanyu "上个星期", :pinyin "shang4 ge4 xing1 qi1", :usage-count 1 }
 { :hanyu "上个月", :pinyin "shang4 ge4 yue4", :usage-count 1 }
@@ -912,7 +928,7 @@
 { :hanyu "上星期", :pinyin "shang4 xing1 qi1", :usage-count 1 }
 { :hanyu "上月", :pinyin "shang4 yue4", :usage-count 1 }
 { :hanyu "稍", :pinyin "shao1", :usage-count 1 }
-{ :hanyu "少", :known true, :pinyin "shao3", :short-english "few", :usage-count 3 }
+{ :hanyu "少", :known true, :pinyin "shao3", :short-english "few", :usage-count 4 }
 { :hanyu "舍得", :pinyin "she3 de5", :usage-count 1 }
 { :hanyu "摄", :pinyin "she4", :usage-count 4 }
 { :hanyu "设计", :pinyin "she4 ji4", :usage-count 1 }
@@ -924,7 +940,7 @@
 { :hanyu "身份", :pinyin "shen1 fen4", :usage-count 1 }
 { :hanyu "身份证", :pinyin "shen1 fen4 zheng4", :usage-count 1 }
 { :hanyu "身上", :pinyin "shen1 shang5", :usage-count 1 }
-{ :hanyu "身体", :pinyin "shen1 ti3", :usage-count 2 }
+{ :hanyu "身体", :known true, :pinyin "shen1 ti3", :short-english "(human) body", :usage-count 3 }
 { :hanyu "深夜", :pinyin "shen1 ye4", :usage-count 1 }
 { :hanyu "什么", :known true, :pinyin "shen2 me5", :usage-count 22 }
 { :hanyu "甚至", :pinyin "shen4 zhi4", :usage-count 1 }
@@ -955,7 +971,7 @@
 { :hanyu "使用", :pinyin "shi3 yong4", :usage-count 1 }
 { :hanyu "事", :pinyin "shi4", :usage-count 5 }
 { :hanyu "市", :pinyin "shi4", :usage-count 2 }
-{ :hanyu "是", :known true, :pinyin "shi4", :usage-count 25 }
+{ :hanyu "是", :known true, :pinyin "shi4", :usage-count 28 }
 { :hanyu "试", :pinyin "shi4", :usage-count 1 }
 { :hanyu "市场", :pinyin "shi4 chang3", :usage-count 3 }
 { :hanyu "是的", :pinyin "shi4 de5", :usage-count 1 }
@@ -983,11 +999,11 @@
 { :hanyu "水", :pinyin "Shui3", :usage-count 1 }
 { :hanyu "水果", :pinyin "shui3 guo3", :usage-count 1 }
 { :hanyu "睡", :pinyin "shui4", :usage-count 1 }
-{ :hanyu "睡觉", :known true, :pinyin "shui4 jiao4", :usage-count 7 }
+{ :hanyu "睡觉", :known true, :pinyin "shui4 jiao4", :usage-count 8 }
 { :hanyu "睡醒", :pinyin "shui4 xing3", :usage-count 1 }
 { :hanyu "顺风", :pinyin "shun4 feng1", :usage-count 1 }
-{ :hanyu "说", :known true, :pinyin "shuo1", :usage-count 25 }
-{ :hanyu "说话", :known true, :pinyin "shuo1 hua4", :short-english "to speak", :usage-count 8 }
+{ :hanyu "说", :known true, :pinyin "shuo1", :usage-count 27 }
+{ :hanyu "说话", :known true, :pinyin "shuo1 hua4", :short-english "to speak", :usage-count 10 }
 { :hanyu "思科", :pinyin "Si1 ke1", :usage-count 1 }
 { :hanyu "私人", :pinyin "si1 ren2", :usage-count 1 }
 { :hanyu "死", :pinyin "si3", :usage-count 1 }
@@ -1000,16 +1016,16 @@
 { :hanyu "岁", :known true, :pinyin "sui4", :short-english "years (of age)", :usage-count 12 }
 { :hanyu "穗", :pinyin "sui4", :usage-count 1 }
 { :hanyu "穗", :pinyin "Sui4", :usage-count 1 }
-{ :hanyu "所以", :known true, :pinyin "suo3 yi3", :short-english "therefore", :usage-count 27 }
+{ :hanyu "所以", :known true, :pinyin "suo3 yi3", :short-english "therefore", :usage-count 29 }
 { :hanyu "他", :known true, :pinyin "ta1", :short-english "he or him", :usage-count 3 }
 { :hanyu "她", :known true, :pinyin "ta1", :short-english "she", :usage-count 26 }
 { :hanyu "它", :known true, :pinyin "ta1", :short-english "it", :usage-count 4 }
 { :hanyu "他妈的", :known true, :pinyin "ta1 ma1 de5", :short-english "(taboo curse) damn it!", :usage-count 4 }
-{ :hanyu "他们", :known true, :pinyin "ta1 men5", :short-english "they", :usage-count 12 }
+{ :hanyu "他们", :known true, :pinyin "ta1 men5", :short-english "they", :usage-count 15 }
 { :hanyu "她们", :pinyin "ta1 men5", :usage-count 1 }
 { :hanyu "它们", :pinyin "ta1 men5", :usage-count 1 }
 { :hanyu "踏雪", :pinyin "ta4 xue3", :usage-count 1 }
-{ :hanyu "太", :known true, :pinyin "tai4", :short-english "highest", :usage-count 5 }
+{ :hanyu "太", :known true, :pinyin "tai4", :short-english "highest", :usage-count 6 }
 { :hanyu "态度", :known false, :pinyin "tai4 du5", :short-english "attitude", :usage-count 1 }
 { :hanyu "太好了", :known true, :pinyin "tai4 hao3 le5", :short-english "very good", :usage-count 1 }
 { :hanyu "太太", :known true, :pinyin "tai4 tai5", :short-english "Mrs", :usage-count 4 }
@@ -1065,7 +1081,8 @@
 { :hanyu "完", :pinyin "wan2", :usage-count 1 }
 { :hanyu "玩", :known true, :pinyin "wan2", :short-english "toy", :usage-count 6 }
 { :hanyu "完成", :pinyin "wan2 cheng2", :usage-count 1 }
-{ :hanyu "晚", :known true, :pinyin "wan3", :short-english "evening", :usage-count 4 }
+{ :hanyu "完全", :pinyin "wan2 quan2", :usage-count 1 }
+{ :hanyu "晚", :known true, :pinyin "wan3", :short-english "evening", :usage-count 5 }
 { :hanyu "晚安", :pinyin "wan3 an1", :usage-count 3 }
 { :hanyu "晚餐", :pinyin "wan3 can1", :usage-count 1 }
 { :hanyu "晚晌", :known true, :pinyin "wan3 shang3", :short-english "evening", :usage-count 5 }
@@ -1084,13 +1101,13 @@
 { :hanyu "忘", :pinyin "wang4", :usage-count 2 }
 { :hanyu "微", :pinyin "wei1", :usage-count 1 }
 { :hanyu "微", :pinyin "Wei1", :usage-count 1 }
-{ :hanyu "围巾", :pinyin "wei2 jin1", :usage-count 1 }
+{ :hanyu "围巾", :pinyin "wei2 jin1", :usage-count 2 }
 { :hanyu "为难", :pinyin "wei2 nan2", :usage-count 1 }
 { :hanyu "为", :pinyin "wei4", :usage-count 1 }
 { :hanyu "味精", :pinyin "wei4 jing1", :usage-count 1 }
-{ :hanyu "未来", :pinyin "wei4 lai2", :usage-count 1 }
+{ :hanyu "未来", :pinyin "wei4 lai2", :usage-count 2 }
 { :hanyu "为了", :pinyin "wei4 le5", :usage-count 1 }
-{ :hanyu "为什么", :known true, :pinyin "wei4 shen2 me5", :short-english "why?", :usage-count 8 }
+{ :hanyu "为什么", :known true, :pinyin "wei4 shen2 me5", :short-english "why?", :usage-count 9 }
 { :hanyu "文", :pinyin "wen2", :usage-count 1 }
 { :hanyu "文", :pinyin "Wen2", :usage-count 1 }
 { :hanyu "文本", :pinyin "wen2 ben3", :usage-count 1 }
@@ -1098,10 +1115,10 @@
 { :hanyu "文章", :pinyin "wen2 zhang1", :usage-count 1 }
 { :hanyu "吻", :pinyin "wen3", :usage-count 1 }
 { :hanyu "问", :pinyin "wen4", :usage-count 1 }
-{ :hanyu "问题", :known true, :pinyin "wen4 ti2", :short-english "question", :usage-count 11 }
+{ :hanyu "问题", :known true, :pinyin "wen4 ti2", :short-english "question", :usage-count 13 }
 { :hanyu "蕹菜", :pinyin "weng4 cai4", :usage-count 1 }
-{ :hanyu "我", :known true, :pinyin "wo3", :short-english "I", :usage-count 446 }
-{ :hanyu "我们", :known true, :pinyin "wo3 men5", :usage-count 55 }
+{ :hanyu "我", :known true, :pinyin "wo3", :short-english "I", :usage-count 489 }
+{ :hanyu "我们", :known true, :pinyin "wo3 men5", :usage-count 60 }
 { :hanyu "卧室", :pinyin "wo4 shi4", :usage-count 1 }
 { :hanyu "污染", :pinyin "wu1 ran3", :usage-count 1 }
 { :hanyu "无礼", :pinyin "wu2 li3", :usage-count 1 }
@@ -1114,11 +1131,11 @@
 { :hanyu "吸尘机", :pinyin "xi1 chen2 ji1", :usage-count 1 }
 { :hanyu "西瓜", :pinyin "xi1 gua1", :usage-count 1 }
 { :hanyu "西红柿", :pinyin "xi1 hong2 shi4", :usage-count 1 }
-{ :hanyu "希望", :known true, :pinyin "xi1 wang4", :short-english "to wish for", :usage-count 10 }
+{ :hanyu "希望", :known true, :pinyin "xi1 wang4", :short-english "to wish for", :usage-count 13 }
 { :hanyu "习俗", :pinyin "xi2 su2", :usage-count 1 }
 { :hanyu "喜", :pinyin "xi3", :usage-count 1 }
 { :hanyu "洗", :pinyin "xi3", :usage-count 2 }
-{ :hanyu "喜欢", :known true, :pinyin "xi3 huan5", :short-english "to like", :usage-count 20 }
+{ :hanyu "喜欢", :known true, :pinyin "xi3 huan5", :short-english "to like", :usage-count 23 }
 { :hanyu "洗头", :known true, :pinyin "xi3 tou2", :short-english "to wash one's hair", :usage-count 2 }
 { :hanyu "洗澡", :pinyin "xi3 zao3", :usage-count 1 }
 { :hanyu "阋", :pinyin "xi4", :usage-count 1 }
@@ -1135,7 +1152,7 @@
 { :hanyu "先", :pinyin "xian1", :usage-count 1 }
 { :hanyu "先前", :pinyin "xian1 qian2", :usage-count 1 }
 { :hanyu "线", :pinyin "xian4", :usage-count 1 }
-{ :hanyu "现在", :known true, :pinyin "xian4 zai4", :short-english "now", :usage-count 44 }
+{ :hanyu "现在", :known true, :pinyin "xian4 zai4", :short-english "now", :usage-count 48 }
 { :hanyu "现状", :pinyin "xian4 zhuang4", :usage-count 1 }
 { :hanyu "相", :pinyin "xiang1", :usage-count 1 }
 { :hanyu "相", :pinyin "Xiang1", :usage-count 1 }
@@ -1154,17 +1171,17 @@
 { :hanyu "消费", :pinyin "xiao1 fei4", :usage-count 1 }
 { :hanyu "消息", :pinyin "xiao1 xi5", :usage-count 2 }
 { :hanyu "小", :known true, :pinyin "xiao3", :short-english "small", :usage-count 7 }
-{ :hanyu "晓", :known true, :pinyin "xiao3", :short-english "dawn", :usage-count 8 }
+{ :hanyu "晓", :known true, :pinyin "xiao3", :short-english "dawn", :usage-count 10 }
 { :hanyu "小时", :pinyin "xiao3 shi2", :usage-count 1 }
 { :hanyu "笑", :pinyin "xiao4", :usage-count 1 }
 { :hanyu "笑话", :pinyin "xiao4 hua4", :usage-count 1 }
 { :hanyu "校园", :pinyin "xiao4 yuan2", :usage-count 3 }
 { :hanyu "些", :pinyin "xie1", :usage-count 2 }
-{ :hanyu "写", :known true, :pinyin "xie3", :short-english "to write", :usage-count 31 }
+{ :hanyu "写", :known true, :pinyin "xie3", :short-english "to write", :usage-count 34 }
 { :hanyu "写信", :pinyin "xie3 xin4", :usage-count 1 }
 { :hanyu "谢", :pinyin "xie4", :usage-count 1 }
 { :hanyu "谢", :pinyin "Xie4", :usage-count 2 }
-{ :hanyu "谢谢", :known true, :pinyin "xie4 xie5", :short-english "to thank", :usage-count 14 }
+{ :hanyu "谢谢", :known true, :pinyin "xie4 xie5", :short-english "to thank", :usage-count 15 }
 { :hanyu "心", :pinyin "xin1", :usage-count 1 }
 { :hanyu "新", :known true, :pinyin "xin1", :short-english "new", :usage-count 10 }
 { :hanyu "新港", :pinyin "Xin1 gang3", :usage-count 1 }
@@ -1219,16 +1236,16 @@
 { :hanyu "样", :pinyin "yang4", :usage-count 1 }
 { :hanyu "遥远", :pinyin "yao2 yuan3", :usage-count 1 }
 { :hanyu "药", :known false, :pinyin "yao4", :short-english "medicine", :usage-count 3 }
-{ :hanyu "要", :known true, :pinyin "yao4", :short-english "want", :usage-count 48 }
+{ :hanyu "要", :known true, :pinyin "yao4", :short-english "want", :usage-count 52 }
 { :hanyu "钥匙", :pinyin "yao4 shi5", :usage-count 1 }
-{ :hanyu "也", :known true, :pinyin "ye3", :short-english "also", :usage-count 39 }
+{ :hanyu "也", :known true, :pinyin "ye3", :short-english "also", :usage-count 42 }
 { :hanyu "也许", :pinyin "ye3 xu3", :usage-count 3 }
 { :hanyu "夜", :pinyin "ye4", :usage-count 1 }
 { :hanyu "叶子", :pinyin "ye4 zi5", :usage-count 1 }
-{ :hanyu "一", :known true, :pinyin "yi1", :usage-count 8 }
+{ :hanyu "一", :known true, :pinyin "yi1", :usage-count 10 }
 { :hanyu "一般", :pinyin "yi1 ban1", :usage-count 1 }
 { :hanyu "一次", :pinyin "yi1 ci4", :usage-count 1 }
-{ :hanyu "一点", :known true, :pinyin "yi1 dian3", :usage-count 12 }
+{ :hanyu "一点", :known true, :pinyin "yi1 dian3", :usage-count 13 }
 { :hanyu "一点点", :known true, :pinyin "yi1 dian3 dian3", :usage-count 1 }
 { :hanyu "一定", :known true, :pinyin "yi1 ding4", :short-english "surely", :usage-count 3 }
 { :hanyu "衣服", :pinyin "yi1 fu5", :usage-count 1 }
@@ -1260,13 +1277,13 @@
 { :hanyu "银行", :pinyin "yin2 hang2", :usage-count 1 }
 { :hanyu "隐形", :pinyin "yin3 xing2", :usage-count 1 }
 { :hanyu "隐形眼镜", :known true, :pinyin "yin3 xing2 yan3 jing4", :short-english "contact lens", :usage-count 3 }
-{ :hanyu "应该", :known true, :pinyin "ying1 gai1", :usage-count 27 }
+{ :hanyu "应该", :known true, :pinyin "ying1 gai1", :usage-count 31 }
 { :hanyu "英国", :pinyin "Ying1 guo2", :short-english "United Kingdom", :usage-count 1 }
-{ :hanyu "英语", :known true, :pinyin "Ying1 yu3", :short-english "English (language)", :usage-count 17 }
+{ :hanyu "英语", :known true, :pinyin "Ying1 yu3", :short-english "English (language)", :usage-count 20 }
 { :hanyu "影响", :pinyin "ying3 xiang3", :usage-count 1 }
 { :hanyu "应力", :pinyin "ying4 li4", :usage-count 1 }
 { :hanyu "永远", :pinyin "yong3 yuan3", :usage-count 1 }
-{ :hanyu "用", :known true, :pinyin "yong4", :short-english "to use", :usage-count 11 }
+{ :hanyu "用", :known true, :pinyin "yong4", :short-english "to use", :usage-count 19 }
 { :hanyu "呦", :known false, :pinyin "you1", :short-english "sbleating of the deer", :usage-count 1 }
 { :hanyu "优秀", :pinyin "you1 xiu4", :usage-count 1 }
 { :hanyu "邮", :pinyin "you2", :usage-count 1 }
@@ -1277,7 +1294,7 @@
 { :hanyu "邮箱", :pinyin "you2 xiang1", :usage-count 1 }
 { :hanyu "游泳", :known true, :pinyin "you2 yong3", :short-english "swimming", :usage-count 3 }
 { :hanyu "由于", :pinyin "you2 yu2", :usage-count 1 }
-{ :hanyu "有", :known true, :pinyin "you3", :short-english "to have", :usage-count 48 }
+{ :hanyu "有", :known true, :pinyin "you3", :short-english "to have", :usage-count 49 }
 { :hanyu "有趣", :pinyin "you3 qu4", :usage-count 1 }
 { :hanyu "有人", :pinyin "you3 ren2", :usage-count 1 }
 { :hanyu "友善", :pinyin "you3 shan4", :usage-count 1 }
@@ -1318,8 +1335,8 @@
 { :hanyu "阅读", :pinyin "yue4 du2", :usage-count 1 }
 { :hanyu "云南", :pinyin "Yun2 nan2", :usage-count 1 }
 { :hanyu "运动", :pinyin "yun4 dong4", :usage-count 1 }
-{ :hanyu "再", :pinyin "zai4", :usage-count 1 }
-{ :hanyu "在", :known true, :pinyin "zai4", :short-english "at", :usage-count 106 }
+{ :hanyu "再", :pinyin "zai4", :usage-count 2 }
+{ :hanyu "在", :known true, :pinyin "zai4", :short-english "at", :usage-count 107 }
 { :hanyu "再次", :pinyin "zai4 ci4", :usage-count 1 }
 { :hanyu "再见", :known true, :pinyin "zai4 jian4", :short-english "goodbye", :usage-count 8 }
 { :hanyu "在下", :pinyin "zai4 xia4", :usage-count 1 }
@@ -1339,7 +1356,7 @@
 { :hanyu "增加", :pinyin "zeng1 jia1", :usage-count 1 }
 { :hanyu "站", :pinyin "zhan4", :usage-count 1 }
 { :hanyu "张", :pinyin "zhang1", :usage-count 2 }
-{ :hanyu "张", :known true, :pinyin "Zhang1", :short-english "surname Zhang", :usage-count 12 }
+{ :hanyu "张", :known true, :pinyin "Zhang1", :short-english "surname Zhang", :usage-count 13 }
 { :hanyu "长大", :pinyin "zhang3 da4", :usage-count 1 }
 { :hanyu "帐户", :known false, :pinyin "zhang4 hu4", :short-english "account", :usage-count 3 }
 { :hanyu "招商", :pinyin "zhao1 shang1", :usage-count 1 }
@@ -1351,12 +1368,13 @@
 { :hanyu "照相", :known true, :pinyin "zhao4 xiang4", :short-english "to take a photograph", :usage-count 5 }
 { :hanyu "这", :known true, :pinyin "zhe4", :short-english "this", :usage-count 4 }
 { :hanyu "这个", :known true, :pinyin "zhe4 ge5", :usage-count 6 }
-{ :hanyu "这里", :known true, :pinyin "zhe4 li3", :usage-count 13 }
+{ :hanyu "这里", :known true, :pinyin "zhe4 li3", :usage-count 14 }
 { :hanyu "这么", :known true, :pinyin "zhe4 me5", :short-english "so much", :usage-count 4 }
 { :hanyu "这儿", :known true, :pinyin "zhe4 r5", :short-english "here", :usage-count 1 }
 { :hanyu "这些", :known true, :pinyin "zhe4 xie1", :short-english "these", :usage-count 3 }
-{ :hanyu "这样", :known true, :pinyin "zhe4 yang4", :short-english "this kind of", :usage-count 4 }
-{ :hanyu "真", :known true, :pinyin "zhen1", :short-english "really", :usage-count 7 }
+{ :hanyu "这样", :known true, :pinyin "zhe4 yang4", :short-english "this kind of", :usage-count 7 }
+{ :hanyu "真", :known true, :pinyin "zhen1", :short-english "really", :usage-count 8 }
+{ :hanyu "真实", :pinyin "zhen1 shi2", :usage-count 1 }
 { :hanyu "挣", :pinyin "zheng1", :usage-count 1 }
 { :hanyu "争吵", :pinyin "zheng1 chao3", :usage-count 1 }
 { :hanyu "征服", :pinyin "zheng1 fu2", :usage-count 1 }
@@ -1364,7 +1382,7 @@
 { :hanyu "政府", :pinyin "zheng4 fu3", :usage-count 1 }
 { :hanyu "郑州", :pinyin "Zheng4 zhou1", :short-english "Zhengzhou city", :usage-count 1 }
 { :hanyu "之", :pinyin "zhi1", :usage-count 1 }
-{ :hanyu "知道", :known true, :pinyin "zhi1 dao4", :short-english "to know", :usage-count 15 }
+{ :hanyu "知道", :known true, :pinyin "zhi1 dao4", :short-english "to know", :usage-count 22 }
 { :hanyu "支付", :pinyin "zhi1 fu4", :usage-count 1 }
 { :hanyu "之前", :pinyin "zhi1 qian2", :usage-count 1 }
 { :hanyu "直", :pinyin "zhi2", :usage-count 1 }
@@ -1388,7 +1406,7 @@
 { :hanyu "中国人", :known true, :pinyin "Zhong1 guo2 ren2", :short-english "Chinese person", :usage-count 4 }
 { :hanyu "中间", :pinyin "zhong1 jian1", :usage-count 1 }
 { :hanyu "中秋节", :pinyin "Zhong1 qiu1 jie2", :usage-count 1 }
-{ :hanyu "中文", :known true, :pinyin "Zhong1 wen2", :usage-count 28 }
+{ :hanyu "中文", :known true, :pinyin "Zhong1 wen2", :usage-count 32 }
 { :hanyu "中午", :pinyin "zhong1 wu3", :usage-count 1 }
 { :hanyu "中心", :pinyin "zhong1 xin1", :usage-count 1 }
 { :hanyu "重视", :pinyin "zhong4 shi4", :usage-count 2 }
@@ -1425,6 +1443,7 @@
 { :hanyu "足够", :pinyin "zu2 gou4", :usage-count 1 }
 { :hanyu "嘴", :pinyin "zui3", :usage-count 1 }
 { :hanyu "最", :known true, :pinyin "zui4", :short-english "most", :usage-count 3 }
+{ :hanyu "最好", :known true, :pinyin "zui4 hao3", :short-english "best", :usage-count 2 }
 { :hanyu "最后", :pinyin "zui4 hou4", :usage-count 2 }
 { :hanyu "最近", :pinyin "zui4 jin4", :usage-count 4 }
 { :hanyu "尊重", :pinyin "zun1 zhong4", :usage-count 1 }
