@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -143,6 +144,10 @@ namespace ChineseWriter {
                 state => UpdateSuggestionsBackground( (IEnumerable<IDictionary<object,object>>) state ), suggestions );       
         }
 
+        /// <summary>
+        /// TODO: Use dotnet Task-framework for this?
+        /// </summary>
+        /// <param name="suggestions"></param>
         private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object,object>> suggestions ) {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             CurrentUpdater++;
@@ -305,6 +310,12 @@ namespace ChineseWriter {
 
         private void Window_Activated( object sender, EventArgs e ) {
             this._pinyinInput.Focus( );
+        }
+
+        private void PasteChineseClick( object sender, RoutedEventArgs e ) {
+            WritingState.LiteralInput( 
+                Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ));
+
         }
 
     } // class
