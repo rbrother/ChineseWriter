@@ -46,6 +46,9 @@
    {:hanyu "人", :pinyin "ren2", :english "man, person, people, CL:個|个[ge4],位[wei4]"}
    {:hanyu "向", :pinyin "Xiang4", :english "surname Xiang"},
    {:hanyu "向", :pinyin "xiang4", :english "towards, to face, to turn towards, direction, to support, to side with, shortly before, formerly, always, all along"},
+	 {:hanyu "后", :pinyin "hou4", :english "empress, queen"}
+	 {:hanyu "后", :pinyin "Hou4", :english "surname Hou"}
+	 {:hanyu "后", :pinyin "hou4", :english "back, behind, rear, afterwards, after, later"}   
 ])
 
 (def test-word-info
@@ -117,13 +120,13 @@
 
 (def word-info-dict-modified
   {{:pinyin "wo3", :hanyu "我"}
-       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
+       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112, :pinyin-no-spaces-no-tones "wo", :pinyin-no-spaces "wo3" },
    {:pinyin "wo3 men5", :hanyu "我们"}
-       {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8},
+       {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8, :pinyin-no-spaces-no-tones "women", :pinyin-no-spaces "wo3men5" },
    {:pinyin "xiang4", :hanyu "向"} 
-       {:pinyin "xiang4", :hanyu "向", :usage-count 2}
+       {:pinyin "xiang4", :hanyu "向", :usage-count 2, :known true, :pinyin-no-spaces-no-tones "xiang", :pinyin-no-spaces "xiang4"}
    { :hanyu "一代", :pinyin "yi1 dai4" }
-       { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5 } 
+       { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5  } 
    } )
 
 (set-word-database! test-words-raw test-word-info)
@@ -153,6 +156,7 @@
   0 (count (find-words "zoobaba" true))
   wo-men-word women-word-calculated
   wo-men-word-expanded (expand-word { :hanyu "我们" :pinyin "wo3 men5" } )
+  "back, behind, rear, afterwards, after, later. empress, queen" (:english (get-word { :hanyu "后", :pinyin "hou4" }))
   "ren2" ((find-char "人" "ren2") :pinyin)
   "ren2" ((find-char "人" "Ren2") :pinyin)
   "ren2" ((find-char "人" "ren5") :pinyin)

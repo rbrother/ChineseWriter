@@ -80,16 +80,17 @@
 
 ;--------------- Loading database -------------------------------------
 
-(defn merge-info-word [ {:keys [hanyu pinyin english] :as word} ]
+(defn add-word-attributes [ {:keys [hanyu pinyin english] :as word} usage-count known ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
-    (merge word
+    (merge 
+      (if english { :short-english (first (str/split english #",")) } {})
       ; Default values of attributes, can be overridden in info
-      { :usage-count 0
-        :known false
+      { :usage-count usage-count
+        :known known
         :pinyin-no-spaces pinyin-no-spaces 
-        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces)  
-        :short-english (first (str/split english #",")) }  ; Default short english, can be overwritten by value in dict-entry
-      (word-info { :hanyu hanyu :pinyin pinyin } ))))
+        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) }   
+      word      
+      )))
 
 (defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
   (let [ uc1 (word1 :usage-count) uc2 (word2 :usage-count) ]
@@ -100,10 +101,12 @@
 
 (defn sort-suggestions [ suggestions ] (sort suggestion-comparer suggestions))
 
+(defn index-hanyu-pinyin [ words ] (index words [ :hanyu :pinyin ]))
+
 (defn create-word-dict [words]
   (merge
     (map-values sort-suggestions (index words [ :hanyu ]))
-    (map-values first (index words [ :hanyu :pinyin ]))))
+    (map-values first (index-hanyu-pinyin words))))
 
 ; TODO: Now these global fields are set almost at the same time, so
 ; possibility of mismatch should be minimal, 
@@ -119,23 +122,32 @@
     (sort-suggestions words) 
     (create-word-dict words)))
 
-(defn set-word-database! [words-raw info-dict]
-  (do
-    (reset! word-info-dict (map-values first (index info-dict [ :hanyu :pinyin ] )))
-    (let [ words (map merge-info-word words-raw) ]
-      ; Short word list for quickly getting writing
-      (set-word-database-inner! (filter #(> (% :usage-count) 0 ) words))
-      ; Full word list (slow to process)
-      (set-word-database-inner! words))))
+; cc-dict can contain multiple entries with same hanyu+pinyin but different english, 
+; for example 后 Combine those.
+(defn combine-duplicates [values]
+  (assoc (first values) :english (str/join ". " (map :english values))))
 
-(defn set-default-usage-count [word] (merge { :usage-count 1 } word ))
+(defn set-word-database! [words-raw info-list]
+  (let [ raw-dict (map-values combine-duplicates (index-hanyu-pinyin words-raw))
+        dict (map-values #(add-word-attributes % 0 false) raw-dict)
+        raw-info-dict (map-values first (index-hanyu-pinyin info-list))
+        info-dict (map-values #(add-word-attributes % 1 true) raw-info-dict)
+        words (vec (vals (merge-with merge dict info-dict))) ]
+    
+    ; stupid to make again list in preceding when we have dict already....
+    
+    (reset! word-info-dict info-dict)
+    ; Short word list for quickly getting writing
+    (set-word-database-inner! (filter #(> (% :usage-count) 0 ) words))
+    ; Full word list (slow to process)
+    (set-word-database-inner! words)))
 
 ; It's better to store the data at clojure-side. Casting the data to more C# usable
 ; format renders it less usable to clojure code
 (defn load-database [ cc-dict-file info-file ]
   (set-word-database!
     (load-from-file cc-dict-file) 
-    (map set-default-usage-count (load-from-file info-file))))
+    (load-from-file info-file)))
 
 ;----------------------- Updating word info  ---------------------
 
