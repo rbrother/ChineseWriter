@@ -92,6 +92,9 @@
       word      
       )))
 
+(defn add-default-english [ {:keys [english short-english] :as word} ]
+    (merge { :english (or short-english "") } word ))
+
 (defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
   (let [ uc1 (word1 :usage-count) uc2 (word2 :usage-count) ]
     (cond
@@ -132,7 +135,7 @@
         dict (map-values #(add-word-attributes % 0 false) raw-dict)
         raw-info-dict (map-values first (index-hanyu-pinyin info-list))
         info-dict (map-values #(add-word-attributes % 1 true) raw-info-dict)
-        words (vec (vals (merge-with merge dict info-dict))) ]
+        words (vec (map add-default-english (vals (merge-with merge dict info-dict)))) ]
     
     ; stupid to make again list in preceding when we have dict already....
     
