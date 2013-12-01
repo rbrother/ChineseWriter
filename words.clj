@@ -123,7 +123,7 @@
 { :hanyu "不行", :known true, :pinyin "bu4 xing2", :pinyin-no-spaces "bu4xing2", :pinyin-no-spaces-no-tones "buxing", :usage-count 1 }
 { :hanyu "不幸", :known true, :pinyin "bu4 xing4", :pinyin-no-spaces "bu4xing4", :pinyin-no-spaces-no-tones "buxing", :usage-count 1 }
 { :hanyu "不要", :known true, :pinyin "bu4 yao4", :pinyin-no-spaces "bu4yao4", :pinyin-no-spaces-no-tones "buyao", :usage-count 1 }
-{ :hanyu "不一样", :known true, :pinyin "bu4 yi1 yang4", :pinyin-no-spaces "bu4yi1yang4", :pinyin-no-spaces-no-tones "buyiyang", :usage-count 4 }
+{ :hanyu "不一样", :known true, :pinyin "bu4 yi1 yang4", :pinyin-no-spaces "bu4yi1yang4", :pinyin-no-spaces-no-tones "buyiyang", :usage-count 5 }
 { :hanyu "不用", :known true, :pinyin "bu4 yong4", :pinyin-no-spaces "bu4yong4", :pinyin-no-spaces-no-tones "buyong", :short-english "need not", :usage-count 1 }
 { :hanyu "不知道", :known true, :pinyin "bu4 zhi1 dao4", :pinyin-no-spaces "bu4zhi1dao4", :pinyin-no-spaces-no-tones "buzhidao", :short-english "not know", :usage-count 30 }
 { :hanyu "猜", :known true, :pinyin "cai1", :pinyin-no-spaces "cai1", :pinyin-no-spaces-no-tones "cai", :usage-count 1 }
@@ -213,6 +213,7 @@
 { :hanyu "此后", :known true, :pinyin "ci3 hou4", :pinyin-no-spaces "ci3hou4", :pinyin-no-spaces-no-tones "cihou", :usage-count 1 }
 { :hanyu "此前", :known true, :pinyin "ci3 qian2", :pinyin-no-spaces "ci3qian2", :pinyin-no-spaces-no-tones "ciqian", :usage-count 2 }
 { :hanyu "次", :known true, :pinyin "ci4", :pinyin-no-spaces "ci4", :pinyin-no-spaces-no-tones "ci", :usage-count 5 }
+{ :hanyu "匆忙", :known true, :pinyin "cong1 mang2", :pinyin-no-spaces "cong1mang2", :pinyin-no-spaces-no-tones "congmang", :usage-count 1 }
 { :hanyu "聪敏", :known true, :pinyin "cong1 min3", :pinyin-no-spaces "cong1min3", :pinyin-no-spaces-no-tones "congmin", :usage-count 1 }
 { :hanyu "从", :known true, :pinyin "cong2", :pinyin-no-spaces "cong2", :pinyin-no-spaces-no-tones "cong", :short-english "from", :usage-count 15 }
 { :hanyu "从", :known true, :pinyin "Cong2", :pinyin-no-spaces "cong2", :pinyin-no-spaces-no-tones "cong", :usage-count 1 }
@@ -225,7 +226,7 @@
 { :hanyu "存", :known true, :pinyin "cun2", :pinyin-no-spaces "cun2", :pinyin-no-spaces-no-tones "cun", :usage-count 1 }
 { :hanyu "错", :known true, :pinyin "cuo4", :pinyin-no-spaces "cuo4", :pinyin-no-spaces-no-tones "cuo", :short-english "mistake", :usage-count 2 }
 { :hanyu "错", :known true, :pinyin "Cuo4", :pinyin-no-spaces "cuo4", :pinyin-no-spaces-no-tones "cuo", :usage-count 1 }
-{ :hanyu "错误", :known true, :pinyin "cuo4 wu4", :pinyin-no-spaces "cuo4wu4", :pinyin-no-spaces-no-tones "cuowu", :usage-count 1 }
+{ :hanyu "错误", :known true, :pinyin "cuo4 wu4", :pinyin-no-spaces "cuo4wu4", :pinyin-no-spaces-no-tones "cuowu", :usage-count 2 }
 { :hanyu "打", :known true, :pinyin "da3", :pinyin-no-spaces "da3", :pinyin-no-spaces-no-tones "da", :usage-count 7 }
 { :hanyu "打工", :known true, :pinyin "da3 gong1", :pinyin-no-spaces "da3gong1", :pinyin-no-spaces-no-tones "dagong", :usage-count 1 }
 { :hanyu "打开", :known true, :pinyin "da3 kai1", :pinyin-no-spaces "da3kai1", :pinyin-no-spaces-no-tones "dakai", :usage-count 2 }
@@ -402,7 +403,7 @@
 { :hanyu "富裕", :known true, :pinyin "fu4 yu4", :pinyin-no-spaces "fu4yu4", :pinyin-no-spaces-no-tones "fuyu", :usage-count 1 }
 { :hanyu "富裕", :known true, :pinyin "Fu4 yu4", :pinyin-no-spaces "fu4yu4", :pinyin-no-spaces-no-tones "fuyu", :usage-count 1 }
 { :hanyu "复杂", :known false, :pinyin "fu4 za2", :pinyin-no-spaces "fu4za2", :pinyin-no-spaces-no-tones "fuza", :short-english "complicated", :usage-count 1 }
-{ :hanyu "该", :known true, :pinyin "gai1", :pinyin-no-spaces "gai1", :pinyin-no-spaces-no-tones "gai", :usage-count 1 }
+{ :hanyu "该", :known true, :pinyin "gai1", :pinyin-no-spaces "gai1", :pinyin-no-spaces-no-tones "gai", :usage-count 2 }
 { :hanyu "改变", :known true, :pinyin "gai3 bian4", :pinyin-no-spaces "gai3bian4", :pinyin-no-spaces-no-tones "gaibian", :usage-count 1 }
 { :hanyu "干净", :known true, :pinyin "gan1 jing4", :pinyin-no-spaces "gan1jing4", :pinyin-no-spaces-no-tones "ganjing", :short-english "clean", :usage-count 4 }
 { :hanyu "敢", :known false, :pinyin "gan3", :pinyin-no-spaces "gan3", :pinyin-no-spaces-no-tones "gan", :short-english "to dare", :usage-count 2 }
@@ -455,12 +456,13 @@
 { :hanyu "挂面", :known true, :pinyin "gua4 mian4", :pinyin-no-spaces "gua4mian4", :pinyin-no-spaces-no-tones "guamian", :usage-count 1 }
 { :hanyu "拐", :known true, :pinyin "guai3", :pinyin-no-spaces "guai3", :pinyin-no-spaces-no-tones "guai", :usage-count 1 }
 { :hanyu "怪物", :known true, :pinyin "guai4 wu5", :pinyin-no-spaces "guai4wu5", :pinyin-no-spaces-no-tones "guaiwu", :usage-count 1 }
-{ :hanyu "关", :known false, :pinyin "guan1", :pinyin-no-spaces "guan1", :pinyin-no-spaces-no-tones "guan", :short-english "shut", :usage-count 3 }
+{ :hanyu "关", :known true, :pinyin "guan1", :pinyin-no-spaces "guan1", :pinyin-no-spaces-no-tones "guan", :short-english "shut", :usage-count 4 }
 { :hanyu "关", :known true, :pinyin "Guan1", :pinyin-no-spaces "guan1", :pinyin-no-spaces-no-tones "guan", :usage-count 1 }
 { :hanyu "关闭", :known true, :pinyin "guan1 bi4", :pinyin-no-spaces "guan1bi4", :pinyin-no-spaces-no-tones "guanbi", :usage-count 3 }
 { :hanyu "关心", :known true, :pinyin "guan1 xin1", :pinyin-no-spaces "guan1xin1", :pinyin-no-spaces-no-tones "guanxin", :usage-count 1 }
 { :hanyu "关于", :known false, :pinyin "guan1 yu2", :pinyin-no-spaces "guan1yu2", :pinyin-no-spaces-no-tones "guanyu", :short-english "about", :usage-count 2 }
 { :hanyu "馆", :known true, :pinyin "guan3", :pinyin-no-spaces "guan3", :pinyin-no-spaces-no-tones "guan", :short-english "building", :usage-count 6 }
+{ :hanyu "光", :known true, :pinyin "guang1", :short-english "light", :usage-count 2 }
 { :hanyu "逛", :known true, :pinyin "guang4", :pinyin-no-spaces "guang4", :pinyin-no-spaces-no-tones "guang", :usage-count 1 }
 { :hanyu "规则", :known false, :pinyin "gui1 ze2", :pinyin-no-spaces "gui1ze2", :pinyin-no-spaces-no-tones "guize", :short-english "regulations", :usage-count 1 }
 { :hanyu "鬼", :known true, :pinyin "gui3", :pinyin-no-spaces "gui3", :pinyin-no-spaces-no-tones "gui", :usage-count 1 }
@@ -530,6 +532,7 @@
 { :hanyu "宏", :known true, :pinyin "hong2", :pinyin-no-spaces "hong2", :pinyin-no-spaces-no-tones "hong", :usage-count 1 }
 { :hanyu "红", :known true, :pinyin "hong2", :pinyin-no-spaces "hong2", :pinyin-no-spaces-no-tones "hong", :short-english "red", :usage-count 1 }
 { :hanyu "红", :known true, :pinyin "Hong2", :pinyin-no-spaces "hong2", :pinyin-no-spaces-no-tones "hong", :usage-count 1 }
+{ :hanyu "红绿灯", :known true, :pinyin "hong2 lu:4 deng1", :short-english "traffic light", :usage-count 1 }
 { :hanyu "红旗", :known true, :pinyin "hong2 qi2", :pinyin-no-spaces "hong2qi2", :pinyin-no-spaces-no-tones "hongqi", :usage-count 1 }
 { :hanyu "红旗", :known true, :pinyin "Hong2 qi2", :pinyin-no-spaces "hong2qi2", :pinyin-no-spaces-no-tones "hongqi", :usage-count 1 }
 { :hanyu "红色", :known true, :pinyin "hong2 se4", :pinyin-no-spaces "hong2se4", :pinyin-no-spaces-no-tones "hongse", :short-english "red (color)", :usage-count 4 }
@@ -705,7 +708,7 @@
 { :hanyu "军队", :known true, :pinyin "jun1 dui4", :pinyin-no-spaces "jun1dui4", :pinyin-no-spaces-no-tones "jundui", :usage-count 1 }
 { :hanyu "咖啡", :known true, :pinyin "ka1 fei1", :pinyin-no-spaces "ka1fei1", :pinyin-no-spaces-no-tones "kafei", :usage-count 1 }
 { :hanyu "卡", :known false, :pinyin "ka3", :pinyin-no-spaces "ka3", :pinyin-no-spaces-no-tones "ka", :short-english "card", :usage-count 1 }
-{ :hanyu "开", :known true, :pinyin "kai1", :pinyin-no-spaces "kai1", :pinyin-no-spaces-no-tones "kai", :short-english "to open", :usage-count 4 }
+{ :hanyu "开", :known true, :pinyin "kai1", :pinyin-no-spaces "kai1", :pinyin-no-spaces-no-tones "kai", :short-english "to open", :usage-count 5 }
 { :hanyu "开车", :known true, :pinyin "kai1 che1", :pinyin-no-spaces "kai1che1", :pinyin-no-spaces-no-tones "kaiche", :short-english "to drive a car", :usage-count 3 }
 { :hanyu "开会", :known true, :pinyin "kai1 hui4", :pinyin-no-spaces "kai1hui4", :pinyin-no-spaces-no-tones "kaihui", :short-english "to hold a meeting", :usage-count 29 }
 { :hanyu "开口", :known false, :pinyin "kai1 kou3", :pinyin-no-spaces "kai1kou3", :pinyin-no-spaces-no-tones "kaikou", :short-english "open mouth", :usage-count 1 }
@@ -867,7 +870,7 @@
 { :hanyu "慢慢", :known true, :pinyin "man4 man4", :pinyin-no-spaces "man4man4", :pinyin-no-spaces-no-tones "manman", :short-english "slowly", :usage-count 1 }
 { :hanyu "忙", :known true, :pinyin "mang2", :pinyin-no-spaces "mang2", :pinyin-no-spaces-no-tones "mang", :short-english "busy", :usage-count 14 }
 { :hanyu "芒果", :known true, :pinyin "mang2 guo3", :pinyin-no-spaces "mang2guo3", :pinyin-no-spaces-no-tones "mangguo", :short-english "mango", :usage-count 1 }
-{ :hanyu "忙碌", :known true, :pinyin "mang2 lu4", :pinyin-no-spaces "mang2lu4", :pinyin-no-spaces-no-tones "manglu", :usage-count 1 }
+{ :hanyu "忙碌", :known true, :pinyin "mang2 lu4", :pinyin-no-spaces "mang2lu4", :pinyin-no-spaces-no-tones "manglu", :usage-count 2 }
 { :hanyu "猫", :known true, :pinyin "mao1", :pinyin-no-spaces "mao1", :pinyin-no-spaces-no-tones "mao", :usage-count 6 }
 { :hanyu "猫声鸟", :known true, :pinyin "mao1 sheng1 niao3", :pinyin-no-spaces "mao1sheng1niao3", :pinyin-no-spaces-no-tones "maoshengniao", :usage-count 1 }
 { :hanyu "冒险", :known true, :pinyin "mao4 xian3", :pinyin-no-spaces "mao4xian3", :pinyin-no-spaces-no-tones "maoxian", :usage-count 1 }
@@ -949,11 +952,12 @@
 { :hanyu "呢", :known true, :pinyin "ne5", :pinyin-no-spaces "ne5", :pinyin-no-spaces-no-tones "ne", :short-english "(emphasize)", :usage-count 3 }
 { :hanyu "内", :known true, :pinyin "nei4", :pinyin-no-spaces "nei4", :pinyin-no-spaces-no-tones "nei", :usage-count 1 }
 { :hanyu "内心", :known true, :pinyin "nei4 xin1", :pinyin-no-spaces "nei4xin1", :pinyin-no-spaces-no-tones "neixin", :usage-count 2 }
+{ :hanyu "内衣", :known true, :pinyin "nei4 yi1", :pinyin-no-spaces "nei4yi1", :pinyin-no-spaces-no-tones "neiyi", :usage-count 1 }
 { :hanyu "能", :known true, :pinyin "neng2", :pinyin-no-spaces "neng2", :pinyin-no-spaces-no-tones "neng", :short-english "be able", :usage-count 42 }
 { :hanyu "能", :known true, :pinyin "Neng2", :pinyin-no-spaces "neng2", :pinyin-no-spaces-no-tones "neng", :usage-count 1 }
 { :hanyu "泥", :known true, :pinyin "ni2", :pinyin-no-spaces "ni2", :pinyin-no-spaces-no-tones "ni", :usage-count 2 }
 { :hanyu "泥沼", :known true, :pinyin "ni2 zhao3", :pinyin-no-spaces "ni2zhao3", :pinyin-no-spaces-no-tones "nizhao", :usage-count 1 }
-{ :hanyu "你", :known true, :pinyin "ni3", :pinyin-no-spaces "ni3", :pinyin-no-spaces-no-tones "ni", :usage-count 521 }
+{ :hanyu "你", :known true, :pinyin "ni3", :pinyin-no-spaces "ni3", :pinyin-no-spaces-no-tones "ni", :usage-count 498 }
 { :english "your", :hanyu "你的", :known true, :pinyin "ni3 de5", :pinyin-no-spaces "ni3de5", :pinyin-no-spaces-no-tones "nide", :short-english "your", :usage-count 148 }
 { :hanyu "你等", :known true, :pinyin "ni3 deng3", :pinyin-no-spaces "ni3deng3", :pinyin-no-spaces-no-tones "nideng", :usage-count 1 }
 { :hanyu "你好", :known true, :pinyin "ni3 hao3", :pinyin-no-spaces "ni3hao3", :pinyin-no-spaces-no-tones "nihao", :short-english "Hello!", :usage-count 37 }
@@ -1049,7 +1053,7 @@
 { :hanyu "庆祝", :known true, :pinyin "qing4 zhu4", :pinyin-no-spaces "qing4zhu4", :pinyin-no-spaces-no-tones "qingzhu", :usage-count 1 }
 { :hanyu "秋天", :known true, :pinyin "qiu1 tian1", :pinyin-no-spaces "qiu1tian1", :pinyin-no-spaces-no-tones "qiutian", :usage-count 3 }
 { :hanyu "区", :known true, :pinyin "qu1", :pinyin-no-spaces "qu1", :pinyin-no-spaces-no-tones "qu", :usage-count 1 }
-{ :hanyu "去", :known true, :pinyin "qu4", :pinyin-no-spaces "qu4", :pinyin-no-spaces-no-tones "qu", :short-english "go", :usage-count 89 }
+{ :hanyu "去", :known true, :pinyin "qu4", :pinyin-no-spaces "qu4", :pinyin-no-spaces-no-tones "qu", :short-english "go", :usage-count 83 }
 { :hanyu "确定", :known true, :pinyin "que4 ding4", :pinyin-no-spaces "que4ding4", :pinyin-no-spaces-no-tones "queding", :usage-count 1 }
 { :hanyu "然而", :known true, :pinyin "ran2 er2", :pinyin-no-spaces "ran2er2", :pinyin-no-spaces-no-tones "raner", :usage-count 1 }
 { :hanyu "然后", :known true, :pinyin "ran2 hou4", :pinyin-no-spaces "ran2hou4", :pinyin-no-spaces-no-tones "ranhou", :short-english "after", :usage-count 17 }
@@ -1076,7 +1080,7 @@
 { :hanyu "肉", :known true, :pinyin "rou4", :pinyin-no-spaces "rou4", :pinyin-no-spaces-no-tones "rou", :usage-count 1 }
 { :hanyu "如", :known true, :pinyin "ru2", :pinyin-no-spaces "ru2", :pinyin-no-spaces-no-tones "ru", :usage-count 1 }
 { :hanyu "如果", :known true, :pinyin "ru2 guo3", :pinyin-no-spaces "ru2guo3", :pinyin-no-spaces-no-tones "ruguo", :short-english "if", :usage-count 36 }
-{ :hanyu "如何", :known true, :pinyin "ru2 he2", :pinyin-no-spaces "ru2he2", :pinyin-no-spaces-no-tones "ruhe", :usage-count 1 }
+{ :hanyu "如何", :known true, :pinyin "ru2 he2", :pinyin-no-spaces "ru2he2", :pinyin-no-spaces-no-tones "ruhe", :usage-count 2 }
 { :hanyu "如今", :known true, :pinyin "ru2 jin1", :pinyin-no-spaces "ru2jin1", :pinyin-no-spaces-no-tones "rujin", :usage-count 6 }
 { :hanyu "入睡", :known true, :pinyin "ru4 shui4", :pinyin-no-spaces "ru4shui4", :pinyin-no-spaces-no-tones "rushui", :usage-count 1 }
 { :hanyu "软件", :known true, :pinyin "ruan3 jian4", :pinyin-no-spaces "ruan3jian4", :pinyin-no-spaces-no-tones "ruanjian", :short-english "(computer) software", :usage-count 9 }
@@ -1163,7 +1167,7 @@
 { :english "eleven o'clock", :hanyu "十一点", :known true, :pinyin "shi2 yi1 dian3", :pinyin-no-spaces "shi2yi1dian3", :pinyin-no-spaces-no-tones "shiyidian", :short-english "eleven o'clock", :usage-count 100 }
 { :hanyu "实在", :known true, :pinyin "shi2 zai4", :pinyin-no-spaces "shi2zai4", :pinyin-no-spaces-no-tones "shizai", :usage-count 1 }
 { :hanyu "使", :known false, :pinyin "shi3", :pinyin-no-spaces "shi3", :pinyin-no-spaces-no-tones "shi", :short-english "to enable", :usage-count 2 }
-{ :hanyu "使用", :known true, :pinyin "shi3 yong4", :pinyin-no-spaces "shi3yong4", :pinyin-no-spaces-no-tones "shiyong", :usage-count 1 }
+{ :hanyu "使用", :known true, :pinyin "shi3 yong4", :pinyin-no-spaces "shi3yong4", :pinyin-no-spaces-no-tones "shiyong", :usage-count 2 }
 { :hanyu "事", :known true, :pinyin "shi4", :pinyin-no-spaces "shi4", :pinyin-no-spaces-no-tones "shi", :usage-count 7 }
 { :hanyu "市", :known true, :pinyin "shi4", :pinyin-no-spaces "shi4", :pinyin-no-spaces-no-tones "shi", :usage-count 2 }
 { :hanyu "是", :known true, :pinyin "shi4", :pinyin-no-spaces "shi4", :pinyin-no-spaces-no-tones "shi", :usage-count 58 }
@@ -1339,9 +1343,9 @@
 { :hanyu "问", :known true, :pinyin "wen4", :pinyin-no-spaces "wen4", :pinyin-no-spaces-no-tones "wen", :usage-count 9 }
 { :hanyu "问题", :known true, :pinyin "wen4 ti2", :pinyin-no-spaces "wen4ti2", :pinyin-no-spaces-no-tones "wenti", :short-english "question", :usage-count 28 }
 { :hanyu "蕹菜", :known true, :pinyin "weng4 cai4", :pinyin-no-spaces "weng4cai4", :pinyin-no-spaces-no-tones "wengcai", :usage-count 1 }
-{ :hanyu "我", :known true, :pinyin "wo3", :pinyin-no-spaces "wo3", :pinyin-no-spaces-no-tones "wo", :short-english "I", :usage-count 1102 }
+{ :hanyu "我", :known true, :pinyin "wo3", :pinyin-no-spaces "wo3", :pinyin-no-spaces-no-tones "wo", :short-english "I", :usage-count 1039 }
 { :english "my", :hanyu "我的", :known true, :pinyin "wo3 de5", :pinyin-no-spaces "wo3de5", :pinyin-no-spaces-no-tones "wode", :short-english "my", :usage-count 194 }
-{ :hanyu "我们", :known true, :pinyin "wo3 men5", :pinyin-no-spaces "wo3men5", :pinyin-no-spaces-no-tones "women", :usage-count 151 }
+{ :hanyu "我们", :known true, :pinyin "wo3 men5", :pinyin-no-spaces "wo3men5", :pinyin-no-spaces-no-tones "women", :usage-count 144 }
 { :english "our", :hanyu "我们的", :known true, :pinyin "wo3 men5 de5", :pinyin-no-spaces "wo3men5de5", :pinyin-no-spaces-no-tones "womende", :short-english "our", :usage-count 130 }
 { :hanyu "卧室", :known true, :pinyin "wo4 shi4", :pinyin-no-spaces "wo4shi4", :pinyin-no-spaces-no-tones "woshi", :usage-count 2 }
 { :hanyu "屋顶", :known true, :pinyin "wu1 ding3", :pinyin-no-spaces "wu1ding3", :pinyin-no-spaces-no-tones "wuding", :short-english "roof", :usage-count 2 }
@@ -1351,10 +1355,11 @@
 { :hanyu "无神论者", :known true, :pinyin "wu2 shen2 lun4 zhe3", :pinyin-no-spaces "wu2shen2lun4zhe3", :pinyin-no-spaces-no-tones "wushenlunzhe", :usage-count 1 }
 { :hanyu "五", :known true, :pinyin "wu3", :pinyin-no-spaces "wu3", :pinyin-no-spaces-no-tones "wu", :short-english "five", :usage-count 8 }
 { :hanyu "舞", :known true, :pinyin "wu3", :pinyin-no-spaces "wu3", :pinyin-no-spaces-no-tones "wu", :usage-count 1 }
-{ :hanyu "午餐", :known true, :pinyin "wu3 can1", :pinyin-no-spaces "wu3can1", :pinyin-no-spaces-no-tones "wucan", :short-english "lunch", :usage-count 1 }
+{ :hanyu "午餐", :known true, :pinyin "wu3 can1", :pinyin-no-spaces "wu3can1", :pinyin-no-spaces-no-tones "wucan", :short-english "lunch", :usage-count 2 }
 { :english "five o'clock", :hanyu "五点", :known true, :pinyin "wu3 dian3", :pinyin-no-spaces "wu3dian3", :pinyin-no-spaces-no-tones "wudian", :short-english "five o'clock", :usage-count 102 }
 { :hanyu "午饭", :known true, :pinyin "wu3 fan4", :pinyin-no-spaces "wu3fan4", :pinyin-no-spaces-no-tones "wufan", :short-english "lunch", :usage-count 9 }
 { :hanyu "舞会", :known true, :pinyin "wu3 hui4", :pinyin-no-spaces "wu3hui4", :pinyin-no-spaces-no-tones "wuhui", :usage-count 3 }
+{ :hanyu "物", :known true, :pinyin "wu4", :pinyin-no-spaces "wu4", :pinyin-no-spaces-no-tones "wu", :usage-count 1 }
 { :hanyu "雾", :known true, :pinyin "wu4", :pinyin-no-spaces "wu4", :pinyin-no-spaces-no-tones "wu", :usage-count 2 }
 { :hanyu "误会", :known true, :pinyin "wu4 hui4", :pinyin-no-spaces "wu4hui4", :pinyin-no-spaces-no-tones "wuhui", :usage-count 1 }
 { :hanyu "吸尘机", :known true, :pinyin "xi1 chen2 ji1", :pinyin-no-spaces "xi1chen2ji1", :pinyin-no-spaces-no-tones "xichenji", :usage-count 1 }
@@ -1388,7 +1393,7 @@
 { :hanyu "仙人掌", :known true, :pinyin "xian1 ren2 zhang3", :pinyin-no-spaces "xian1ren2zhang3", :pinyin-no-spaces-no-tones "xianrenzhang", :usage-count 2 }
 { :hanyu "先生", :known true, :pinyin "Xian1 sheng5", :pinyin-no-spaces "xian1sheng5", :pinyin-no-spaces-no-tones "xiansheng", :usage-count 1 }
 { :hanyu "线", :known true, :pinyin "xian4", :pinyin-no-spaces "xian4", :pinyin-no-spaces-no-tones "xian", :usage-count 1 }
-{ :hanyu "现在", :known true, :pinyin "xian4 zai4", :pinyin-no-spaces "xian4zai4", :pinyin-no-spaces-no-tones "xianzai", :short-english "now", :usage-count 126 }
+{ :hanyu "现在", :known true, :pinyin "xian4 zai4", :pinyin-no-spaces "xian4zai4", :pinyin-no-spaces-no-tones "xianzai", :short-english "now", :usage-count 118 }
 { :hanyu "现状", :known true, :pinyin "xian4 zhuang4", :pinyin-no-spaces "xian4zhuang4", :pinyin-no-spaces-no-tones "xianzhuang", :usage-count 1 }
 { :hanyu "相", :known true, :pinyin "xiang1", :pinyin-no-spaces "xiang1", :pinyin-no-spaces-no-tones "xiang", :usage-count 1 }
 { :hanyu "相", :known true, :pinyin "Xiang1", :pinyin-no-spaces "xiang1", :pinyin-no-spaces-no-tones "xiang", :usage-count 1 }
