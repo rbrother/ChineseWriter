@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChineseWriter", "ChineseWriter.csproj", "{F2E39ABA-D544-421B-9642-7DB5D1DA48AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{04A04319-E6CE-48C9-9AB3-A14CA9F20164}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C794021-0901-4BEC-A13D-F98DB8065C27}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,9 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = ChineseWriter.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -40,19 +37,11 @@ Global
 		{F2E39ABA-D544-421B-9642-7DB5D1DA48AC}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F2E39ABA-D544-421B-9642-7DB5D1DA48AC}.Release|x86.ActiveCfg = Release|x86
 		{F2E39ABA-D544-421B-9642-7DB5D1DA48AC}.Release|x86.Build.0 = Release|x86
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Debug|x86.Build.0 = Debug|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4BD3F9A7-E304-4FFF-A519-CF9F9BCE95EB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = ChineseWriter.vsmdi
 	EndGlobalSection
 EndGlobal

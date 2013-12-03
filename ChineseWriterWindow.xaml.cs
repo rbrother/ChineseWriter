@@ -25,10 +25,8 @@ namespace ChineseWriter {
 
         public void InitClojureLoadPath() {
             var loadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH") ?? "";
-            var gd = Environment.GetEnvironmentVariable("GD") ?? "";
-            loadPath = AppendToPath( loadPath, Path.Combine( gd, "programs/clojure-clr"));
-            loadPath = AppendToPath( loadPath, Path.Combine( "C:/Google Drive", "programs/clojure-clr"));
             loadPath = AppendToPath( loadPath, "c:/github/ChineseWriter/Clojure" );
+            loadPath = loadPath.Replace('\\', '/');
             Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath);
         }
 
@@ -78,7 +76,15 @@ namespace ChineseWriter {
                 _pinyinInput.Focus( );
 
             } catch (Exception ex) {
-                MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
+                var message = ex.ToString();
+                if (message.Contains("Could not locate clojure.core.clj.dll")) {
+                    MessageBox.Show("Please ensure that environment variable CLOJURE_LOAD_PATH\n" +
+                        "Contains clojure-clr directory and any other library directories needed",
+                        "Cannot find Clojure files");
+                }
+                else {
+                    MessageBox.Show(ex.ToString(), "Error in startup of ChineseWriter");
+                }
             }
         }
 
@@ -198,21 +204,6 @@ namespace ChineseWriter {
             return panel;
         }
 
-        void ScrollInputVisible( ) {
-            if (_cursorPanel.Parent != null) {
-                /*
-                TextScrollView.UpdateLayout( );
-                var maxScrollPos = TextScrollView.ExtentWidth - TextScrollView.ViewportWidth;
-                var scrollTo = TextScrollView.HorizontalOffset -
-                    TextScrollView.TransformToVisual( _cursorPanel ).Transform( new Point( 0, 0 ) ).X -
-                    TextScrollView.ViewportWidth * 0.5;
-                if (scrollTo < 0) scrollTo = 0;
-                if (scrollTo > maxScrollPos) scrollTo = maxScrollPos;
-                TextScrollView.ScrollToHorizontalOffset( scrollTo );
-                 */
-            }
-        }
-
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if (e.Key == Key.Enter) {
                 if (Suggestions.Items.Count == 0) {
@@ -250,7 +241,6 @@ namespace ChineseWriter {
             }
             if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
-            ScrollInputVisible( );
         }
 
         void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
