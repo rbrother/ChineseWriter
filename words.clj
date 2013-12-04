@@ -462,7 +462,7 @@
 { :hanyu "关心", :known true, :pinyin "guan1 xin1", :pinyin-no-spaces "guan1xin1", :pinyin-no-spaces-no-tones "guanxin", :usage-count 1 }
 { :hanyu "关于", :known false, :pinyin "guan1 yu2", :pinyin-no-spaces "guan1yu2", :pinyin-no-spaces-no-tones "guanyu", :short-english "about", :usage-count 2 }
 { :hanyu "馆", :known true, :pinyin "guan3", :pinyin-no-spaces "guan3", :pinyin-no-spaces-no-tones "guan", :short-english "building", :usage-count 6 }
-{ :hanyu "光", :known true, :pinyin "guang1", :short-english "light", :usage-count 2 }
+{ :hanyu "光", :known true, :pinyin "guang1", :pinyin-no-spaces "guang1", :pinyin-no-spaces-no-tones "guang", :short-english "light", :usage-count 2 }
 { :hanyu "逛", :known true, :pinyin "guang4", :pinyin-no-spaces "guang4", :pinyin-no-spaces-no-tones "guang", :usage-count 1 }
 { :hanyu "规则", :known false, :pinyin "gui1 ze2", :pinyin-no-spaces "gui1ze2", :pinyin-no-spaces-no-tones "guize", :short-english "regulations", :usage-count 1 }
 { :hanyu "鬼", :known true, :pinyin "gui3", :pinyin-no-spaces "gui3", :pinyin-no-spaces-no-tones "gui", :usage-count 1 }
@@ -532,7 +532,7 @@
 { :hanyu "宏", :known true, :pinyin "hong2", :pinyin-no-spaces "hong2", :pinyin-no-spaces-no-tones "hong", :usage-count 1 }
 { :hanyu "红", :known true, :pinyin "hong2", :pinyin-no-spaces "hong2", :pinyin-no-spaces-no-tones "hong", :short-english "red", :usage-count 1 }
 { :hanyu "红", :known true, :pinyin "Hong2", :pinyin-no-spaces "hong2", :pinyin-no-spaces-no-tones "hong", :usage-count 1 }
-{ :hanyu "红绿灯", :known true, :pinyin "hong2 lu:4 deng1", :short-english "traffic light", :usage-count 1 }
+{ :hanyu "红绿灯", :known true, :pinyin "hong2 lu:4 deng1", :pinyin-no-spaces "hong2lu4deng1", :pinyin-no-spaces-no-tones "hongludeng", :short-english "traffic light", :usage-count 1 }
 { :hanyu "红旗", :known true, :pinyin "hong2 qi2", :pinyin-no-spaces "hong2qi2", :pinyin-no-spaces-no-tones "hongqi", :usage-count 1 }
 { :hanyu "红旗", :known true, :pinyin "Hong2 qi2", :pinyin-no-spaces "hong2qi2", :pinyin-no-spaces-no-tones "hongqi", :usage-count 1 }
 { :hanyu "红色", :known true, :pinyin "hong2 se4", :pinyin-no-spaces "hong2se4", :pinyin-no-spaces-no-tones "hongse", :short-english "red (color)", :usage-count 4 }
