@@ -14,7 +14,7 @@
   (is (starts-with "moikka" "moi"))
   (is (not (starts-with "moikka" "hei"))))
 
-(def test-words-raw 
+(def test-words-raw
   [
    {:hanyu "一下子", :pinyin "yi1 xia4 zi5", :english "in a short while, all at once, all of a sudden"},
    {:hanyu "一世", :pinyin "yi1 shi4", :english "generation, period of 30 years, one's whole lifetime, lifelong, age, era, times, the whole world, the First (of numbered European kings)"},
@@ -48,12 +48,12 @@
    {:hanyu "向", :pinyin "xiang4", :english "towards, to face, to turn towards, direction, to support, to side with, shortly before, formerly, always, all along"},
 	 {:hanyu "后", :pinyin "hou4", :english "empress, queen"}
 	 {:hanyu "后", :pinyin "Hou4", :english "surname Hou"}
-	 {:hanyu "后", :pinyin "hou4", :english "back, behind, rear, afterwards, after, later"}   
+	 {:hanyu "后", :pinyin "hou4", :english "back, behind, rear, afterwards, after, later"}
 ])
 
 (def test-word-info
   [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112 }
-    { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 } 
+    { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 }
     { :hanyu "向", :pinyin "xiang4", :usage-count 2 }])
 
 (def wo-men-word
@@ -63,7 +63,7 @@
    :short-english "we"
    :pinyin-no-spaces "wo3men5"
    :pinyin-no-spaces-no-tones "women"
-   :known true 
+   :known true
    :usage-count 7 })
 
 (def wo-expanded
@@ -72,20 +72,20 @@
    :pinyin-no-spaces "wo3",
    :pinyin-diacritics "wo3",
    :short-english "I", :known true, :usage-count 112,
-   :characters 
+   :characters
    [ {:hanyu "我", :pinyin "wo3", :english "I, me, my",
       :pinyin-no-spaces-no-tones "wo",
       :pinyin-no-spaces "wo3",
       :pinyin-diacritics "wo3",
       :short-english "I", :known true, :usage-count 112} ]} )
-  
-(def wo-men-word-expanded 
+
+(def wo-men-word-expanded
   {:characters
    [{:short-english "I",
      :pinyin-no-spaces-no-tones "wo",
      :pinyin-no-spaces "wo3",
      :known true,
-     :usage-count 112 
+     :usage-count 112
      :hanyu "我",
      :pinyin "wo3",
      :pinyin-diacritics "wo3",
@@ -115,7 +115,7 @@
        {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
    {:pinyin "wo3 men5", :hanyu "我们"}
        {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7},
-   {:pinyin "xiang4", :hanyu "向"} 
+   {:pinyin "xiang4", :hanyu "向"}
        {:pinyin "xiang4", :hanyu "向", :usage-count 2} })
 
 (def word-info-dict-modified
@@ -123,10 +123,10 @@
        {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112, :pinyin-no-spaces-no-tones "wo", :pinyin-no-spaces "wo3" },
    {:pinyin "wo3 men5", :hanyu "我们"}
        {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8, :pinyin-no-spaces-no-tones "women", :pinyin-no-spaces "wo3men5" },
-   {:pinyin "xiang4", :hanyu "向"} 
+   {:pinyin "xiang4", :hanyu "向"}
        {:pinyin "xiang4", :hanyu "向", :usage-count 2, :known true, :pinyin-no-spaces-no-tones "xiang", :pinyin-no-spaces "xiang4"}
    { :hanyu "一代", :pinyin "yi1 dai4" }
-       { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5  } 
+       { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5  }
    } )
 
 (set-word-database! test-words-raw test-word-info)
@@ -145,10 +145,10 @@
 
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
-       word-info-dict-modified 
-         (do 
-           (inc-usage-count "我们" "wo3 men5" ) 
-           (set-word-info "我们" "wo3 men5" "xxx" true) 
+       word-info-dict-modified
+         (do
+           (inc-usage-count "我们" "wo3 men5" )
+           (set-word-info "我们" "wo3 men5" "xxx" true)
            @word-info-dict)
   2 (count (find-words "wo3" false))
   1 (count (find-words "girlfriend" true))
@@ -183,15 +183,10 @@
 
 (deftest export-test
   (are [ expected calculated ] (= expected calculated)
-       "<span style='color: #00B000;'>我</span><span style='color: #808080;'>们</span>" 
+       "<span style='color: #00B000;'>我</span><span style='color: #808080;'>们</span>"
        (ExportText/word-hanyu-html wo-men-word-expanded)
-       "<span style='color: #00B000;'>wo3</span> <span style='color: #808080;'>men5</span>" 
+       "<span style='color: #00B000;'>wo3</span> <span style='color: #808080;'>men5</span>"
        (ExportText/word-pinyin-html wo-men-word-expanded)
 ))
 
-(deftest save-words-test
-  (are [ expected calculated ] (= expected calculated)
-    "{ :a 666, :k \"moikka\", :x 5 }" (Utils/map-to-str { :x 5 :a 666 :k "moikka" })
-    "[\r\n{ :a 555, :k \"zelda\", :x 9 }\r\n{ :a 666, :k \"moikka\", :x 5 }]\r\n" (Utils/list-to-str [ { :x 9 :a 555 :k "zelda" } { :x 5 :a 666 :k "moikka" } ] ) ))
-
-(run-tests)
+(run-tests)

@@ -11,11 +11,11 @@ namespace ChineseWriter {
     internal static class WritingState {
 
         public static Subject<IEnumerable<IDictionary<object, object>>> WordsChanges =
-            new Subject<IEnumerable<IDictionary<object, object>>>();
+            new Subject<IEnumerable<IDictionary<object, object>>>( );
 
         private static IDictionary<object, object> WritingStateData {
             get {
-                return (IDictionary<object, object>) 
+                return (IDictionary<object, object>)
                     ( (clojure.lang.Atom)RT.var( "WritingState", "state" ).deref( ) ).deref( );
             }
         }
@@ -33,10 +33,10 @@ namespace ChineseWriter {
         }
 
         public static void LoadText( ) {
-            if (File.Exists(TextSaveFileName)) {
-                RT.var("WritingState", "load-current-text").invoke(TextSaveFileName);                
+            if ( File.Exists( TextSaveFileName ) ) {
+                RT.var( "WritingState", "load-current-text" ).invoke( TextSaveFileName );
             }
-            WordsChanges.OnNext(Words);
+            WordsChanges.OnNext( Words );
         }
 
         public static void Delete( ) {
@@ -61,7 +61,7 @@ namespace ChineseWriter {
 
         internal static void SelectWord( IDictionary<object, object> word ) {
             WordDatabase.IncreaseUsageCount( word );
-            InsertWords( new IDictionary<object, object>[] { word } );            
+            InsertWords( new IDictionary<object, object>[] { word } );
         }
 
         private static void InsertWords( IDictionary<object, object>[] newWords ) {
@@ -81,22 +81,23 @@ namespace ChineseWriter {
 
         public static string HanyiPinyinLines( bool copyPinyin, bool copyEnglish ) {
             var hanyus = Words.Select( word => word.Hanyu( ) );
-            if (!copyPinyin && !copyEnglish) {
+            if ( !copyPinyin && !copyEnglish ) {
                 // simple case: only hanyu
                 return string.Join( " ", hanyus.ToArray( ) );
-            } else { // complex case: aligned lines (use monospaced font)
+            }
+            else { // complex case: aligned lines (use monospaced font)
                 var pinyins = Words.Select( word => word.PinyinDiacritics( ) );
                 var english = Words.Select( word => word.ShortEnglish( ) );
                 var hanyuLengths = hanyus.Select( word => word.Length + 1 );
                 var pinyinLengths = pinyins.Select( word => word.Length + 1 );
                 var englishLengths = english.Select( word => word.Length + 1 );
                 var lengths = hanyuLengths;
-                if (copyPinyin) lengths = lengths.Zip( pinyinLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
-                if (copyEnglish) lengths = lengths.Zip( englishLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
+                if ( copyPinyin ) lengths = lengths.Zip( pinyinLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
+                if ( copyEnglish ) lengths = lengths.Zip( englishLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
                 // could not think of way to do this with the base LINQ funcs:
                 var cumulativeLengths = new List<int>( );
                 int cumulativeLength = 0;
-                foreach (int length in lengths) {
+                foreach ( int length in lengths ) {
                     cumulativeLength += length;
                     cumulativeLengths.Add( cumulativeLength );
                 }
@@ -118,7 +119,7 @@ namespace ChineseWriter {
         }
 
         internal static string Hanyu {
-            get { return string.Join( "", Words.Select( word => word.Get<string>("hanyu") ).ToArray( ) ); }
+            get { return string.Join( "", Words.Select( word => word.Get<string>( "hanyu" ) ).ToArray( ) ); }
         }
 
         internal static string TextSaveFileName {
@@ -128,8 +129,7 @@ namespace ChineseWriter {
         }
 
         internal static void SaveCurrentText( ) {
-            var content = (string) RT.var( "Utils", "list-to-str" ).invoke( Words );
-            File.WriteAllText( TextSaveFileName, content, Encoding.UTF8 );
+            RT.var( "WritingState", "save-current-text" ).invoke( TextSaveFileName );
         }
 
         internal static void Move( string dir ) {

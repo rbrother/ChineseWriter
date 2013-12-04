@@ -15,9 +15,12 @@
   (let [ text (load-from-file path) ]
     (reset! state { :text text :cursor-pos (count text) } )))
 
+(defn save-current-text [ path ]
+  (write-to-file path (pretty-pr (@state :text))))
+
 (defn delete-word [ { :keys [ text cursor-pos ] :as original } delete-pos ]
   (if (and (>= delete-pos 0) (< delete-pos (count text)))
-    { :text 
+    { :text
      (concat
        (take delete-pos text)
        (drop (inc delete-pos) text))
@@ -29,7 +32,7 @@
 
 (defn insert-words [ { :keys [ text cursor-pos ] } new-words ]
   { :text
-   (concat 
+   (concat
      (take cursor-pos text)
      (expand-all-words new-words)
      (drop cursor-pos text))
@@ -55,4 +58,5 @@
   (assoc state :cursor-pos (moved-cursor-pos state dir)))
 
 (defn move-cursor! [ dir ]
-  (swap! state move-cursor dir )) 
+  (swap! state move-cursor dir ))
+

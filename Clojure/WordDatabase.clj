@@ -1,4 +1,4 @@
-﻿(ns WordDatabase
+(ns WordDatabase
   (:use Utils)
   (:require [clojure.string :as str])
   (:use clojure.pprint)
@@ -57,7 +57,7 @@
   (assoc word :pinyin-diacritics (@add-diacritics-func pinyin)))
 
 ; This is slow, so do only for a word when needed (mainly when fetched to form current sentence words), not for all words in dictionary
-(defn characters [ { hanyu :hanyu pinyin :pinyin } ] 
+(defn characters [ { hanyu :hanyu pinyin :pinyin } ]
   (->> (zip (map str hanyu) (str/split pinyin #" "))
     (map (fn [ [h p] ] (find-char h p)))
     (map add-diacritics-to-word)
@@ -65,7 +65,7 @@
 
 (defn expand-hanyu-word [ { :keys [hanyu pinyin] } ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (merge 
+    (merge
       (get-word key)
       { :pinyin-diacritics (@add-diacritics-func pinyin) }
       (word-info key) ; info has been already merged at load, but re-merge as it might change runtime
@@ -82,14 +82,14 @@
 
 (defn add-word-attributes [ {:keys [hanyu pinyin english] :as word} usage-count known ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
-    (merge 
+    (merge
       (if english { :short-english (first (str/split english #",")) } {})
       ; Default values of attributes, can be overridden in info
       { :usage-count usage-count
         :known known
-        :pinyin-no-spaces pinyin-no-spaces 
-        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) }   
-      word      
+        :pinyin-no-spaces pinyin-no-spaces
+        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) }
+      word
       )))
 
 (defn add-default-english [ {:keys [english short-english] :as word} ]
@@ -112,20 +112,20 @@
     (map-values first (index-hanyu-pinyin words))))
 
 ; TODO: Now these global fields are set almost at the same time, so
-; possibility of mismatch should be minimal, 
+; possibility of mismatch should be minimal,
 ; but consider if we should set all of the following atoms in one go, i.e. make them
-; part of a single global atom that is reset in one operation. 
+; part of a single global atom that is reset in one operation.
 (defn set-word-database-inner-2! [ sorted-words dictionary ]
   (reset! word-search-cache {})
   (reset! all-words sorted-words)
   (reset! word-dict dictionary))
 
 (defn set-word-database-inner! [words]
-  (set-word-database-inner-2! 
-    (sort-suggestions words) 
+  (set-word-database-inner-2!
+    (sort-suggestions words)
     (create-word-dict words)))
 
-; cc-dict can contain multiple entries with same hanyu+pinyin but different english, 
+; cc-dict can contain multiple entries with same hanyu+pinyin but different english,
 ; for example 后 Combine those.
 (defn combine-duplicates [values]
   (assoc (first values) :english (str/join ". " (map :english values))))
@@ -136,9 +136,9 @@
         raw-info-dict (map-values first (index-hanyu-pinyin info-list))
         info-dict (map-values #(add-word-attributes % 1 true) raw-info-dict)
         words (vec (map add-default-english (vals (merge-with merge dict info-dict)))) ]
-    
+
     ; stupid to make again list in preceding when we have dict already....
-    
+
     (reset! word-info-dict info-dict)
     ; Short word list for quickly getting writing
     (set-word-database-inner! (filter #(> (% :usage-count) 0 ) words))
@@ -149,29 +149,28 @@
 ; format renders it less usable to clojure code
 (defn load-database [ cc-dict-file info-file ]
   (set-word-database!
-    (load-from-file cc-dict-file) 
+    (load-from-file cc-dict-file)
     (load-from-file info-file)))
 
 ;----------------------- Updating word info  ---------------------
 
 (defn update-word-props! [ hanyu-pinyin new-props ]
-  (let [ amend-word-info (fn [ dict hanyu-pinyin new-props ] 
+  (let [ amend-word-info (fn [ dict hanyu-pinyin new-props ]
          (update-in dict [ hanyu-pinyin ] merge hanyu-pinyin (dict hanyu-pinyin) new-props) ) ]
       (swap! word-info-dict amend-word-info hanyu-pinyin new-props)))
-  
+
 (defn usage-count [ hanyu-pinyin ] (get (word-info hanyu-pinyin) :usage-count 0))
 
 (defn inc-usage-count [ hanyu pinyin ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (update-word-props! key { :usage-count (inc (usage-count key)) } )))
 
-(defn set-word-info [hanyu pinyin short-english known ]  
+(defn set-word-info [hanyu pinyin short-english known ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (update-word-props! key { :short-english short-english :known known })))
 
-(defn word-info-string [ ] 
-  (let [ sortfn (fn [ { hanyu :hanyu pinyin :pinyin } ] [ pinyin hanyu ] ) ]
-    (list-to-str (sort-by sortfn (vals @word-info-dict)))))
+(defn word-info-string [ ]
+  (pretty-pr (vals @word-info-dict)))
 
 ;-------------------  Finding words   ----------------------------------------
 
@@ -205,8 +204,9 @@
 
 ;(def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
 
-(defn find-words [ input english ] 
+(defn find-words [ input english ]
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
     (->> (find-words-cached input english)
-      (map expand-word) 
+      (map expand-word)
       (take 1000))))
+
