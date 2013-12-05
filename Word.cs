@@ -11,11 +11,13 @@ namespace ChineseWriter {
 
     public class SuggestionWord {
 
-        public SuggestionWord( IDictionary<object, object> word, string shortCut ) {
+        public SuggestionWord( int index, IDictionary<object, object> word, string shortCut ) {
+            Index = index;
             Word = word; // for later retrieval when suggetion used
             Shortcut = shortCut;
         }
 
+        public int Index { get; set; }
         public string Shortcut { get; set; }
         public string Pinyin { get { return Word.PinyinDiacritics( ); } set { } }
         public string Hanyu { get { return Word.Hanyu( ); } set { } }

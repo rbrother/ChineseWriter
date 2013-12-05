@@ -200,7 +200,7 @@
 ; The key here is to have all-words pre-sorted in order of usage-count, so no new sorting is needed:
 ; Top results come quickly from top of the list.
 ; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
-; to consume processor power, limit to 1000
+; to consume less processor power, limit to 5000 (we will never expect to need more words)
 
 ;(def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
 
@@ -208,5 +208,7 @@
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
     (->> (find-words-cached input english)
       (map expand-word)
-      (take 1000))))
+      (take 5000))))
+
+
 

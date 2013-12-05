@@ -174,7 +174,7 @@ namespace ChineseWriter {
                     if (id != CurrentUpdater) return;
                     var shortcut = index == 1 ? "Enter" :
                         index <= 10 ? string.Format( "CTRL+{0}", index - 1 ) : "<click>";
-                    var dataWord = new SuggestionWord( suggestion, shortcut );
+                    var dataWord = new SuggestionWord( index, suggestion, shortcut );
                     this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                     index++;
                 }

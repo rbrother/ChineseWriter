@@ -66,6 +66,7 @@
                       AlternatingRowBackground="Gainsboro" AlternationCount="2"
                       SelectedCellsChanged="Suggestions_SelectedCellsChanged">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="#" Foreground="Gray" Binding="{Binding Path=Index}"/>
                     <DataGridTextColumn Header="Shortcut" Foreground="Gray" Binding="{Binding Path=Shortcut}"/>
                     <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=Pinyin}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
