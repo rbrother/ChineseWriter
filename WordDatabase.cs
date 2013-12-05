@@ -25,7 +25,7 @@ namespace ChineseWriter {
                 .invoke( FilePath( "cedict_ts.clj" ), InfoFileName );
         }
 
-        private static string InfoFileName { get { return FilePath( "words.clj" ); } }
+        private static string InfoFileName { get { return @"C:\Google Drive\Ann\chinese study\words.clj"; } }
 
         public static DirectoryInfo ExeDir {
             get {
