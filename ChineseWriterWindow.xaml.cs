@@ -283,12 +283,6 @@ namespace ChineseWriter {
             WritingState.SaveCurrentText( );
         }
 
-        private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
-            if ( e.AddedCells.Count( ) > 0 ) {
-                SelectSuggestion( (SuggestionWord)e.AddedCells.First( ).Item );
-            }
-        }
-
         private void StayOnTop_Checked( object sender, RoutedEventArgs e ) {
             this.Topmost = StayOnTop.IsChecked ?? false;
         }
@@ -309,6 +303,13 @@ namespace ChineseWriter {
             WritingState.LiteralInput(
                 Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ) );
 
+        }
+
+        private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {
+            Console.WriteLine( sender );
+            var source = (DependencyObject) e.OriginalSource;
+            var row = (DataGridRow) GuiUtils.FindParent( source, typeof( DataGridRow ) );
+            if (row != null) SelectSuggestion( (SuggestionWord) row.Item );
         }
 
     } // class

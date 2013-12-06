@@ -40,6 +40,15 @@ namespace ChineseWriter {
                 .Merge( boxUnchecked );
         }
 
+        public static DependencyObject FindParent( DependencyObject child, Type parentClass ) {
+            var current = child;
+            while ( current.GetType( ) != parentClass ) {
+                current = VisualTreeHelper.GetParent( current );
+                if ( current == null ) return null;
+            }
+            return current;
+        }
+
     } // class
 
 } // namespace

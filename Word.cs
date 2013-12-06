@@ -9,6 +9,9 @@ using RT = clojure.lang.RT;
 
 namespace ChineseWriter {
 
+    /// <summary>
+    /// Object for data-grid inteop
+    /// </summary>
     public class SuggestionWord {
 
         public SuggestionWord( int index, IDictionary<object, object> word, string shortCut ) {
