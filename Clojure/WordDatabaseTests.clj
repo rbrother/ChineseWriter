@@ -54,7 +54,8 @@
 (def test-word-info
   [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112 }
     { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 }
-    { :hanyu "向", :pinyin "xiang4", :usage-count 2 }])
+    { :hanyu "向", :pinyin "xiang4", :usage-count 2 }
+    { :hanyu "一了百了", :pinyin "yi1 liao3 bai3 liao3", :usage-count 2 } ])
 
 (def wo-men-word
   {:hanyu "我们",
@@ -129,6 +130,7 @@
        { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5  }
    } )
 
+
 (set-word-database! test-words-raw test-word-info)
 
 (def yi-dai {:hanyu "一代", :pinyin "yi1 dai4" } )
@@ -189,4 +191,8 @@
        (ExportText/word-pinyin-html wo-men-word-expanded)
 ))
 
-(run-tests)
+(delete-word-info! "一了百了" "yi1 liao3 bai3 liao3")
+
+(run-tests)
+
+

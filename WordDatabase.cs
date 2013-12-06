@@ -72,6 +72,10 @@ namespace ChineseWriter {
             }
         }
 
+        internal static void DeleteWordInfo( IDictionary<object, object> word ) {
+            RT.var( "WordDatabase", "delete-word-info!" ).
+                    invoke( word.Hanyu( ), word.Pinyin( ) );
+        }
     } // class
 
 } // namespace

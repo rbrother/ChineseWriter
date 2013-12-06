@@ -108,8 +108,8 @@
 
 (defn create-word-dict [words]
   (merge
-    (map-values sort-suggestions (index words [ :hanyu ]))
-    (map-values first (index-hanyu-pinyin words))))
+    (map-map-values sort-suggestions (index words [ :hanyu ]))
+    (map-map-values first (index-hanyu-pinyin words))))
 
 ; TODO: Now these global fields are set almost at the same time, so
 ; possibility of mismatch should be minimal,
@@ -131,10 +131,10 @@
   (assoc (first values) :english (str/join ". " (map :english values))))
 
 (defn set-word-database! [words-raw info-list]
-  (let [ raw-dict (map-values combine-duplicates (index-hanyu-pinyin words-raw))
-        dict (map-values #(add-word-attributes % 0 false) raw-dict)
-        raw-info-dict (map-values first (index-hanyu-pinyin info-list))
-        info-dict (map-values #(add-word-attributes % 1 true) raw-info-dict)
+  (let [ raw-dict (map-map-values combine-duplicates (index-hanyu-pinyin words-raw))
+        dict (map-map-values #(add-word-attributes % 0 false) raw-dict)
+        raw-info-dict (map-map-values first (index-hanyu-pinyin info-list))
+        info-dict (map-map-values #(add-word-attributes % 1 true) raw-info-dict)
         words (vec (map add-default-english (vals (merge-with merge dict info-dict)))) ]
 
     ; stupid to make again list in preceding when we have dict already....
@@ -168,6 +168,10 @@
 (defn set-word-info [hanyu pinyin short-english known ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (update-word-props! key { :short-english short-english :known known })))
+
+(defn delete-word-info! [ hanyu pinyin ]
+  (let [ remove-word-info (fn [info-dict k] (filter-map #(not= k %) info-dict)) ]
+    (swap! word-info-dict remove-word-info { :hanyu hanyu :pinyin pinyin } )))
 
 (defn word-info-string [ ]
   (pretty-pr (vals @word-info-dict)))

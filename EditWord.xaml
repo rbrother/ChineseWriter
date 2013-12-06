@@ -17,8 +17,9 @@
         <Label Grid.Row="1">Known (hide english)</Label>
         <CheckBox Grid.Row="1" Name="Known" Grid.Column="2" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button IsDefault="True" Click="OkClick" Padding="4">Ok</Button>
-            <Button IsCancel="True" Padding="4">Cancel</Button>
+            <Button IsDefault="True" Click="OkClick" Padding="4" Margin="4">Ok</Button>
+            <Button IsCancel="True" Padding="4" Margin="4">Cancel</Button>
+            <Button x:Name="DeleteWordButton" Padding="4" Margin="4" Click="DeleteWordButton_Click">Delete word</Button>
         </StackPanel>
     </Grid>
 </Window>

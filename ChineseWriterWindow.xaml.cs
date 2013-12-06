@@ -23,20 +23,20 @@ namespace ChineseWriter {
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
 
-        public void InitClojureLoadPath() {
-            var loadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH") ?? "";
+        public void InitClojureLoadPath( ) {
+            var loadPath = Environment.GetEnvironmentVariable( "CLOJURE_LOAD_PATH" ) ?? "";
             loadPath = AppendToPath( loadPath, "c:/github/ChineseWriter/Clojure" );
-            loadPath = loadPath.Replace('\\', '/');
-            Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath);
+            loadPath = loadPath.Replace( '\\', '/' );
+            Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath );
         }
 
-        private string AppendToPath( string path, string newDir) {
-            return path + (Directory.Exists(newDir) ? ";" + newDir : "");
+        private string AppendToPath( string path, string newDir ) {
+            return path + ( Directory.Exists( newDir ) ? ";" + newDir : "" );
         }
 
         public ChineseWriterWindow( ) {
             InitializeComponent( );
-            InitClojureLoadPath();
+            InitClojureLoadPath( );
             try {
                 RT.load( "WritingState" );
                 RT.load( "ExportText" );
@@ -62,11 +62,11 @@ namespace ChineseWriter {
 
                 var PinyinChanges = Observable.
                     FromEventPattern<TextChangedEventArgs>( _pinyinInput, "TextChanged" ).
-                    ObserveOnDispatcher().
-                    Select( args => ((TextBox) args.Sender).Text );
+                    ObserveOnDispatcher( ).
+                    Select( args => ( (TextBox)args.Sender ).Text );
                 // Update UI based on writing state changes
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
-                    CombineLatest( PinyinChanges, (english,input) => Tuple.Create(english,input) ).
+                    CombineLatest( PinyinChanges, ( english, input ) => Tuple.Create( english, input ) ).
                     ObserveOnDispatcher( ).
                     Subscribe( tuple => UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 WritingState.WordsChanges.
@@ -75,22 +75,21 @@ namespace ChineseWriter {
                 WritingState.LoadText( );
                 _pinyinInput.Focus( );
 
-            } catch (Exception ex) {
-                var message = ex.ToString();
-                if (message.Contains("Could not locate clojure.core.clj.dll")) {
-                    MessageBox.Show("Please ensure that environment variable CLOJURE_LOAD_PATH\n" +
+            } catch ( Exception ex ) {
+                var message = ex.ToString( );
+                if ( message.Contains( "Could not locate clojure.core.clj.dll" ) ) {
+                    MessageBox.Show( "Please ensure that environment variable CLOJURE_LOAD_PATH\n" +
                         "Contains clojure-clr directory and any other library directories needed",
-                        "Cannot find Clojure files");
-                }
-                else {
-                    MessageBox.Show(ex.ToString(), "Error in startup of ChineseWriter");
+                        "Cannot find Clojure files" );
+                } else {
+                    MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
                 }
             }
         }
 
         public void TextEdit( Key key ) {
-            switch (key) {
-                case Key.Left: 
+            switch ( key ) {
+                case Key.Left:
                 case Key.Right:
                 case Key.Home:
                 case Key.End:
@@ -100,7 +99,7 @@ namespace ChineseWriter {
                     WritingState.BackSpace( );
                     break;
                 case Key.Delete:
-                    WritingState.Delete( ); 
+                    WritingState.Delete( );
                     break;
             }
         }
@@ -112,29 +111,29 @@ namespace ChineseWriter {
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
             ThreadPool.QueueUserWorkItem( state => {
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-                WordDatabase.LoadWords( );            
+                WordDatabase.LoadWords( );
             } );
             ThreadPool.QueueUserWorkItem( state => ReportLoadStateTask( ) );
         }
 
         private void ReportLoadStateTask( ) {
             var start = DateTime.Now;
-            SetTitleThreadsafe("Loading Clojure runtime...");
-            while (true) {
+            SetTitleThreadsafe( "Loading Clojure runtime..." );
+            while ( true ) {
                 string status;
-                if (RT.var( "WordDatabase", "all-words").isBound) {
-                    var wordsList = (IList<object>) ((clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( )).deref();
+                if ( RT.var( "WordDatabase", "all-words" ).isBound ) {
+                    var wordsList = (IList<object>)( (clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( ) ).deref( );
                     status = wordsList.Count == 0 ? "Loading word list..." :
                         wordsList.Count < 10000 ? "Short word list loaded (start writing!), loading full dictionary..." :
-                        string.Format( "ChineseWriter, {0} words, {1} known. All ready", wordsList.Count, 
-                            wordsList.Count(word => ((IDictionary<object,object>) word).Known()));
+                        string.Format( "ChineseWriter, {0} words, {1} known. All ready", wordsList.Count,
+                            wordsList.Count( word => ( (IDictionary<object, object>)word ).Known( ) ) );
                 } else {
                     status = "Loading Clojure runtime...";
                 }
                 var dur = DateTime.Now - start;
-                SetTitleThreadsafe( string.Format("{0} {1:0} s", status, dur.TotalSeconds ) );
-                if (status.StartsWith( "ChineseWriter" )) return;
-                Thread.Sleep(100);
+                SetTitleThreadsafe( string.Format( "{0} {1:0} s", status, dur.TotalSeconds ) );
+                if ( status.StartsWith( "ChineseWriter" ) ) return;
+                Thread.Sleep( 100 );
             }
         }
 
@@ -145,24 +144,24 @@ namespace ChineseWriter {
         private int CurrentUpdater = 0;
         private int ActiveUpdaters = 0;
 
-        private void UpdateSuggestions( IEnumerable<IDictionary<object,object>> suggestions ) {
+        private void UpdateSuggestions( IEnumerable<IDictionary<object, object>> suggestions ) {
             ThreadPool.QueueUserWorkItem(
-                state => UpdateSuggestionsBackground( (IEnumerable<IDictionary<object,object>>) state ), suggestions );       
+                state => UpdateSuggestionsBackground( (IEnumerable<IDictionary<object, object>>)state ), suggestions );
         }
 
         /// <summary>
         /// TODO: Use dotnet Task-framework for this?
         /// </summary>
         /// <param name="suggestions"></param>
-        private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object,object>> suggestions ) {
+        private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object, object>> suggestions ) {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             CurrentUpdater++;
             var id = CurrentUpdater;
             ActiveUpdaters++;
             try {
-                while (ActiveUpdaters > 1) {
+                while ( ActiveUpdaters > 1 ) {
                     Thread.Sleep( 10 );
-                    if (id != CurrentUpdater) return;
+                    if ( id != CurrentUpdater ) return;
                 }
                 this.Dispatcher.Invoke( new Action( ( ) => {
                     ProcessingLabel.Content = "Searching dictionary...";
@@ -170,10 +169,10 @@ namespace ChineseWriter {
                     Suggestions.Items.Clear( );
                 } ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                 var index = 1;
-                foreach (var suggestion in suggestions) {
-                    if (id != CurrentUpdater) return;
+                foreach ( var suggestion in suggestions ) {
+                    if ( id != CurrentUpdater ) return;
                     var shortcut = index == 1 ? "Enter" :
-                        index <= 10 ? string.Format( "CTRL+{0}", index - 1 ) : "<click>";
+                        index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
                     var dataWord = new SuggestionWord( index, suggestion, shortcut );
                     this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                     index++;
@@ -205,8 +204,8 @@ namespace ChineseWriter {
         }
 
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
-            if (e.Key == Key.Enter) {
-                if (Suggestions.Items.Count == 0) {
+            if ( e.Key == Key.Enter ) {
+                if ( Suggestions.Items.Count == 0 ) {
                     WritingState.LiteralInput( _pinyinInput.Text );
                     _pinyinInput.Text = "";
                 } else {
@@ -217,56 +216,60 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestionIndex( int pinyinIndex ) {
-            if (pinyinIndex < Suggestions.Items.Count) {
-                SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex] );
+            if ( pinyinIndex < Suggestions.Items.Count ) {
+                SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex-1] );
             }
         }
 
-        private void SelectSuggestion(SuggestionWord word) {
+        private void SelectSuggestion( SuggestionWord word ) {
             WritingState.SelectWord( word.Word );
             ShowEnglish.IsChecked = false;
             _pinyinInput.Text = "";
         }
 
-        private void PopulateCharGrid( IEnumerable<IDictionary<object,object>> words, int cursorPos ) {
+        private void PopulateCharGrid( IEnumerable<IDictionary<object, object>> words, int cursorPos ) {
             Characters.Children.Clear( );
             int pos = 0;
-            foreach (var word in words) {
-                if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
+            foreach ( var word in words ) {
+                if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
                 wordPanel.Tag = word;
                 wordPanel.MouseUp += new MouseButtonEventHandler( HanyuPanelMouseUp );
                 pos++;
             }
-            if (pos == cursorPos) Characters.Children.Add( _cursorPanel );
+            if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
         }
 
         void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
             var widget = (FrameworkElement)sender;
-            var word = widget.Tag as IDictionary<object,object>;
-            if (word != null) {
+            var word = widget.Tag as IDictionary<object, object>;
+            if ( word != null ) {
                 var editWord = new EditWord( word );
                 var result = editWord.ShowDialog( );
-                if (result.HasValue && result.Value) {
-                    WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text, 
-                        editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value);
-                    WritingState.ExpandChars( );
+                if ( result.HasValue && result.Value ) {
+                    if ( editWord.DeleteWordClicked ) {
+                        WordDatabase.DeleteWordInfo( word );
+                    } else {
+                        WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text,
+                            editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value );
+                        WritingState.ExpandChars( );
+                    }
                 }
             }
         }
 
         private void CopyClick( object sender, RoutedEventArgs e ) {
-            if (CopyHtml.IsChecked ?? false) {
+            if ( CopyHtml.IsChecked ?? false ) {
                 ClipboardTool.CopyToClipboard(
-                    (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ), 
+                    (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ),
                     new Uri( "http://www.brotherus.net" ) );
             } else {
                 var data = WritingState.HanyiPinyinLines(
                     CopyPinyin.IsChecked ?? false,
                     CopyEnglish.IsChecked ?? false );
-                HandleExceptions( () => Clipboard.SetText( data, TextDataFormat.UnicodeText ) );
+                HandleExceptions( ( ) => Clipboard.SetText( data, TextDataFormat.UnicodeText ) );
             }
         }
 
@@ -281,7 +284,7 @@ namespace ChineseWriter {
         }
 
         private void Suggestions_SelectedCellsChanged( object sender, SelectedCellsChangedEventArgs e ) {
-            if (e.AddedCells.Count( ) > 0) {
+            if ( e.AddedCells.Count( ) > 0 ) {
                 SelectSuggestion( (SuggestionWord)e.AddedCells.First( ).Item );
             }
         }
@@ -290,11 +293,11 @@ namespace ChineseWriter {
             this.Topmost = StayOnTop.IsChecked ?? false;
         }
 
-        private void HandleExceptions(Action action) {
+        private void HandleExceptions( Action action ) {
             try {
-                action.Invoke();
-            } catch (Exception ex) {
-                MessageBox.Show(this, ex.Message, "Exception in ChineseWriter", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
+                action.Invoke( );
+            } catch ( Exception ex ) {
+                MessageBox.Show( this, ex.Message, "Exception in ChineseWriter", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None );
             }
         }
 
@@ -303,8 +306,8 @@ namespace ChineseWriter {
         }
 
         private void PasteChineseClick( object sender, RoutedEventArgs e ) {
-            WritingState.LiteralInput( 
-                Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ));
+            WritingState.LiteralInput(
+                Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ) );
 
         }
 
