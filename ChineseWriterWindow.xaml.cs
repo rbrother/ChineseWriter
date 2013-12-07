@@ -235,29 +235,10 @@ namespace ChineseWriter {
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
                 wordPanel.Tag = word;
-                wordPanel.MouseUp += new MouseButtonEventHandler( HanyuPanelMouseUp );
                 pos++;
             }
             if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
-        }
-
-        void HanyuPanelMouseUp( object sender, MouseButtonEventArgs e ) {
-            var widget = (FrameworkElement)sender;
-            var word = widget.Tag as IDictionary<object, object>;
-            if ( word != null ) {
-                var editWord = new EditWord( word );
-                var result = editWord.ShowDialog( );
-                if ( result.HasValue && result.Value ) {
-                    if ( editWord.DeleteWordClicked ) {
-                        WordDatabase.DeleteWordInfo( word );
-                    } else {
-                        WordDatabase.SetWordInfo( word, editWord.ShortEnglishBox.Text,
-                            editWord.Known.IsChecked.HasValue && editWord.Known.IsChecked.Value );
-                        WritingState.ExpandChars( );
-                    }
-                }
-            }
         }
 
         private void CopyClick( object sender, RoutedEventArgs e ) {

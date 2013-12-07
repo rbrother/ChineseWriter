@@ -83,9 +83,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClipboardTool.cs" />
-    <Compile Include="EditWord.xaml.cs">
-      <DependentUpon>EditWord.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GuiUtils.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="WordPanel.cs" />
@@ -104,10 +101,6 @@
       <DependentUpon>ChineseWriterWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="EditWord.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
