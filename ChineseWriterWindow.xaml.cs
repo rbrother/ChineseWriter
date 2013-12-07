@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -164,7 +165,8 @@ namespace ChineseWriter {
                     Thread.Sleep( 10 );
                     if ( id != CurrentUpdater ) return;
                 }
-                var items = new ObservableCollection<SuggestionWord>(); // The default ItemsCollection of DataGrid does not allow editing
+                var items = new ObservableCollection<SuggestionWord>( ); // The default ItemsCollection of DataGrid does not allow editing
+                items.CollectionChanged += items_CollectionChanged;
                 this.Dispatcher.Invoke( new Action( ( ) => {
                     ProcessingLabel.Content = "Searching dictionary...";
                     ProcessingLabel.Foreground = new SolidColorBrush( Colors.Red );
@@ -185,6 +187,14 @@ namespace ChineseWriter {
                 } ) );
             } finally {
                 ActiveUpdaters--;
+            }
+        }
+
+        void items_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) {
+            if ( e.Action == NotifyCollectionChangedAction.Remove ) {
+                foreach ( SuggestionWord item in e.OldItems ) {
+                    WordDatabase.DeleteWordInfo( item.Hanyu, item.Word.Pinyin( ) );
+                }
             }
         }
 
@@ -219,7 +229,7 @@ namespace ChineseWriter {
 
         private void SelectSuggestionIndex( int pinyinIndex ) {
             if ( pinyinIndex <= Suggestions.Items.Count ) {
-                SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex-1] );
+                SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex - 1] );
             }
         }
 
@@ -288,12 +298,12 @@ namespace ChineseWriter {
 
         private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {
             Console.WriteLine( sender );
-            var source = (DependencyObject) e.OriginalSource;
-            var row = (DataGridRow) GuiUtils.FindParent( source, typeof( DataGridRow ) );
-            var cell = (DataGridCell)GuiUtils.FindParent(source, typeof(DataGridCell));
-            if (row == null || cell == null) return;
-            if (cell.Column.Header.ToString() == "Shortcut") {
-                SelectSuggestion((SuggestionWord)row.Item);
+            var source = (DependencyObject)e.OriginalSource;
+            var row = (DataGridRow)GuiUtils.FindParent( source, typeof( DataGridRow ) );
+            var cell = (DataGridCell)GuiUtils.FindParent( source, typeof( DataGridCell ) );
+            if ( row == null || cell == null ) return;
+            if ( cell.Column.Header.ToString( ) == "Shortcut" ) {
+                SelectSuggestion( (SuggestionWord)row.Item );
                 e.Handled = true;
             }
         }

@@ -160,8 +160,7 @@
 
 (defn save-word-info [ ]
   (if @info-file-name
-    (spit @info-file-name (pretty-pr (vals @word-info-dict)))
-    nil ))
+    (System.IO.File/WriteAllText @info-file-name (pretty-pr (vals @word-info-dict))) nil ))
 
 (defn update-word-props! [ hanyu-pinyin new-props ]
   (let [ amend-word-info (fn [ dict hanyu-pinyin new-props ]
