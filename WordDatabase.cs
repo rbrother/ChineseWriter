@@ -40,10 +40,8 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
-        internal static void SetWordInfo( IDictionary<object,object> word, 
-            string shortEnglish, bool known ) {
-                RT.var( "WordDatabase", "set-word-info" ).
-                    invoke( word.Hanyu( ), word.Pinyin( ), shortEnglish, known );
+        internal static void SetWordInfo( string hanyu, string pinyin, string propName, object value ) {
+                RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
         }
 
         internal static void IncreaseUsageCount( IDictionary<object, object> word ) {

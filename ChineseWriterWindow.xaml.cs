@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -163,10 +164,11 @@ namespace ChineseWriter {
                     Thread.Sleep( 10 );
                     if ( id != CurrentUpdater ) return;
                 }
+                var items = new ObservableCollection<SuggestionWord>(); // The default ItemsCollection of DataGrid does not allow editing
                 this.Dispatcher.Invoke( new Action( ( ) => {
                     ProcessingLabel.Content = "Searching dictionary...";
                     ProcessingLabel.Foreground = new SolidColorBrush( Colors.Red );
-                    Suggestions.Items.Clear( );
+                    Suggestions.ItemsSource = items;
                 } ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                 var index = 1;
                 foreach ( var suggestion in suggestions ) {
@@ -174,7 +176,7 @@ namespace ChineseWriter {
                     var shortcut = index == 1 ? "Enter" :
                         index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
                     var dataWord = new SuggestionWord( index, suggestion, shortcut );
-                    this.Dispatcher.Invoke( new Action( ( ) => Suggestions.Items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
+                    this.Dispatcher.Invoke( new Action( ( ) => items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                     index++;
                 }
                 this.Dispatcher.Invoke( new Action( ( ) => {
@@ -216,7 +218,7 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestionIndex( int pinyinIndex ) {
-            if ( pinyinIndex < Suggestions.Items.Count ) {
+            if ( pinyinIndex <= Suggestions.Items.Count ) {
                 SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex-1] );
             }
         }
@@ -288,7 +290,12 @@ namespace ChineseWriter {
             Console.WriteLine( sender );
             var source = (DependencyObject) e.OriginalSource;
             var row = (DataGridRow) GuiUtils.FindParent( source, typeof( DataGridRow ) );
-            if (row != null) SelectSuggestion( (SuggestionWord) row.Item );
+            var cell = (DataGridCell)GuiUtils.FindParent(source, typeof(DataGridCell));
+            if (row == null || cell == null) return;
+            if (cell.Column.Header.ToString() == "Shortcut") {
+                SelectSuggestion((SuggestionWord)row.Item);
+                e.Handled = true;
+            }
         }
 
     } // class

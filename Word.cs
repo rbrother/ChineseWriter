@@ -25,8 +25,18 @@ namespace ChineseWriter {
         public string Pinyin { get { return Word.PinyinDiacritics( ); } set { } }
         public string Hanyu { get { return Word.Hanyu( ); } set { } }
         public string UsageCountString { get { return Word.UsageCountStr( ); } set { } }
-        public bool Known { get { return Word.Known( ); } set { } }
-        public string English { get { return Word.Get<string>( "english" ); } set { } }
+        public bool Known { 
+            get { return Word.Known( ); }
+            set { WordDatabase.SetWordInfo(Hanyu, Word.Pinyin(), ":known", value); } 
+        }
+        public string ShortEnglish { 
+            get { return Word.HasKeyword("short-english") ? Word.Get<string>("short-english") : ""; }
+            set { WordDatabase.SetWordInfo( Hanyu, Word.Pinyin( ), ":short-english", value ); }
+        }
+        public string English { 
+            get { return Word.Get<string>("english"); }
+            set { WordDatabase.SetWordInfo(Hanyu, Word.Pinyin(), ":english", value ); } 
+        }
         public IDictionary<object, object> Word { set; get; }
     }
 

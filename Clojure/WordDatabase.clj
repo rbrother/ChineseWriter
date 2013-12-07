@@ -171,12 +171,12 @@
         (save-word-info))))
 
 (defn inc-usage-count [ hanyu pinyin ]
-  (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (update-word-props! key { :usage-count (inc (usage-count key)) } )))
+  (let [ key { :hanyu hanyu :pinyin pinyin }
+         usage-count (get (word-info key) :usage-count 0) ]
+    (update-word-props! key { :usage-count (inc usage-count) } )))
 
-(defn set-word-info [hanyu pinyin short-english known ]
-  (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (update-word-props! key { :short-english short-english :known known })))
+(defn set-word-info-prop [hanyu pinyin prop-name value ]
+    (update-word-props! { :hanyu hanyu :pinyin pinyin } { (read-string prop-name) value } ))
 
 (defn delete-word-info! [ hanyu pinyin ]
   (let [ remove-word-info (fn [info-dict k] (filter-map #(not= k %) info-dict)) ]
@@ -221,6 +221,8 @@
     (->> (find-words-cached input english)
       (map expand-word)
       (take 5000))))
+
+
 
 
 

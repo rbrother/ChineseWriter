@@ -71,7 +71,8 @@
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Usage" Binding="{Binding Path=UsageCountString}"/>
                     <DataGridCheckBoxColumn Header="Known" Binding="{Binding Path=Known}"/>
-                    <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" IsReadOnly="True" MaxWidth="600" />
+                    <DataGridTextColumn Header="Short English" FontFamily="Times New Roman" Binding="{Binding Path=ShortEnglish}" MaxWidth="200" />
+                    <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" MaxWidth="600" />
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
