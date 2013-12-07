@@ -22,10 +22,9 @@ namespace ChineseWriter {
 
         public static void LoadWords( ) {
             RT.var( "WordDatabase", "load-database" )
-                .invoke( FilePath( "cedict_ts.clj" ), InfoFileName );
+                .invoke( FilePath( "cedict_ts.clj" ), 
+                    @"C:\Google Drive\Ann\chinese study\words.clj" );
         }
-
-        private static string InfoFileName { get { return @"C:\Google Drive\Ann\chinese study\words.clj"; } }
 
         public static DirectoryInfo ExeDir {
             get {
@@ -49,15 +48,6 @@ namespace ChineseWriter {
 
         internal static void IncreaseUsageCount( IDictionary<object, object> word ) {
             RT.var( "WordDatabase", "inc-usage-count" ).invoke( word.Hanyu( ), word.Pinyin( ) );
-        }
-
-        internal static void SaveWordsInfo( ) {
-            var word_info_string = RT.var( "WordDatabase", "word-info-string" );
-            if (word_info_string.isBound) { // might be that SW is closed before words loaded
-                File.WriteAllText( InfoFileName,
-                    (string)word_info_string.invoke( ),
-                    Encoding.UTF8 );
-            }
         }
 
         public static IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {

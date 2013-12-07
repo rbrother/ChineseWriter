@@ -260,7 +260,6 @@ namespace ChineseWriter {
         }
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
-            WordDatabase.SaveWordsInfo( );
             WritingState.SaveCurrentText( );
         }
 
@@ -283,7 +282,6 @@ namespace ChineseWriter {
         private void PasteChineseClick( object sender, RoutedEventArgs e ) {
             WritingState.LiteralInput(
                 Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ) );
-
         }
 
         private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {

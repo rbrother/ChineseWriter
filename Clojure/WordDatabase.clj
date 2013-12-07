@@ -7,6 +7,8 @@
 
 ;----------------------- Atoms for the dictionary data etc. ----------------------------------
 
+(def info-file-name (atom nil)) ; For storing info-file-name so at save we can use same name
+
 (def all-words (atom []))
 
 ; dictionaries for all words. Immutable once set (could they be just defs?)
@@ -148,18 +150,25 @@
 ; It's better to store the data at clojure-side. Casting the data to more C# usable
 ; format renders it less usable to clojure code
 (defn load-database [ cc-dict-file info-file ]
-  (set-word-database!
-    (load-from-file cc-dict-file)
-    (load-from-file info-file)))
+  (do
+    (reset! info-file-name info-file)
+    (set-word-database!
+      (load-from-file cc-dict-file)
+      (load-from-file info-file))))
 
 ;----------------------- Updating word info  ---------------------
+
+(defn save-word-info [ ]
+  (if @info-file-name
+    (spit @info-file-name (pretty-pr (vals @word-info-dict)))
+    nil ))
 
 (defn update-word-props! [ hanyu-pinyin new-props ]
   (let [ amend-word-info (fn [ dict hanyu-pinyin new-props ]
          (update-in dict [ hanyu-pinyin ] merge hanyu-pinyin (dict hanyu-pinyin) new-props) ) ]
-      (swap! word-info-dict amend-word-info hanyu-pinyin new-props)))
-
-(defn usage-count [ hanyu-pinyin ] (get (word-info hanyu-pinyin) :usage-count 0))
+      (do
+        (swap! word-info-dict amend-word-info hanyu-pinyin new-props)
+        (save-word-info))))
 
 (defn inc-usage-count [ hanyu pinyin ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
@@ -171,10 +180,9 @@
 
 (defn delete-word-info! [ hanyu pinyin ]
   (let [ remove-word-info (fn [info-dict k] (filter-map #(not= k %) info-dict)) ]
-    (swap! word-info-dict remove-word-info { :hanyu hanyu :pinyin pinyin } )))
-
-(defn word-info-string [ ]
-  (pretty-pr (vals @word-info-dict)))
+    (do
+      (swap! word-info-dict remove-word-info { :hanyu hanyu :pinyin pinyin } )
+      (save-word-info))))
 
 ;-------------------  Finding words   ----------------------------------------
 
