@@ -150,8 +150,8 @@
        word-info-dict-modified
          (do
            (inc-usage-count "我们" "wo3 men5" )
-           (set-word-info-prop "我们" "wo3 men5" ":short-english" "xxx")
-           (set-word-info-prop "我们" "wo3 men5" ":known" true)
+           (set-word-info-prop "我们" "wo3 men5" "short-english" "xxx")
+           (set-word-info-prop "我们" "wo3 men5" "known" true)
            @word-info-dict)
   2 (count (find-words "wo3" false))
   1 (count (find-words "girlfriend" true))
@@ -198,3 +198,4 @@
 
 
 
+
