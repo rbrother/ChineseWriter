@@ -59,9 +59,9 @@ namespace ChineseWriter {
             InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
         }
 
-        internal static void SelectWord( IDictionary<object, object> word ) {
-            WordDatabase.IncreaseUsageCount( word );
-            InsertWords( new IDictionary<object, object>[] { word } );
+        internal static void SelectWord( string hanyu, string pinyin ) {
+            WordDatabase.IncreaseUsageCount( hanyu, pinyin );
+            InsertWords( new IDictionary<object, object>[] { WordDatabase.GetWord( hanyu, pinyin ) } );
         }
 
         private static void InsertWords( IDictionary<object, object>[] newWords ) {

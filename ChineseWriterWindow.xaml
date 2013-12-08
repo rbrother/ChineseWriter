@@ -67,12 +67,13 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="#" Foreground="Gray" Binding="{Binding Path=Index}"/>
                     <DataGridTextColumn Header="Shortcut" Foreground="Gray" Binding="{Binding Path=Shortcut}"/>
-                    <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=Pinyin}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=PinyinDiacritics}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Usage" Binding="{Binding Path=UsageCountString}"/>
                     <DataGridCheckBoxColumn Header="Known" Binding="{Binding Path=Known}"/>
                     <DataGridTextColumn Header="Short English" FontFamily="Times New Roman" Binding="{Binding Path=ShortEnglish}" MaxWidth="200" />
                     <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" MaxWidth="600" />
+                    <DataGridTextColumn Header="Source" FontFamily="Times New Roman" Binding="{Binding Path=Source}"/> 
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

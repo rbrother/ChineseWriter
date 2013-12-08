@@ -40,12 +40,16 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
-        internal static void SetWordInfo( string hanyu, string pinyin, string propName, object value ) {
-                RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
+        public static IDictionary<object, object> GetWord( string hanyu, string pinyin ) {
+            return (IDictionary<object, object>) RT.var( "WordDatabase", "get-word" ).invoke( hanyu, pinyin );            
         }
 
-        internal static void IncreaseUsageCount( IDictionary<object, object> word ) {
-            RT.var( "WordDatabase", "inc-usage-count" ).invoke( word.Hanyu( ), word.Pinyin( ) );
+        internal static void SetWordProp( string hanyu, string pinyin, string propName, object value ) {
+            RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
+        }
+
+        internal static void IncreaseUsageCount( string hanyu, string pinyin ) {
+            RT.var( "WordDatabase", "inc-usage-count" ).invoke( hanyu, pinyin );
         }
 
         public static IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {
@@ -62,6 +66,10 @@ namespace ChineseWriter {
 
         internal static void DeleteWordInfo( string hanyu, string pinyin ) {
             RT.var( "WordDatabase", "delete-word-info!" ).invoke( hanyu, pinyin );
+        }
+
+        internal static object GetWordProp( string hanyu, string pinyin, string propName ) {
+            return RT.var( "WordDatabase", "get-word-prop").invoke( hanyu, pinyin, propName );
         }
     } // class
 

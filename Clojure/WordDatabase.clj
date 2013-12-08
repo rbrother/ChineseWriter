@@ -28,7 +28,9 @@
 
 ;----------------------- Dictionary accessors ----------------------------------
 
-(defn get-word [ key ] (@word-dict key))
+(defn get-word
+  ( [ key ] (@word-dict key))
+  ( [ hanyu pinyin ] (get-word { :hanyu hanyu :pinyin pinyin } )))
 
 (defn word-info [ hanyu-pinyin ] (get @word-info-dict hanyu-pinyin hanyu-pinyin ))
 
@@ -174,8 +176,13 @@
          usage-count (get (word-info key) :usage-count 0) ]
     (update-word-props! key { :usage-count (inc usage-count) } )))
 
+(defn get-word-prop [ hanyu pinyin prop-name ]
+  (let [ key { :hanyu hanyu :pinyin pinyin }
+         combined-properties (merge (get-word key) (word-info key)) ]
+    (combined-properties (keyword prop-name))))
+
 (defn set-word-info-prop [hanyu pinyin prop-name value ]
-    (update-word-props! { :hanyu hanyu :pinyin pinyin } { (read-string prop-name) value } ))
+    (update-word-props! { :hanyu hanyu :pinyin pinyin } { (keyword prop-name) value } ))
 
 (defn delete-word-info! [ hanyu pinyin ]
   (let [ remove-word-info (fn [info-dict k] (filter-map #(not= k %) info-dict)) ]

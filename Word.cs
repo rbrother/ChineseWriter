@@ -14,39 +14,59 @@ namespace ChineseWriter {
     /// </summary>
     public class SuggestionWord {
 
+        private string _hanyu, _pinyin, _pinyinDiacritics; // Immutable word ID stuff, make a copy
+
         public SuggestionWord( int index, IDictionary<object, object> word, string shortCut ) {
             Index = index;
-            Word = word; // for later retrieval when suggetion used
+            _hanyu = word.Hanyu( );
+            _pinyin = word.Pinyin( );
+            _pinyinDiacritics = word.PinyinDiacritics( );
             Shortcut = shortCut;
         }
 
         public int Index { get; set; }
         public string Shortcut { get; set; }
-        public string Pinyin { get { return Word.PinyinDiacritics( ); } set { } }
-        public string Hanyu { get { return Word.Hanyu( ); } set { } }
-        public string UsageCountString { get { return Word.UsageCountStr( ); } set { } }
-        public bool Known { 
-            get { return Word.Known( ); }
-            set { WordDatabase.SetWordInfo(Hanyu, Word.Pinyin(), ":known", value); } 
+        public string PinyinDiacritics { get { return _pinyinDiacritics; } set { } }
+        public string Pinyin { get { return _pinyin; } }
+        public string Hanyu { get { return _hanyu; } set { } }
+        public string UsageCountString {
+            get { return WordDatabase.GetWordProp( _hanyu, _pinyin, "usage-count" ).ToString( ); }
+            set { }
         }
-        public string ShortEnglish { 
-            get { return Word.HasKeyword("short-english") ? Word.Get<string>("short-english") : ""; }
-            set { WordDatabase.SetWordInfo( Hanyu, Word.Pinyin( ), ":short-english", value ); }
+        public bool Known {
+            get { return (bool)Get("known"); }
+            set { Set( "known", value ); }
         }
-        public string English { 
-            get { return Word.Get<string>("english"); }
-            set { WordDatabase.SetWordInfo(Hanyu, Word.Pinyin(), ":english", value ); } 
+        public string ShortEnglish {
+            get { return (string) Get( "short-english" ); }
+            set { Set("short-english", value ); }
         }
-        public IDictionary<object, object> Word { set; get; }
+        public string Source {
+            get { return (string)Get( "source" ); }
+            set { Set( "source", value ); }
+        }
+        public string English {
+            get { return (string)Get("english" ); }
+            set { Set("english", value ); }
+        }
+        internal void Delete( ) {
+            WordDatabase.DeleteWordInfo( _hanyu, _pinyin );
+        }
+        private object Get( string propName ) { 
+            return WordDatabase.GetWordProp( _hanyu, _pinyin, propName );
+        }
+        private void Set( string propName, object value ) {
+            WordDatabase.SetWordProp( _hanyu, _pinyin, propName, value );
+        }
     }
 
     public static class WordExtensions {
 
-        public static T Get<T>( this IDictionary<object,object> dict, string key ) {
-            return (T) Convert.ChangeType( dict[ RT.keyword( null, key) ], typeof(T) );
+        public static T Get<T>( this IDictionary<object, object> dict, string key ) {
+            return (T)Convert.ChangeType( dict[RT.keyword( null, key )], typeof( T ) );
         }
 
-        public static IList<object> GetList( this IDictionary<object,object> dict, string key ) {
+        public static IList<object> GetList( this IDictionary<object, object> dict, string key ) {
             return (IList<object>)dict[RT.keyword( null, key )];
         }
 
@@ -54,38 +74,38 @@ namespace ChineseWriter {
             return dict.ContainsKey( RT.keyword( null, key ) );
         }
 
-        public static string Pinyin( this IDictionary<object,object> word ) {
-            return word.HasKeyword("pinyin") ?
+        public static string Pinyin( this IDictionary<object, object> word ) {
+            return word.HasKeyword( "pinyin" ) ?
                 word.Get<string>( "pinyin" ) : word.Get<string>( "text" );
         }
 
-        public static string ShortEnglish( this IDictionary<object,object> word ) {
-            return word.HasKeyword("text") ? word.Get<string>("text") :
-                word.Known() ? "" : word.Get<string>( "short-english" );
+        public static string ShortEnglish( this IDictionary<object, object> word ) {
+            return word.HasKeyword( "text" ) ? word.Get<string>( "text" ) :
+                word.Known( ) ? "" : word.Get<string>( "short-english" );
         }
 
         public static bool Known( this IDictionary<object, object> word ) {
-            return word.HasKeyword("known") && word.Get<bool>( "known" );
+            return word.HasKeyword( "known" ) && word.Get<bool>( "known" );
         }
 
-        public static IEnumerable<IDictionary<object,object>> Characters( this IDictionary<object, object> word ) {
+        public static IEnumerable<IDictionary<object, object>> Characters( this IDictionary<object, object> word ) {
             return word.GetList( "characters" ).Cast<IDictionary<object, object>>( );
         }
 
-        public static string PinyinDiacritics( this IDictionary<object,object> word ) {
-            return word.HasKeyword( "pinyin-diacritics" ) ? word.Get<string>("pinyin-diacritics") :
-                word.HasKeyword( "pinyin" ) ? word.Get<string>("pinyin") : 
+        public static string PinyinDiacritics( this IDictionary<object, object> word ) {
+            return word.HasKeyword( "pinyin-diacritics" ) ? word.Get<string>( "pinyin-diacritics" ) :
+                word.HasKeyword( "pinyin" ) ? word.Get<string>( "pinyin" ) :
                 word.Get<string>( "text" );
         }
 
-        public static string Hanyu( this IDictionary<object,object> word ) {
+        public static string Hanyu( this IDictionary<object, object> word ) {
             return word.HasKeyword( "hanyu" ) ?
                 word.Get<string>( "hanyu" ) : word.Get<string>( "text" );
         }
 
-        public static string UsageCountStr( this IDictionary<object,object> word ) {
+        public static string UsageCountStr( this IDictionary<object, object> word ) {
             return word.HasKeyword( "usage-count" ) ?
-                Convert.ToString( word.Get<int>("usage-count") ) : "";
+                Convert.ToString( word.Get<int>( "usage-count" ) ) : "";
         }
 
     }

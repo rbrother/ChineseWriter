@@ -193,7 +193,7 @@ namespace ChineseWriter {
         void items_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) {
             if ( e.Action == NotifyCollectionChangedAction.Remove ) {
                 foreach ( SuggestionWord item in e.OldItems ) {
-                    WordDatabase.DeleteWordInfo( item.Hanyu, item.Word.Pinyin( ) );
+                    item.Delete();
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestion( SuggestionWord word ) {
-            WritingState.SelectWord( word.Word );
+            WritingState.SelectWord( word.Hanyu, word.Pinyin );
             ShowEnglish.IsChecked = false;
             _pinyinInput.Text = "";
         }
