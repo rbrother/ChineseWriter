@@ -108,10 +108,9 @@
     (merge { :english (or short-english "") } word ))
 
 (defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
-  (let [ uc1 (word1 :usage-count) uc2 (word2 :usage-count) ]
+  (let [ known1 (get word1 :known 0) known2 (get word2 :known 0) ]
     (cond
-      (not= uc1 uc2) (if (> uc1 uc2) -1 1 )
-      (not= (count hanyu1) (count hanyu2)) (if (< (count hanyu1) (count hanyu2)) -1 1 )
+      (not= known1 known2) (if (> known1 known2) -1 1 )
       :else (compare pinyin1 pinyin2))))
 
 (defn sort-suggestions [ suggestions ] (sort suggestion-comparer suggestions))
