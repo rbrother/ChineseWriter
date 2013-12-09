@@ -16,6 +16,19 @@ namespace ChineseWriter {
 
     public static class WordDatabase {
 
+        public static Dictionary<int, string> KNOWLEDGE_LEVEL_DESCR = new Dictionary<int, string>( ) { 
+            { 0, "0 - Not known at all, do not learn" },
+            { 1, "1 - Minimal vague passive knowledge" },
+            { 2, "2 - Some knowledge, remembered 10% of times" },
+            { 3, "3 - Good knowledge, remembered 90% of times" },
+            { 4, "4 - Excellent knowledge, no need for training" },
+        };
+
+        public static Dictionary<string, int> KNOWLEDGE_LEVEL_VALUE =
+            KNOWLEDGE_LEVEL_DESCR.ToDictionary( pair => pair.Value, pair => pair.Key );
+
+        public static string[] KNOWLEDGE_DESCRIPTIONS = KNOWLEDGE_LEVEL_DESCR.Values.ToArray( );
+
         private static string FilePath(string fileName) {
             return SearchUpwardFile( ExeDir, fileName );
         }

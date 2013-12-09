@@ -33,9 +33,13 @@ namespace ChineseWriter {
             get { return WordDatabase.GetWordProp( _hanyu, _pinyin, "usage-count" ).ToString( ); }
             set { }
         }
-        public bool Known {
-            get { return (bool)Get("known"); }
-            set { Set( "known", value ); }
+        public string Known {
+            get { return WordDatabase.KNOWLEDGE_LEVEL_DESCR[ KnownLevel ]; }
+            set { KnownLevel = WordDatabase.KNOWLEDGE_LEVEL_VALUE[value]; }
+        }
+        public int KnownLevel { 
+            get { return Convert.ToInt32( Get( "known" ) ); }
+            set { Set( "known", Convert.ToInt64( value ) ); }
         }
         public string ShortEnglish {
             get { return (string) Get( "short-english" ); }
