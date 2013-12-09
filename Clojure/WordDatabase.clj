@@ -34,6 +34,14 @@
 
 (defn word-info [ hanyu-pinyin ] (get @word-info-dict hanyu-pinyin hanyu-pinyin ))
 
+;--------------------------------------------------------------------------------
+
+(defn database-info []
+  (let [ known-level-count (fn [level] (count (filter #(= (:known %) level) (vals @word-info-dict))))
+         known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
+         known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
+    (str (count @all-words) " words, " known-levels)))
+
 ;--------------------- Expanding word characters ------------------------------------
 
 (defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))

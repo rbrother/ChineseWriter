@@ -192,6 +192,10 @@
        (ExportText/word-pinyin-html wo-men-word-expanded)
 ))
 
+(deftest database-info-test
+  (are [ expected calculated ] (= expected calculated)
+    "32 words, level 1: 0, level 2: 0, level 3: 0, level 4: 0" (database-info)))
+
 (delete-word-info! "一了百了" "yi1 liao3 bai3 liao3")
 
 (run-tests)

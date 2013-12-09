@@ -120,21 +120,24 @@ namespace ChineseWriter {
 
         private void ReportLoadStateTask( ) {
             var start = DateTime.Now;
+            var wordCount = 0;
+            var ready = false;
             SetTitleThreadsafe( "Loading Clojure runtime..." );
             while ( true ) {
                 string status;
                 if ( RT.var( "WordDatabase", "all-words" ).isBound ) {
                     var wordsList = (IList<object>)( (clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( ) ).deref( );
-                    status = wordsList.Count == 0 ? "Loading word list..." :
-                        wordsList.Count < 10000 ? "Short word list loaded (start writing!), loading full dictionary..." :
-                        string.Format( "ChineseWriter, {0} words, {1} known. All ready", wordsList.Count,
-                            wordsList.Count( word => ( (IDictionary<object, object>)word ).Known( ) ) );
+                    wordCount = wordsList.Count;
+                    ready = wordCount > 10000;
+                    status = wordCount == 0 ? "Loading word list..." :
+                        !ready ? "Short word list loaded (start writing!), loading full dictionary..." :
+                        "ChineseWriter. " + RT.var( "WordDatabase", "database-info" ).invoke().ToString() + ", ";
                 } else {
                     status = "Loading Clojure runtime...";
                 }
                 var dur = DateTime.Now - start;
                 SetTitleThreadsafe( string.Format( "{0} {1:0} s", status, dur.TotalSeconds ) );
-                if ( status.StartsWith( "ChineseWriter" ) ) return;
+                if ( ready ) return;
                 Thread.Sleep( 100 );
             }
         }
