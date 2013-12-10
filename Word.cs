@@ -85,7 +85,7 @@ namespace ChineseWriter {
         }
 
         public static bool Known( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "known" ) && word.Get<bool>( "known" );
+            return word.HasKeyword( "known" ) && word.Get<int>( "known" ) >= 2;
         }
 
         public static IEnumerable<IDictionary<object, object>> Characters( this IDictionary<object, object> word ) {
