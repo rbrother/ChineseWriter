@@ -16,7 +16,7 @@
     (reset! state { :text text :cursor-pos (count text) } )))
 
 (defn save-current-text [ path ]
-  (System.IO.File/WriteAllText path (pretty-pr (@state :text))))
+  (System.IO.File/WriteAllText path (pretty-pr (current-text))))
 
 (defn delete-word [ { :keys [ text cursor-pos ] :as original } delete-pos ]
   (if (and (>= delete-pos 0) (< delete-pos (count text)))

@@ -29,10 +29,6 @@ namespace ChineseWriter {
         public string PinyinDiacritics { get { return _pinyinDiacritics; } set { } }
         public string Pinyin { get { return _pinyin; } }
         public string Hanyu { get { return _hanyu; } set { } }
-        public string UsageCountString {
-            get { return WordDatabase.GetWordProp( _hanyu, _pinyin, "usage-count" ).ToString( ); }
-            set { }
-        }
         public string Known {
             get { return WordDatabase.KNOWLEDGE_LEVEL_DESCR[ KnownLevel ]; }
             set { KnownLevel = WordDatabase.KNOWLEDGE_LEVEL_VALUE[value]; }
@@ -105,11 +101,6 @@ namespace ChineseWriter {
         public static string Hanyu( this IDictionary<object, object> word ) {
             return word.HasKeyword( "hanyu" ) ?
                 word.Get<string>( "hanyu" ) : word.Get<string>( "text" );
-        }
-
-        public static string UsageCountStr( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "usage-count" ) ?
-                Convert.ToString( word.Get<int>( "usage-count" ) ) : "";
         }
 
     }

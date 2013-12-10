@@ -52,10 +52,10 @@
 ])
 
 (def test-word-info
-  [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112 }
-    { :pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7 }
-    { :hanyu "向", :pinyin "xiang4", :usage-count 2 }
-    { :hanyu "一了百了", :pinyin "yi1 liao3 bai3 liao3", :usage-count 2 } ])
+  [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true }
+    { :pinyin "wo3 men5", :hanyu "我们", :known true }
+    { :hanyu "向", :pinyin "xiang4" }
+    { :hanyu "一了百了", :pinyin "yi1 liao3 bai3 liao3" } ])
 
 (def wo-men-word
   {:hanyu "我们",
@@ -64,21 +64,20 @@
    :short-english "we"
    :pinyin-no-spaces "wo3men5"
    :pinyin-no-spaces-no-tones "women"
-   :known true
-   :usage-count 7 })
+   :known true })
 
 (def wo-expanded
   {:hanyu "我", :pinyin "wo3", :english "I, me, my",
    :pinyin-no-spaces-no-tones "wo",
    :pinyin-no-spaces "wo3",
    :pinyin-diacritics "wo3",
-   :short-english "I", :known true, :usage-count 112,
+   :short-english "I", :known true,
    :characters
    [ {:hanyu "我", :pinyin "wo3", :english "I, me, my",
       :pinyin-no-spaces-no-tones "wo",
       :pinyin-no-spaces "wo3",
       :pinyin-diacritics "wo3",
-      :short-english "I", :known true, :usage-count 112} ]} )
+      :short-english "I", :known true } ]} )
 
 (def wo-men-word-expanded
   {:characters
@@ -86,7 +85,6 @@
      :pinyin-no-spaces-no-tones "wo",
      :pinyin-no-spaces "wo3",
      :known true,
-     :usage-count 112
      :hanyu "我",
      :pinyin "wo3",
      :pinyin-diacritics "wo3",
@@ -95,7 +93,6 @@
      :pinyin-no-spaces-no-tones "men",
      :pinyin-no-spaces "men5",
      :known false,
-     :usage-count 0,
      :hanyu "们",
      :pinyin "men5",
      :pinyin-diacritics "men5",
@@ -107,27 +104,26 @@
    :pinyin "wo3 men5",
    :pinyin-diacritics "wo3 men5",
    :english "we, us, ourselves, our",
-   :short-english "xxx", ; by the time we get to test this, we have changed it
-   :usage-count 8 ; by the time we get to test this, we have increased it
+   :short-english "xxx" ; by the time we get to test this, we have changed it
 })
 
 (def word-info-dict-test
   {{:pinyin "wo3", :hanyu "我"}
-       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112},
+       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true },
    {:pinyin "wo3 men5", :hanyu "我们"}
-       {:pinyin "wo3 men5", :hanyu "我们", :known true, :usage-count 7},
+       {:pinyin "wo3 men5", :hanyu "我们", :known true },
    {:pinyin "xiang4", :hanyu "向"}
-       {:pinyin "xiang4", :hanyu "向", :usage-count 2} })
+       {:pinyin "xiang4", :hanyu "向" } })
 
 (def word-info-dict-modified
   {{:pinyin "wo3", :hanyu "我"}
-       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :usage-count 112, :pinyin-no-spaces-no-tones "wo", :pinyin-no-spaces "wo3" },
+       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :pinyin-no-spaces-no-tones "wo", :pinyin-no-spaces "wo3" },
    {:pinyin "wo3 men5", :hanyu "我们"}
-       {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :usage-count 8, :pinyin-no-spaces-no-tones "women", :pinyin-no-spaces "wo3men5" },
+       {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :pinyin-no-spaces-no-tones "women", :pinyin-no-spaces "wo3men5" },
    {:pinyin "xiang4", :hanyu "向"}
-       {:pinyin "xiang4", :hanyu "向", :usage-count 2, :known true, :pinyin-no-spaces-no-tones "xiang", :pinyin-no-spaces "xiang4"}
+       {:pinyin "xiang4", :hanyu "向", :known true, :pinyin-no-spaces-no-tones "xiang", :pinyin-no-spaces "xiang4"}
    { :hanyu "一代", :pinyin "yi1 dai4" }
-       { :hanyu "一代", :pinyin "yi1 dai4", :known true, :usage-count 5  }
+       { :hanyu "一代", :pinyin "yi1 dai4", :known true  }
    } )
 
 
@@ -135,7 +131,7 @@
 
 (def yi-dai {:hanyu "一代", :pinyin "yi1 dai4" } )
 
-(update-word-props! yi-dai { :known true, :usage-count 5 } )
+(update-word-props! yi-dai { :known true } )
 
 (def women-word-calculated (first (get-word { :hanyu "我们" })))
 
@@ -149,7 +145,6 @@
   (are [ expected calculated ] (= expected calculated)
        word-info-dict-modified
          (do
-           (inc-usage-count "我们" "wo3 men5" )
            (set-word-info-prop "我们" "wo3 men5" "short-english" "xxx")
            (set-word-info-prop "我们" "wo3 men5" "known" true)
            @word-info-dict)

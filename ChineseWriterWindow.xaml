@@ -70,7 +70,6 @@
                     <DataGridTextColumn Header="Shortcut" Foreground="Gray" Binding="{Binding Path=Shortcut}"/>
                     <DataGridTextColumn Header="Pinyin" FontSize="18" FontFamily="Times New Roman" Binding="{Binding Path=PinyinDiacritics}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
-                    <DataGridTextColumn Header="Usage" Binding="{Binding Path=UsageCountString}"/>
                     <DataGridComboBoxColumn Header="Known" SelectedValueBinding="{Binding Path=Known}"
                                             ItemsSource="{x:Static cw:WordDatabase.KNOWLEDGE_DESCRIPTIONS}"
                                             MaxWidth="150">

@@ -61,10 +61,6 @@ namespace ChineseWriter {
             RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
         }
 
-        internal static void IncreaseUsageCount( string hanyu, string pinyin ) {
-            RT.var( "WordDatabase", "inc-usage-count" ).invoke( hanyu, pinyin );
-        }
-
         public static IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {
             var findWords = RT.var( "WordDatabase", "find-words" );
             if (findWords.isBound) {

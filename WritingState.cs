@@ -60,7 +60,6 @@ namespace ChineseWriter {
         }
 
         internal static void SelectWord( string hanyu, string pinyin ) {
-            WordDatabase.IncreaseUsageCount( hanyu, pinyin );
             InsertWords( new IDictionary<object, object>[] { WordDatabase.GetWord( hanyu, pinyin ) } );
         }
 

@@ -9,7 +9,7 @@
 
 (def info-file-name (atom nil)) ; For storing info-file-name so at save we can use same name
 
-(def all-words (atom []))
+(def all-words (atom [])) ; list for filtering suggestions
 
 ; dictionaries for all words. Immutable once set (could they be just defs?)
 ; Keyed by:
@@ -17,7 +17,7 @@
 ; { :hanyu hanyu :pinyin pinyin }  (values are single words)
 (def word-dict (atom {}))
 
-(def word-info-dict (atom {})) ; retain so that properties like usage-count can be changed at runtime
+(def word-info-dict (atom {})) ; retain so that properties like :known can be changed at runtime
 
 (def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
 
@@ -92,13 +92,12 @@
 
 ;--------------- Loading database -------------------------------------
 
-(defn add-word-attributes [ {:keys [hanyu pinyin english] :as word} usage-count known ]
+(defn add-word-attributes [ {:keys [hanyu pinyin english] :as word} known ]
   (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
     (merge
       (if english { :short-english (first (str/split english #",")) } {})
       ; Default values of attributes, can be overridden in info
-      { :usage-count usage-count
-        :known known
+      { :known known
         :pinyin-no-spaces pinyin-no-spaces
         :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) }
       word
@@ -107,13 +106,13 @@
 (defn add-default-english [ {:keys [english short-english] :as word} ]
     (merge { :english (or short-english "") } word ))
 
-(defn suggestion-comparer [ { hanyu1 :hanyu pinyin1 :pinyin :as word1} { hanyu2 :hanyu pinyin2 :pinyin :as word2 } ]
+(defn suggestion-comparer [ { pinyin1 :pinyin :as word1} { pinyin2 :pinyin :as word2 } ]
   (let [ known1 (get word1 :known 0) known2 (get word2 :known 0) ]
     (cond
       (not= known1 known2) (if (> known1 known2) -1 1 )
       :else (compare pinyin1 pinyin2))))
 
-(defn sort-suggestions [ suggestions ] (sort suggestion-comparer suggestions))
+(defn sort-suggestions [ words ] (sort suggestion-comparer words))
 
 (defn index-hanyu-pinyin [ words ] (index words [ :hanyu :pinyin ]))
 
@@ -137,22 +136,22 @@
     (create-word-dict words)))
 
 ; cc-dict can contain multiple entries with same hanyu+pinyin but different english,
-; for example 后 Combine those.
+; for example 后 Combine those. TODO: We could combine them already at import if ccdict...
 (defn combine-duplicates [values]
   (assoc (first values) :english (str/join ". " (map :english values))))
 
 (defn set-word-database! [words-raw info-list]
   (let [ raw-dict (map-map-values combine-duplicates (index-hanyu-pinyin words-raw))
-        dict (map-map-values #(add-word-attributes % 0 false) raw-dict)
+        dict (map-map-values #(add-word-attributes % false) raw-dict)  ; TODO: add-word-attributes / known should not be false!
         raw-info-dict (map-map-values first (index-hanyu-pinyin info-list))
-        info-dict (map-map-values #(add-word-attributes % 1 true) raw-info-dict)
+        info-dict (map-map-values #(add-word-attributes % true) raw-info-dict)  ; TODO: add-word-attributes / known should not be true!
         words (vec (map add-default-english (vals (merge-with merge dict info-dict)))) ]
 
     ; stupid to make again list in preceding when we have dict already....
 
     (reset! word-info-dict info-dict)
     ; Short word list for quickly getting writing
-    (set-word-database-inner! (filter #(> (% :usage-count) 0 ) words))
+    (set-word-database-inner! (filter #(> (% :known) 0 ) words))
     ; Full word list (slow to process)
     (set-word-database-inner! words)))
 
@@ -167,35 +166,28 @@
 
 ;----------------------- Updating word info  ---------------------
 
-(defn save-word-info [ ]
-  (if @info-file-name
-    (System.IO.File/WriteAllText @info-file-name (pretty-pr (vals @word-info-dict))) nil ))
-
-(defn update-word-props! [ hanyu-pinyin new-props ]
-  (let [ amend-word-info (fn [ dict hanyu-pinyin new-props ]
-         (update-in dict [ hanyu-pinyin ] merge hanyu-pinyin (dict hanyu-pinyin) new-props) ) ]
-      (do
-        (swap! word-info-dict amend-word-info hanyu-pinyin new-props)
-        (save-word-info))))
-
-(defn inc-usage-count [ hanyu pinyin ]
-  (let [ key { :hanyu hanyu :pinyin pinyin }
-         usage-count (get (word-info key) :usage-count 0) ]
-    (update-word-props! key { :usage-count (inc usage-count) } )))
-
 (defn get-word-prop [ hanyu pinyin prop-name ]
   (let [ key { :hanyu hanyu :pinyin pinyin }
          combined-properties (merge (get-word key) (word-info key)) ]
     (combined-properties (keyword prop-name))))
 
+(defn swap-word-info! [ swap-func ]
+  (do
+    (swap! word-info-dict swap-func)
+    (if @info-file-name
+      (let [ words-str (pretty-pr (sort-suggestions (vals @word-info-dict))) ]
+        (System.IO.File/WriteAllText @info-file-name words-str) nil ))))
+
+(defn update-word-props! [ hanyu-pinyin new-props ]
+  (swap-word-info!
+    (fn [ dict ] (update-in dict [ hanyu-pinyin ] merge hanyu-pinyin (dict hanyu-pinyin) new-props) )))
+
 (defn set-word-info-prop [hanyu pinyin prop-name value ]
     (update-word-props! { :hanyu hanyu :pinyin pinyin } { (keyword prop-name) value } ))
 
 (defn delete-word-info! [ hanyu pinyin ]
-  (let [ remove-word-info (fn [info-dict k] (filter-map #(not= k %) info-dict)) ]
-    (do
-      (swap! word-info-dict remove-word-info { :hanyu hanyu :pinyin pinyin } )
-      (save-word-info))))
+  (let [ key { :hanyu hanyu :pinyin pinyin } ]
+    (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
 
 ;-------------------  Finding words   ----------------------------------------
 
@@ -222,12 +214,10 @@
 
 ; Although filtering the whole dictionary is slowish, this function quickly returns
 ; a lazy-seq which we process in background-thread in the UI, so no delay is noticeable.
-; The key here is to have all-words pre-sorted in order of usage-count, so no new sorting is needed:
+; The key here is to have all-words pre-sorted in order of :known, so no new sorting is needed:
 ; Top results come quickly from top of the list.
 ; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
 ; to consume less processor power, limit to 5000 (we will never expect to need more words)
-
-;(def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
 
 (defn find-words [ input english ]
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
