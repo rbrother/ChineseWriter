@@ -133,10 +133,10 @@
 
 ;----------------------- Updating word info  ---------------------
 
+(defn combined-properties [ hanyu-pinyin ] (merge (get-word hanyu-pinyin) (word-info hanyu-pinyin)))
+
 (defn get-word-prop [ hanyu pinyin prop-name ]
-  (let [ key { :hanyu hanyu :pinyin pinyin }
-         combined-properties (merge (get-word key) (word-info key)) ]
-    (combined-properties (keyword prop-name))))
+  ((combined-properties { :hanyu hanyu :pinyin pinyin }) (keyword prop-name)))
 
 (defn swap-word-info! [ swap-func ]
   (do
@@ -146,11 +146,12 @@
         (System.IO.File/WriteAllText @info-file-name words-str) nil ))))
 
 (defn update-word-props! [ hanyu-pinyin new-props ]
-  (swap-word-info!
-    (fn [ dict ] (update-in dict [ hanyu-pinyin ] merge hanyu-pinyin (dict hanyu-pinyin) new-props) )))
+  (swap-word-info! (fn [ dict ] (assoc dict hanyu-pinyin new-props))))
 
 (defn set-word-info-prop [hanyu pinyin prop-name value ]
-    (update-word-props! { :hanyu hanyu :pinyin pinyin } { (keyword prop-name) value } ))
+  (let [ key { :hanyu hanyu :pinyin pinyin }
+         old-props (combined-properties key) ]
+    (update-word-props! key (assoc old-props (keyword prop-name) value))))
 
 (defn delete-word-info! [ hanyu pinyin ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
@@ -159,8 +160,10 @@
 ;-------------------  Finding suggestions based on starting pinyin or english  -----------------------
 
 (defn pinyin-matcher [ pinyin-start ]
-  (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones } ]
-    (or (starts-with p1 pinyin-start) (starts-with p2 pinyin-start))))
+  (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones :as word } ]
+    (if (and p1 p2)
+      (or (starts-with p1 pinyin-start) (starts-with p2 pinyin-start))
+      (throw (Exception. (str "no pinyin variants for " (pr-str word)))))))
 
 (defn english-matcher [ english-start ]
   (fn [ { english :english } ]
