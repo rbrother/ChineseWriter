@@ -38,12 +38,7 @@ namespace ChineseWriter {
 
         public ChineseWriterWindow( ) {
             InitializeComponent( );
-            InitClojureLoadPath( );
             try {
-                RT.load( "WritingState" );
-                RT.load( "ExportText" );
-                RT.load( "ParseChinese" );
-                RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
@@ -74,7 +69,6 @@ namespace ChineseWriter {
                 WritingState.WordsChanges.
                     ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
 
-                WritingState.LoadText( );
                 _pinyinInput.Focus( );
 
             } catch ( Exception ex ) {
@@ -113,6 +107,12 @@ namespace ChineseWriter {
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
             ThreadPool.QueueUserWorkItem( state => {
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+                InitClojureLoadPath( );
+                RT.load( "WritingState" );
+                RT.load( "ExportText" );
+                RT.load( "ParseChinese" );
+                RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
+                Dispatcher.Invoke( new Action( () => WritingState.LoadText( ) ) );
                 WordDatabase.LoadWords( );
             } );
             ThreadPool.QueueUserWorkItem( state => ReportLoadStateTask( ) );
