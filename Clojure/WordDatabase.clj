@@ -92,20 +92,6 @@
 
 ;--------------- Loading database -------------------------------------
 
-(defn add-word-attributes [ {:keys [hanyu pinyin english] :as word} known ]
-  (let [pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" "")) ]
-    (merge
-      (if english { :short-english (first (str/split english #",")) } {})
-      ; Default values of attributes, can be overridden in info
-      { :known known
-        :pinyin-no-spaces pinyin-no-spaces
-        :pinyin-no-spaces-no-tones (remove-tone-numbers pinyin-no-spaces) }
-      word
-      )))
-
-(defn add-default-english [ {:keys [english short-english] :as word} ]
-    (merge { :english (or short-english "") } word ))
-
 (defn suggestion-comparer [ { pinyin1 :pinyin :as word1} { pinyin2 :pinyin :as word2 } ]
   (let [ known1 (get word1 :known 0) known2 (get word2 :known 0) ]
     (cond
@@ -140,20 +126,17 @@
 (defn combine-duplicates [values]
   (assoc (first values) :english (str/join ". " (map :english values))))
 
+; TODO: After we get all attributes to words.clj as well (like full english), then we can
+; immediately call (set-word-database-inner! info-list) and only then proceed with the
+; slow step of merging the dictionaries (we can even only *load* the large dictionary after that).
+; This should allow very quick starting of writing.
 (defn set-word-database! [words-raw info-list]
-  (let [ raw-dict (map-map-values combine-duplicates (index-hanyu-pinyin words-raw))
-        dict (map-map-values #(add-word-attributes % false) raw-dict)  ; TODO: add-word-attributes / known should not be false!
-        raw-info-dict (map-map-values first (index-hanyu-pinyin info-list))
-        info-dict (map-map-values #(add-word-attributes % true) raw-info-dict)  ; TODO: add-word-attributes / known should not be true!
-        words (vec (map add-default-english (vals (merge-with merge dict info-dict)))) ]
-
-    ; stupid to make again list in preceding when we have dict already....
-
-    (reset! word-info-dict info-dict)
-    ; Short word list for quickly getting writing
-    (set-word-database-inner! (filter #(> (% :known) 0 ) words))
-    ; Full word list (slow to process)
-    (set-word-database-inner! words)))
+  (let [ full-dict (map-map-values combine-duplicates (index-hanyu-pinyin words-raw))
+         short-dict (map-map-values first (index-hanyu-pinyin info-list))
+         words (vec (vals (merge-with merge full-dict short-dict))) ] ; merge-with merge :-)
+    (reset! word-info-dict short-dict)
+    (set-word-database-inner! (filter #(and (% :known) (> (% :known) 0 )) words))    ; Short word list for quickly getting writing
+    (set-word-database-inner! words)))                              ; Full word list (slow to process)
 
 ; It's better to store the data at clojure-side. Casting the data to more C# usable
 ; format renders it less usable to clojure code
