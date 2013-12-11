@@ -180,7 +180,7 @@
 
 (defn english-matcher [ english-start ]
   (fn [ { english :english } ]
-    (some #(starts-with % english-start) (str/split english #" "))))
+    (if english (some #(starts-with % english-start) (str/split english #" ")) false )))
 
 (defn find-words-cached [ input english ]
   (let [ key { :input input :english english } ]
@@ -207,8 +207,4 @@
     (->> (find-words-cached input english)
       (map expand-word)
       (take 5000))))
-
-
-
-
 
