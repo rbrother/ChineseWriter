@@ -17,14 +17,15 @@
 ; { :hanyu hanyu :pinyin pinyin }  (values are single words)
 (def word-dict (atom {}))
 
-(def word-info-dict (atom {})) ; retain so that properties like :known can be changed at runtime
+; retain so that properties like :known can be changed at runtime.
+; Keyed by { :hanyu hanyu :pinyin pinyin }
+(def word-info-dict (atom {}))
 
 (def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
 
 (def add-diacritics-func (atom identity)) ; set this to proper diacritics expander from C#
 
 (defn set-add-diacritics-func! [ f ] (reset! add-diacritics-func f))
-
 
 ;----------------------- Dictionary accessors ----------------------------------
 
@@ -61,7 +62,6 @@
       (get-word { :hanyu hanyu :pinyin pinyin }) ; exact match?
       (pinyin-matching-word equal-caseless pinyin hanyu-matches) ; only case difference?
       (pinyin-matching-word toneless-equal pinyin hanyu-matches) ; Tone changes of char as part of a word
-      (first hanyu-matches)
       ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
       { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))
 
@@ -102,50 +102,34 @@
 
 (defn index-hanyu-pinyin [ words ] (index words [ :hanyu :pinyin ]))
 
-(defn create-word-dict [words]
+(defn create-hanyu-pinyin-dict [words] (map-map-values first (index-hanyu-pinyin words)))
+
+(defn create-combined-dict [words]
   (merge
     (map-map-values sort-suggestions (index words [ :hanyu ]))
-    (map-map-values first (index-hanyu-pinyin words))))
+    (create-hanyu-pinyin-dict words)))
 
 ; TODO: Now these global fields are set almost at the same time, so
 ; possibility of mismatch should be minimal,
 ; but consider if we should set all of the following atoms in one go, i.e. make them
 ; part of a single global atom that is reset in one operation.
-(defn set-word-database-inner-2! [ sorted-words dictionary ]
-  (reset! word-search-cache {})
-  (reset! all-words sorted-words)
-  (reset! word-dict dictionary))
+(defn set-word-database-inner! [ sorted-words ]
+  (let [ dictionary (create-combined-dict sorted-words) ]
+    (reset! word-search-cache {})
+    (reset! all-words sorted-words)
+    (reset! word-dict dictionary)))
 
-(defn set-word-database-inner! [words]
-  (set-word-database-inner-2!
-    (sort-suggestions words)
-    (create-word-dict words)))
-
-; cc-dict can contain multiple entries with same hanyu+pinyin but different english,
-; for example 后 Combine those. TODO: We could combine them already at import if ccdict...
-(defn combine-duplicates [values]
-  (assoc (first values) :english (str/join ". " (map :english values))))
-
-; TODO: After we get all attributes to words.clj as well (like full english), then we can
-; immediately call (set-word-database-inner! info-list) and only then proceed with the
-; slow step of merging the dictionaries (we can even only *load* the large dictionary after that).
-; This should allow very quick starting of writing.
-(defn set-word-database! [words-raw info-list]
-  (let [ full-dict (map-map-values combine-duplicates (index-hanyu-pinyin words-raw))
-         short-dict (map-map-values first (index-hanyu-pinyin info-list))
-         words (vec (vals (merge-with merge full-dict short-dict))) ] ; merge-with merge :-)
+(defn load-database [ cc-dict-file short-dict-file ]
+  (let [ short-words (load-from-file short-dict-file)
+         short-dict (create-hanyu-pinyin-dict short-words) ]
+    (reset! info-file-name short-dict-file)
     (reset! word-info-dict short-dict)
-    (set-word-database-inner! (filter #(and (% :known) (> (% :known) 0 )) words))    ; Short word list for quickly getting writing
-    (set-word-database-inner! words)))                              ; Full word list (slow to process)
-
-; It's better to store the data at clojure-side. Casting the data to more C# usable
-; format renders it less usable to clojure code
-(defn load-database [ cc-dict-file info-file ]
-  (do
-    (reset! info-file-name info-file)
-    (set-word-database!
-      (load-from-file cc-dict-file)
-      (load-from-file info-file))))
+    (set-word-database-inner! short-words) ; words.clj is sorted upon saving, so no need to sort here
+    ; At this point user can start writing with the short dictionary, rest is slower...
+    (let [ full-words (load-from-file cc-dict-file)
+           full-dict (create-hanyu-pinyin-dict full-words)
+           merged-words (sort-suggestions (vals (merge-with merge full-dict short-dict))) ] ; merge-with merge :-)
+      (set-word-database-inner! merged-words))))
 
 ;----------------------- Updating word info  ---------------------
 
@@ -172,7 +156,7 @@
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
 
-;-------------------  Finding words   ----------------------------------------
+;-------------------  Finding suggestions based on starting pinyin or english  -----------------------
 
 (defn pinyin-matcher [ pinyin-start ]
   (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones } ]
