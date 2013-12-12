@@ -129,7 +129,7 @@ namespace ChineseWriter {
                         ready = wordCount > 10000;
                         status = wordCount == 0 ? "Loading word list..." :
                             !ready ? "Short word list loaded (start writing!), loading full dictionary..." :
-                            "ChineseWriter. " + RT.var( "WordDatabase", "database-info" ).invoke( ).ToString( ) + ", ";
+                            "ChineseWriter. " + RT.var( "WordDatabase", "database-info" ).invoke( ).ToString( ) + " --- ";
                     } else {
                         status = "Loading Clojure runtime...";
                     }
@@ -182,7 +182,7 @@ namespace ChineseWriter {
             try {
                 while ( ActiveUpdaters > 1 ) {
                     Thread.Sleep( 10 );
-                    if ( id != CurrentUpdater ) return;
+                    if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
                 }
                 var items = new ObservableCollection<SuggestionWord>( ); // The default ItemsCollection of DataGrid does not allow editing
                 items.CollectionChanged += items_CollectionChanged;
@@ -193,7 +193,7 @@ namespace ChineseWriter {
                 } ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
                 var index = 1;
                 foreach ( var suggestion in suggestions ) {
-                    if ( id != CurrentUpdater ) return;
+                    if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
                     var shortcut = index == 1 ? "Enter" :
                         index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
                     var dataWord = new SuggestionWord( index, suggestion, shortcut );

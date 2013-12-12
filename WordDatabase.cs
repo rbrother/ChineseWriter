@@ -33,10 +33,11 @@ namespace ChineseWriter {
             return SearchUpwardFile( ExeDir, fileName );
         }
 
+        public static string SmallDictionaryFile { get { return @"C:\Google Drive\Ann\chinese study\words.clj"; } }
+
         public static void LoadWords( ) {
             RT.var( "WordDatabase", "load-database" )
-                .invoke( FilePath( "cedict_ts.clj" ), 
-                    @"C:\Google Drive\Ann\chinese study\words.clj" );
+                .invoke( FilePath( "cedict_ts.clj" ), SmallDictionaryFile );
         }
 
         public static DirectoryInfo ExeDir {
