@@ -92,11 +92,14 @@
 
 ;--------------- Loading database -------------------------------------
 
-(defn suggestion-comparer [ { pinyin1 :pinyin :as word1} { pinyin2 :pinyin :as word2 } ]
-  (let [ known1 (get word1 :known 0) known2 (get word2 :known 0) ]
-    (cond
-      (not= known1 known2) (if (> known1 known2) -1 1 )
-      :else (compare pinyin1 pinyin2))))
+(defn suggestion-comparer [
+     { hanyu1 :hanyu pinyin1 :pinyin known1 :known }
+     { hanyu2 :hanyu pinyin2 :pinyin known2 :known } ]
+  (cond
+    (not= known1 known2) (if (> (or known1 0) (or known2 0)) -1 1 )
+    (not= (count hanyu1) (count hanyu2)) (if (> (count hanyu1) (count hanyu2)) 1 -1 )
+    (not= pinyin1 pinyin2) (compare pinyin1 pinyin2)
+    :else (compare hanyu1 hanyu2)))
 
 (defn sort-suggestions [ words ] (sort suggestion-comparer words))
 
@@ -196,6 +199,4 @@
     (->> (find-words-cached input english)
       (map expand-word)
       (take 5000))))
-
-
 
