@@ -38,6 +38,7 @@ namespace ChineseWriter {
 
         public ChineseWriterWindow( ) {
             InitializeComponent( );
+            InitClojureLoadPath( );
             try {
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
@@ -72,14 +73,7 @@ namespace ChineseWriter {
                 _pinyinInput.Focus( );
 
             } catch ( Exception ex ) {
-                var message = ex.ToString( );
-                if ( message.Contains( "Could not locate clojure.core.clj.dll" ) ) {
-                    MessageBox.Show( "Please ensure that environment variable CLOJURE_LOAD_PATH\n" +
-                        "Contains clojure-clr directory and any other library directories needed",
-                        "Cannot find Clojure files" );
-                } else {
-                    MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
-                }
+                MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
             }
         }
 
@@ -107,13 +101,16 @@ namespace ChineseWriter {
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
             ThreadPool.QueueUserWorkItem( state => {
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-                InitClojureLoadPath( );
-                RT.load( "WritingState" );
-                RT.load( "ExportText" );
-                RT.load( "ParseChinese" );
-                RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
-                Dispatcher.Invoke( new Action( () => WritingState.LoadText( ) ) );
-                WordDatabase.LoadWords( );
+                try {
+                    RT.load( "WritingState" );
+                    RT.load( "ExportText" );
+                    RT.load( "ParseChinese" );
+                    RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
+                    Dispatcher.Invoke( new Action( ( ) => WritingState.LoadText( ) ) );
+                    WordDatabase.LoadWords( );
+                } catch ( Exception ex ) {
+                    ReportErrorThreadSafe( ex );
+                }
             } );
             ThreadPool.QueueUserWorkItem( state => ReportLoadStateTask( ) );
         }
@@ -123,22 +120,41 @@ namespace ChineseWriter {
             var wordCount = 0;
             var ready = false;
             SetTitleThreadsafe( "Loading Clojure runtime..." );
-            while ( true ) {
-                string status;
-                if ( RT.var( "WordDatabase", "all-words" ).isBound ) {
-                    var wordsList = (IList<object>)( (clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( ) ).deref( );
-                    wordCount = wordsList.Count;
-                    ready = wordCount > 10000;
-                    status = wordCount == 0 ? "Loading word list..." :
-                        !ready ? "Short word list loaded (start writing!), loading full dictionary..." :
-                        "ChineseWriter. " + RT.var( "WordDatabase", "database-info" ).invoke().ToString() + ", ";
-                } else {
-                    status = "Loading Clojure runtime...";
+            try {
+                while ( true ) {
+                    string status;
+                    if ( RT.var( "WordDatabase", "all-words" ).isBound ) {
+                        var wordsList = (IList<object>)( (clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( ) ).deref( );
+                        wordCount = wordsList.Count;
+                        ready = wordCount > 10000;
+                        status = wordCount == 0 ? "Loading word list..." :
+                            !ready ? "Short word list loaded (start writing!), loading full dictionary..." :
+                            "ChineseWriter. " + RT.var( "WordDatabase", "database-info" ).invoke( ).ToString( ) + ", ";
+                    } else {
+                        status = "Loading Clojure runtime...";
+                    }
+                    var dur = DateTime.Now - start;
+                    SetTitleThreadsafe( string.Format( "{0} {1:0} s", status, dur.TotalSeconds ) );
+                    if ( ready ) return;
+                    Thread.Sleep( 100 );
                 }
-                var dur = DateTime.Now - start;
-                SetTitleThreadsafe( string.Format( "{0} {1:0} s", status, dur.TotalSeconds ) );
-                if ( ready ) return;
-                Thread.Sleep( 100 );
+            } catch ( Exception ex ) {
+                ReportErrorThreadSafe( ex );
+            }
+        }
+
+        private void ReportErrorThreadSafe( Exception ex ) {
+            var message = ex.ToString( );
+            if ( message.Contains( "Could not locate clojure.core.clj.dll" ) ) {
+                this.Dispatcher.Invoke( new Action( ( ) => {
+                    MessageBox.Show( "Please ensure that environment variable CLOJURE_LOAD_PATH\n" +
+                        "Contains clojure-clr directory and any other library directories needed",
+                        "Cannot find Clojure files" );
+                } ) );
+            } else {
+                this.Dispatcher.Invoke( new Action( ( ) => {
+                    MessageBox.Show( ex.ToString( ), "Error in ChineseWriter Clojure initialization" );
+                } ) );
             }
         }
 
