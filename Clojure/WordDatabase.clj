@@ -160,10 +160,12 @@
 ;-------------------  Finding suggestions based on starting pinyin or english  -----------------------
 
 (defn pinyin-matcher [ pinyin-start ]
-  (fn [ { p1 :pinyin-no-spaces p2 :pinyin-no-spaces-no-tones :as word } ]
-    (if (and p1 p2)
-      (or (starts-with p1 pinyin-start) (starts-with p2 pinyin-start))
-      (throw (Exception. (str "no pinyin variants for " (pr-str word)))))))
+  (fn [ { pinyin :pinyin } ]
+    (let [ pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" ""))
+           pinyin-no-tones (remove-tone-numbers pinyin-no-spaces) ]
+      (or
+       (starts-with pinyin-no-spaces pinyin-start)
+       (starts-with pinyin-no-tones pinyin-start)))))
 
 (defn english-matcher [ english-start ]
   (fn [ { english :english } ]
@@ -194,4 +196,6 @@
     (->> (find-words-cached input english)
       (map expand-word)
       (take 5000))))
+
+
 
