@@ -57,8 +57,8 @@
                     <Label Name="ProcessingLabel">Suggestions</Label>
                 </Border>
             </StackPanel>
-            <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Background="Transparent">
-                <StackPanel Orientation="Horizontal" Name="Characters" Style="{StaticResource WidgetStyle}" Background="Transparent"/>
+            <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Background="Transparent">
+                <WrapPanel Orientation="Horizontal" MaxWidth="1024" Name="Characters" Style="{StaticResource WidgetStyle}" Background="Transparent"/>
             </ScrollViewer>
         </StackPanel>
         <!--                   -->
