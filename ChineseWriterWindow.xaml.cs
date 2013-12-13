@@ -41,7 +41,7 @@ namespace ChineseWriter {
             InitClojureLoadPath( );
             try {
 
-                _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle };
+                _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle, MinWidth = 40 };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
 
                 _cursorPanel = CreateCursorPanel( );
