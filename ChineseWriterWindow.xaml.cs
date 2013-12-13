@@ -69,7 +69,7 @@ namespace ChineseWriter {
                     Subscribe( tuple => UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 WritingState.WordsChanges.
                     ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
-
+                WritingState.WordsChanges.Subscribe( words => WritingState.SaveCurrentText( ) );
                 _pinyinInput.Focus( );
 
             } catch ( Exception ex ) {
@@ -288,10 +288,6 @@ namespace ChineseWriter {
         private void Clear_Text_Click( object sender, RoutedEventArgs e ) {
             WritingState.Clear( );
             _pinyinInput.Text = "";
-        }
-
-        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
-            WritingState.SaveCurrentText( );
         }
 
         private void StayOnTop_Checked( object sender, RoutedEventArgs e ) {

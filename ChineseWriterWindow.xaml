@@ -5,7 +5,7 @@
         Title="Chinese Writer" Background="#D0D0D0" 
         Width="800" Height="400"
         Loaded="Window_Loaded"
-        FontSize="14" Closing="Window_Closing" Activated="Window_Activated">
+        FontSize="14" Activated="Window_Activated">
     <Window.Resources>
         <Style x:Key="WidgetStyle" TargetType="FrameworkElement">
             <Setter Property="Margin" Value="2"/>
