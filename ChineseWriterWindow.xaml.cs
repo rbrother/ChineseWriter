@@ -21,6 +21,8 @@ namespace ChineseWriter {
 
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
+        private bool _draggingSelection = false;
+        private FrameworkElement _selectionStart, _selectionEnd;
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
@@ -43,6 +45,7 @@ namespace ChineseWriter {
 
                 _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle, MinWidth = 40 };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
+                _pinyinInput.GotFocus += _pinyinInput_GotFocus;
 
                 _cursorPanel = CreateCursorPanel( );
 
@@ -75,6 +78,16 @@ namespace ChineseWriter {
             } catch ( Exception ex ) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
             }
+        }
+
+        void _pinyinInput_GotFocus( object sender, RoutedEventArgs e ) {
+            RemoveTextSelection( );
+        }
+
+        void RemoveTextSelection( ) {
+            _selectionStart = null;
+            _selectionEnd = null;
+            MarkDraggedSelection( );            
         }
 
         public void TextEdit( Key key ) {
@@ -209,6 +222,22 @@ namespace ChineseWriter {
             }
         }
 
+        void ShowTempMessage( string message ) {
+            ProcessingLabel.Foreground = new SolidColorBrush( Colors.DarkGreen );
+            ProcessingLabel.Content = message;
+            ThreadPool.QueueUserWorkItem( state => {
+                try {
+                    Thread.Sleep(1000);
+                    Dispatcher.Invoke( new Action( ( ) => { 
+                        ProcessingLabel.Content = "";
+                        ProcessingLabel.Foreground = new SolidColorBrush( Colors.Black );
+                    } ));                    
+                } catch ( Exception ex ) {
+                    ReportErrorThreadSafe( ex );
+                }
+            } );
+        }
+
         void items_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) {
             if ( e.Action == NotifyCollectionChangedAction.Remove ) {
                 foreach ( SuggestionWord item in e.OldItems ) {
@@ -259,6 +288,8 @@ namespace ChineseWriter {
         }
 
         private void PopulateCharGrid( IEnumerable<IDictionary<object, object>> words, int cursorPos ) {
+            _selectionStart = null;
+            _selectionEnd = null;
             Characters.Children.Clear( );
             int pos = 0;
             foreach ( var word in words ) {
@@ -266,29 +297,88 @@ namespace ChineseWriter {
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
                 wordPanel.Tag = word;
-                wordPanel.MouseDown += wordPanel_MouseDown;
+                wordPanel.MouseEnter += wordPanel_MouseEnter;
+                wordPanel.MouseLeftButtonDown += wordPanel_MouseLeftButtonDown;
+                wordPanel.MouseLeftButtonUp += wordPanel_MouseLeftButtonUp;
                 pos++;
             }
             if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
         }
 
-        void wordPanel_MouseDown( object sender, MouseButtonEventArgs e ) {
+        void wordPanel_MouseLeftButtonDown( object sender, MouseButtonEventArgs e ) {
             var wordPanel = (FrameworkElement)sender;
             var word = (IDictionary<object, object>)wordPanel.Tag;
-            UpdateSuggestionsBackground( new IDictionary<object, object>[] { word } );            
+            UpdateSuggestionsBackground( new IDictionary<object, object>[] { word } );
+            _draggingSelection = true;
+            _selectionStart = wordPanel;
+            _selectionEnd = wordPanel;
+            MarkDraggedSelection( );
+        }
+
+        void wordPanel_MouseEnter( object sender, MouseEventArgs e ) {
+            var thisPanel = (FrameworkElement)sender;
+            if (Mouse.LeftButton != MouseButtonState.Pressed) _draggingSelection = false;
+            if ( _draggingSelection ) _selectionEnd = thisPanel;
+            MarkDraggedSelection( );
+        }
+
+        void wordPanel_MouseLeftButtonUp( object sender, MouseButtonEventArgs e ) {
+            _draggingSelection = false;
+            CopyNow( );
+        }
+
+        void MarkDraggedSelection( ) {
+            // First deselect all
+            foreach ( FrameworkElement wordPanel in Characters.Children ) {
+                WordPanel.SetSelected( wordPanel, false );
+            }
+            // Then mark selected
+            foreach ( FrameworkElement wordPanel in SelectedWordPanels ) {
+                WordPanel.SetSelected( wordPanel, true );
+            }
+        }
+
+        FrameworkElement[] SelectedWordPanels {
+            get {
+                var panels = new List<FrameworkElement>( );
+                bool insideSelection = false;
+                foreach ( FrameworkElement wordPanel in Characters.Children ) {
+                    int boundaryCount = ( object.ReferenceEquals( wordPanel, _selectionStart ) ? 1 : 0 ) +
+                        ( object.ReferenceEquals( wordPanel, _selectionEnd ) ? 1 : 0 );
+                    bool enteringSelectionNow = !insideSelection && boundaryCount > 0;
+                    bool exitingSelectionAfterThis = ( insideSelection && boundaryCount == 1 ) || boundaryCount == 2;
+                    if ( enteringSelectionNow ) insideSelection = true;
+                    if ( insideSelection ) panels.Add( wordPanel );
+                    if ( exitingSelectionAfterThis ) insideSelection = false;
+                }
+                return panels.ToArray( );
+            }
         }
 
         private void CopyClick( object sender, RoutedEventArgs e ) {
+            CopyNow( );
+        }
+
+        private void CopyNow( ) {
             if ( CopyHtml.IsChecked ?? false ) {
                 ClipboardTool.CopyToClipboard(
                     (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ),
                     new Uri( "http://www.brotherus.net" ) );
             } else {
                 var data = WritingState.HanyiPinyinLines(
+                    SelectedWords,
                     CopyPinyin.IsChecked ?? false,
                     CopyEnglish.IsChecked ?? false );
                 HandleExceptions( ( ) => Clipboard.SetText( data, TextDataFormat.UnicodeText ) );
+            }
+            ShowTempMessage( "Copied" );
+        }
+
+        private IEnumerable<IDictionary<object, object>> SelectedWords {
+            get {
+                if ( _selectionEnd == null && _selectionEnd == null ) return null;
+                return SelectedWordPanels.Select( panel => (IDictionary<object, object>)panel.Tag );
             }
         }
 

@@ -78,8 +78,9 @@ namespace ChineseWriter {
             return s.PadRight( latinLength - hanyuExtraLen );
         }
 
-        public static string HanyiPinyinLines( bool copyPinyin, bool copyEnglish ) {
-            var hanyus = Words.Select( word => word.Hanyu( ) );
+        public static string HanyiPinyinLines( IEnumerable<IDictionary<object, object>> words, bool copyPinyin, bool copyEnglish ) {
+            var finalWords = words != null ? words : Words;
+            var hanyus = finalWords.Select( word => word.Hanyu( ) );
             if ( !copyPinyin && !copyEnglish ) {
                 // simple case: only hanyu
                 return string.Join( " ", hanyus.ToArray( ) );
