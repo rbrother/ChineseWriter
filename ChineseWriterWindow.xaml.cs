@@ -266,10 +266,17 @@ namespace ChineseWriter {
                 var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
                 wordPanel.Tag = word;
+                wordPanel.MouseDown += wordPanel_MouseDown;
                 pos++;
             }
             if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
+        }
+
+        void wordPanel_MouseDown( object sender, MouseButtonEventArgs e ) {
+            var wordPanel = (FrameworkElement)sender;
+            var word = (IDictionary<object, object>)wordPanel.Tag;
+            UpdateSuggestionsBackground( new IDictionary<object, object>[] { word } );            
         }
 
         private void CopyClick( object sender, RoutedEventArgs e ) {
