@@ -88,8 +88,8 @@ namespace ChineseWriter {
             return word.HasKeyword( "known" ) && word.Get<int>( "known" ) >= 2;
         }
 
-        public static IEnumerable<IDictionary<object, object>> Characters( this IDictionary<object, object> word ) {
-            return word.GetList( "characters" ).Cast<IDictionary<object, object>>( );
+        public static IDictionary<object, object>[] Characters( this IDictionary<object, object> word ) {
+            return word.GetList( "characters" ).Cast<IDictionary<object, object>>( ).ToArray();
         }
 
         public static string PinyinDiacritics( this IDictionary<object, object> word ) {

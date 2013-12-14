@@ -59,4 +59,11 @@
 
 (defn move-cursor! [ dir ]
   (swap! state move-cursor dir ))
+
+(defn set-cursor [ { :keys [ text ] } pos ]
+  { :text text :cursor-pos (max 0 (min (count text) pos)) } )
+
+(defn reset-cursor! [ pos ]
+  (swap! state set-cursor pos ))
+
 

@@ -12,11 +12,32 @@ using Keyword = clojure.lang.Keyword;
 
 namespace ChineseWriter {
 
-    static class WordPanel {
+    /// <summary>
+    /// TODO: Make this non-static class. Now that we actually manipulate the panels it
+    /// is better to have proper state, getters and setters...
+    /// </summary>
+    class WordPanel : UserControl {
+
+        private Panel _mainPanel;
 
         private static readonly Color[] TONE_COLORS = { 
             Color.FromRgb(255,0,0), Color.FromRgb(160,160,0), Color.FromRgb(0,180,0), 
             Color.FromRgb(0,0,255), Colors.Black };
+
+        public WordPanel( IDictionary<object, object> word ) {
+            this.Content = GuiUtils.WrapToBorder(
+                word.HasKeyword( "text" ) ?
+                CreateForLiteral( word.Get<string>( "text" ) ) :
+                CreateForHanyu( word ) );
+            this.Tag = word;
+        }
+
+        public void SetSelected( bool selected ) {
+            var border = (Border)this.Content;
+            var panel = (Panel)border.Child;
+            var colorLevel = (byte)( selected ? 200 : 255 );
+            panel.Background = new SolidColorBrush( Color.FromRgb( colorLevel, colorLevel, colorLevel ) );
+        }
 
         private static StackPanel WordStackPanel( params FrameworkElement[] content ) {
             var panel = new StackPanel {
@@ -62,38 +83,9 @@ namespace ChineseWriter {
             return TONE_COLORS[tone - 1];
         }
 
-        private static object CreateExplanationPanel( IDictionary<object,object> word ) {
-            var panel = new StackPanel { Orientation = Orientation.Vertical };
-            panel.Children.Add( 
-                new TextBlock { 
-                    Padding = new Thickness(4),                            
-                    FontSize = 16, Text = word.Get<string>("english"), 
-                    MaxWidth = 500, TextWrapping = TextWrapping.Wrap,
-            } );
-            var detailsPanel = new StackPanel { Orientation = Orientation.Horizontal };
-            panel.Children.Add( detailsPanel );
-            foreach (FrameworkElement childPanel in
-                word.Characters().Select( w => CharacterPanel( w ) ))
-                detailsPanel.Children.Add( childPanel );
-            return panel;
-        }
-
-        public static FrameworkElement CharacterPanel( IDictionary<object,object> character ) {
-            var foreground = new SolidColorBrush( ToneColor( character.Pinyin( ) ) );
-            return GuiUtils.WrapToBorder(
-                WordStackPanel(
-                    CreateTextBlock( "SimSun", 80, new Run {
-                        Text = character.Hanyu( ),
-                        Foreground = foreground } ), 
-                    CreateTextBlock( "Times New Roman", 40, new Run {
-                        Text = " " + character.PinyinDiacritics() + " ",
-                        Foreground = foreground } ), 
-                    CreateEnglishPanel( character, true ) ) );
-        }
-
-        private static FrameworkElement CreateForHanyu( IDictionary<object,object> word ) {
+        private FrameworkElement CreateForHanyu( IDictionary<object,object> word ) {
             var chars = word.GetList( "characters" ).Cast<IDictionary<object,object>>( );
-            var panel = WordStackPanel(
+            _mainPanel = WordStackPanel(
                 CreateTextBlock( "SimSun", 30,
                     chars.Select( c => new Run {
                         Text = c.Hanyu(),
@@ -105,30 +97,13 @@ namespace ChineseWriter {
                         Foreground = new SolidColorBrush( ToneColor( c.Pinyin( ) ) )
                     } ).ToArray( ) ),
                 word.Known() ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
-            panel.ToolTip = CreateExplanationPanel( word );
-            panel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
-            return panel;
+            _mainPanel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
+            return _mainPanel;
         }
 
-        private static FrameworkElement CreateForLiteral( string text ) {
-            return WordStackPanel( CreateTextBlock( "Times New Roman", 30, text ) );
+        private FrameworkElement CreateForLiteral( string text ) {
+            _mainPanel = WordStackPanel( CreateTextBlock( "Times New Roman", 30, text ) );
+            return _mainPanel;
         }
-
-        public static FrameworkElement Create( IDictionary<object,object> word) {
-            return GuiUtils.WrapToBorder(
-                word.HasKeyword( "text" ) ?
-                CreateForLiteral( word.Get<string>("text") ) :
-                CreateForHanyu(word));
-        }
-
-        public static void SetSelected( FrameworkElement wordPanel, bool selected ) {
-            var border = (Border) wordPanel;
-            var panel = border.Child as Panel;
-            if ( panel != null ) {
-                var colorLevel = (byte)( selected ? 200 : 255 );
-                panel.Background = new SolidColorBrush( Color.FromRgb( colorLevel, colorLevel, colorLevel ) );
-            }
-        }
-
     }
 }

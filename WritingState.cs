@@ -59,7 +59,7 @@ namespace ChineseWriter {
             InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
         }
 
-        internal static void SelectWord( string hanyu, string pinyin ) {
+        internal static void InsertWord( string hanyu, string pinyin ) {
             InsertWords( new IDictionary<object, object>[] { WordDatabase.GetWord( hanyu, pinyin ) } );
         }
 
@@ -134,6 +134,11 @@ namespace ChineseWriter {
 
         internal static void Move( string dir ) {
             RT.var( "WritingState", "move-cursor!" ).invoke( dir );
+            WordsChanges.OnNext( Words );
+        }
+
+        internal static void SetCursorPos( int pos ) {
+            RT.var( "WritingState", "reset-cursor!" ).invoke( pos );
             WordsChanges.OnNext( Words );
         }
     } // class

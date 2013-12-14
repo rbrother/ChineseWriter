@@ -22,7 +22,8 @@ namespace ChineseWriter {
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
         private bool _draggingSelection = false;
-        private FrameworkElement _selectionStart, _selectionEnd;
+        private WordPanel _selectionStart, _selectionEnd;
+        private WordPanel[] _wordPanels = new WordPanel[] {};
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
@@ -43,7 +44,7 @@ namespace ChineseWriter {
             InitClojureLoadPath( );
             try {
 
-                _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle, MinWidth = 40 };
+                _pinyinInput = new TextBox { Style = GuiUtils.PinyinStyle, MinWidth = 20 };
                 _pinyinInput.KeyUp += new KeyEventHandler( PinyinInput_KeyUp );
                 _pinyinInput.GotFocus += _pinyinInput_GotFocus;
 
@@ -282,7 +283,7 @@ namespace ChineseWriter {
         }
 
         private void SelectSuggestion( SuggestionWord word ) {
-            WritingState.SelectWord( word.Hanyu, word.Pinyin );
+            WritingState.InsertWord( word.Hanyu, word.Pinyin );
             ShowEnglish.IsChecked = false;
             _pinyinInput.Text = "";
         }
@@ -290,13 +291,12 @@ namespace ChineseWriter {
         private void PopulateCharGrid( IEnumerable<IDictionary<object, object>> words, int cursorPos ) {
             _selectionStart = null;
             _selectionEnd = null;
+            _wordPanels = words.Select( word => new WordPanel( word ) ).ToArray();
             Characters.Children.Clear( );
-            int pos = 0;
-            foreach ( var word in words ) {
+            int pos = 0;            
+            foreach ( var wordPanel in _wordPanels ) {
                 if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
-                var wordPanel = WordPanel.Create( word );
                 Characters.Children.Add( wordPanel );
-                wordPanel.Tag = word;
                 wordPanel.MouseEnter += wordPanel_MouseEnter;
                 wordPanel.MouseLeftButtonDown += wordPanel_MouseLeftButtonDown;
                 wordPanel.MouseLeftButtonUp += wordPanel_MouseLeftButtonUp;
@@ -307,9 +307,10 @@ namespace ChineseWriter {
         }
 
         void wordPanel_MouseLeftButtonDown( object sender, MouseButtonEventArgs e ) {
-            var wordPanel = (FrameworkElement)sender;
+            var wordPanel = (WordPanel)sender;
             var word = (IDictionary<object, object>)wordPanel.Tag;
-            UpdateSuggestionsBackground( new IDictionary<object, object>[] { word } );
+            var charsToShow = word.Characters( ).Length >= 2 ? word.Characters( ) : new IDictionary<object, object>[] { };
+            UpdateSuggestionsBackground( new IDictionary<object, object>[] { word }.Concat( charsToShow ) );
             _draggingSelection = true;
             _selectionStart = wordPanel;
             _selectionEnd = wordPanel;
@@ -317,42 +318,51 @@ namespace ChineseWriter {
         }
 
         void wordPanel_MouseEnter( object sender, MouseEventArgs e ) {
-            var thisPanel = (FrameworkElement)sender;
+            var thisPanel = (WordPanel)sender;
             if (Mouse.LeftButton != MouseButtonState.Pressed) _draggingSelection = false;
             if ( _draggingSelection ) _selectionEnd = thisPanel;
             MarkDraggedSelection( );
         }
 
         void wordPanel_MouseLeftButtonUp( object sender, MouseButtonEventArgs e ) {
-            _draggingSelection = false;
-            CopyNow( );
+            if ( _draggingSelection ) {
+                _draggingSelection = false;
+                CopyNow( );
+                WritingState.SetCursorPos( WordPanelIndex((WordPanel)sender) + 1 );
+            }
         }
 
         void MarkDraggedSelection( ) {
             // First deselect all
-            foreach ( FrameworkElement wordPanel in Characters.Children ) {
-                WordPanel.SetSelected( wordPanel, false );
+            foreach ( WordPanel wordPanel in _wordPanels ) {
+                wordPanel.SetSelected(false);
             }
             // Then mark selected
-            foreach ( FrameworkElement wordPanel in SelectedWordPanels ) {
-                WordPanel.SetSelected( wordPanel, true );
+            foreach ( WordPanel wordPanel in SelectedWordPanels ) {
+                wordPanel.SetSelected(true );
             }
         }
 
-        FrameworkElement[] SelectedWordPanels {
+        int WordPanelIndex( WordPanel panelToFind ) {
+            int index = 0;
+            foreach ( WordPanel wordPanel in _wordPanels ) {
+                if ( object.ReferenceEquals( wordPanel, panelToFind ) ) return index;
+                index++;
+            }
+            throw new ApplicationException( "Panel not found");
+        }
+
+        WordPanel[] SelectedWordPanels {
             get {
-                var panels = new List<FrameworkElement>( );
-                bool insideSelection = false;
-                foreach ( FrameworkElement wordPanel in Characters.Children ) {
-                    int boundaryCount = ( object.ReferenceEquals( wordPanel, _selectionStart ) ? 1 : 0 ) +
-                        ( object.ReferenceEquals( wordPanel, _selectionEnd ) ? 1 : 0 );
-                    bool enteringSelectionNow = !insideSelection && boundaryCount > 0;
-                    bool exitingSelectionAfterThis = ( insideSelection && boundaryCount == 1 ) || boundaryCount == 2;
-                    if ( enteringSelectionNow ) insideSelection = true;
-                    if ( insideSelection ) panels.Add( wordPanel );
-                    if ( exitingSelectionAfterThis ) insideSelection = false;
+                if ( _selectionStart == null ) {
+                    return new WordPanel[] {};
+                } else {
+                    int startIndex = WordPanelIndex( _selectionStart );
+                    int endIndex = WordPanelIndex( _selectionEnd );
+                    var first = Math.Min( startIndex, endIndex );
+                    var last = Math.Max( startIndex, endIndex );
+                    return _wordPanels.Skip( first ).Take( last - first + 1 ).ToArray( );           
                 }
-                return panels.ToArray( );
             }
         }
 
