@@ -20,6 +20,8 @@ namespace ChineseWriter {
 
         private Panel _mainPanel;
 
+        public IDictionary<object, object> Word { get; set; }
+
         private static readonly Color[] TONE_COLORS = { 
             Color.FromRgb(255,0,0), Color.FromRgb(160,160,0), Color.FromRgb(0,180,0), 
             Color.FromRgb(0,0,255), Colors.Black };
@@ -29,14 +31,12 @@ namespace ChineseWriter {
                 word.HasKeyword( "text" ) ?
                 CreateForLiteral( word.Get<string>( "text" ) ) :
                 CreateForHanyu( word.Hanyu(), word.Pinyin(), word.Known( ) ? "" : word.ShortEnglish() ) );
-            this.Tag = word;
+            this.Word = word;
         }
 
         public void SetSelected( bool selected ) {
-            var border = (Border)this.Content;
-            var panel = (Panel)border.Child;
-            var colorLevel = (byte)( selected ? 200 : 255 );
-            panel.Background = new SolidColorBrush( Color.FromRgb( colorLevel, colorLevel, colorLevel ) );
+            var colorLevel = (byte)( selected ? 220 : 255 );
+            _mainPanel.Background = new SolidColorBrush( Color.FromRgb( colorLevel, colorLevel, colorLevel ) );
         }
 
         private static StackPanel WordStackPanel( params FrameworkElement[] content ) {

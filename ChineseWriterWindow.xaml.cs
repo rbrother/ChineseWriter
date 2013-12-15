@@ -308,8 +308,6 @@ namespace ChineseWriter {
 
         void wordPanel_MouseLeftButtonDown( object sender, MouseButtonEventArgs e ) {
             var wordPanel = (WordPanel)sender;
-            var word = (IDictionary<object, object>)wordPanel.Tag;
-            UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
             _draggingSelection = true;
             _selectionStart = wordPanel;
             _selectionEnd = wordPanel;
@@ -327,7 +325,12 @@ namespace ChineseWriter {
             if ( _draggingSelection ) {
                 _draggingSelection = false;
                 CopyNow( );
-                WritingState.SetCursorPos( WordPanelIndex((WordPanel)sender) + 1 );
+                if ( object.ReferenceEquals( _selectionStart, _selectionEnd ) ) {
+                    var word = ( (WordPanel)sender ).Word;
+                    // Show word breakdown and Move cursor only on clicking on single field, not dragging selection
+                    UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
+                    WritingState.SetCursorPos( WordPanelIndex( (WordPanel)sender ) + 1 );
+                }
             }
         }
 
@@ -387,7 +390,7 @@ namespace ChineseWriter {
         private IEnumerable<IDictionary<object, object>> SelectedWords {
             get {
                 if ( _selectionEnd == null && _selectionEnd == null ) return null;
-                return SelectedWordPanels.Select( panel => (IDictionary<object, object>)panel.Tag );
+                return SelectedWordPanels.Select( panel => panel.Word );
             }
         }
 
