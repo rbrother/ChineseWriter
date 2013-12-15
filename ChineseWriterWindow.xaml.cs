@@ -309,8 +309,7 @@ namespace ChineseWriter {
         void wordPanel_MouseLeftButtonDown( object sender, MouseButtonEventArgs e ) {
             var wordPanel = (WordPanel)sender;
             var word = (IDictionary<object, object>)wordPanel.Tag;
-            var charsToShow = word.Characters( ).Length >= 2 ? word.Characters( ) : new IDictionary<object, object>[] { };
-            UpdateSuggestionsBackground( new IDictionary<object, object>[] { word }.Concat( charsToShow ) );
+            UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
             _draggingSelection = true;
             _selectionStart = wordPanel;
             _selectionEnd = wordPanel;

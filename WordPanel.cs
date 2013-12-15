@@ -28,7 +28,7 @@ namespace ChineseWriter {
             this.Content = GuiUtils.WrapToBorder(
                 word.HasKeyword( "text" ) ?
                 CreateForLiteral( word.Get<string>( "text" ) ) :
-                CreateForHanyu( word ) );
+                CreateForHanyu( word.Hanyu(), word.Pinyin(), word.Known( ) ? "" : word.ShortEnglish() ) );
             this.Tag = word;
         }
 
@@ -66,12 +66,12 @@ namespace ChineseWriter {
             return textBlock;
         }
 
-        private static TextBlock CreateEnglishPanel( IDictionary<object,object> word, bool breakDown ) {
+        private static TextBlock CreateEnglishPanel( string shortEnglish ) {
             return new TextBlock {
                 Padding = new Thickness( 4.0 ),
                 TextWrapping = TextWrapping.Wrap,
                 TextAlignment = TextAlignment.Center,
-                Text = breakDown ? word.Get<string>("english") : word.Get<string>("short-english"),
+                Text = shortEnglish,
                 Foreground = new SolidColorBrush( Color.FromArgb( 192, 0, 0, 0 ) )
             };
         }
@@ -83,8 +83,8 @@ namespace ChineseWriter {
             return TONE_COLORS[tone - 1];
         }
 
-        private FrameworkElement CreateForHanyu( IDictionary<object,object> word ) {
-            var chars = word.GetList( "characters" ).Cast<IDictionary<object,object>>( );
+        private FrameworkElement CreateForHanyu( string hanyu, string pinyin, string shortEnglish ) {
+            var chars = WordDatabase.Characters( hanyu, pinyin );
             _mainPanel = WordStackPanel(
                 CreateTextBlock( "SimSun", 30,
                     chars.Select( c => new Run {
@@ -96,7 +96,7 @@ namespace ChineseWriter {
                         Text = " " + c.PinyinDiacritics() + " ",
                         Foreground = new SolidColorBrush( ToneColor( c.Pinyin( ) ) )
                     } ).ToArray( ) ),
-                word.Known() ? new TextBlock( ) : CreateEnglishPanel( word, false ) );
+                CreateEnglishPanel( shortEnglish ) );
             _mainPanel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             return _mainPanel;
         }

@@ -54,24 +54,32 @@ namespace ChineseWriter {
             return SearchUpwardFile( startDir.Parent, fileName );            
         }
 
+        private static IEnumerable<IDictionary<object, object>> ToWordList( object words ) {
+            // Do *not* cast the list to Array here! That kills the performance since it forces
+            // the lazy list to be fully evaluated
+            return ( (IEnumerable<object>)words ).Cast<IDictionary<object, object>>( );
+        }
+
         public static IDictionary<object, object> GetWord( string hanyu, string pinyin ) {
             return (IDictionary<object, object>) RT.var( "WordDatabase", "get-word" ).invoke( hanyu, pinyin );            
         }
 
-        internal static void SetWordProp( string hanyu, string pinyin, string propName, object value ) {
-            RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
-        }
-
         public static IEnumerable<IDictionary<object, object>> Suggestions( string input, bool english ) {
             var findWords = RT.var( "WordDatabase", "find-words" );
-            if (findWords.isBound) {
-                var suggestions = (IEnumerable<object>)findWords.invoke(input, english);
-                // Do *not* cast suggestions to list or Array here! That kills the performance since it forces
-                // the lazy list to be fully evaluated
-                return suggestions.Cast<IDictionary<object, object>>( );
-            } else {
-                return new IDictionary<object, object>[] { };
-            }
+            return findWords.isBound ?
+                ToWordList( findWords.invoke( input, english ) ) :
+                new IDictionary<object, object>[] { };
+        }
+
+        public static IEnumerable<IDictionary<object, object>> Characters( string hanyu, string pinyin ) {
+            return ToWordList( RT.var( "WordDatabase", "characters" ).invoke( hanyu, pinyin ) );
+        }
+
+        /// <summary>
+        /// Word itself and it's characters
+        /// </summary>
+        public static IEnumerable<IDictionary<object, object>> BreakDown( string hanyu, string pinyin ) {
+            return ToWordList( RT.var( "WordDatabase", "word-breakdown" ).invoke( hanyu, pinyin ) );
         }
 
         internal static void DeleteWordInfo( string hanyu, string pinyin ) {
@@ -81,6 +89,11 @@ namespace ChineseWriter {
         internal static object GetWordProp( string hanyu, string pinyin, string propName ) {
             return RT.var( "WordDatabase", "get-word-prop").invoke( hanyu, pinyin, propName );
         }
+
+        internal static void SetWordProp( string hanyu, string pinyin, string propName, object value ) {
+            RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
+        }
+
     } // class
 
 } // namespace

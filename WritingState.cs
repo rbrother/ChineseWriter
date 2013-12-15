@@ -68,11 +68,6 @@ namespace ChineseWriter {
             WordsChanges.OnNext( Words );
         }
 
-        public static void ExpandChars( ) {
-            RT.var( "WritingState", "expand-words!" ).invoke( );
-            WordsChanges.OnNext( Words );
-        }
-
         private static string PadHanyu( string s, int latinLength ) {
             int hanyuExtraLen = s.Replace( " ", "" ).Length / 2;
             return s.PadRight( latinLength - hanyuExtraLen );

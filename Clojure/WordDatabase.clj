@@ -21,8 +21,6 @@
 ; Keyed by { :hanyu hanyu :pinyin pinyin }
 (def word-info-dict (atom {}))
 
-(def word-search-cache (atom {})) ; key: { :input pinyin-start :english bool }, value: raw words
-
 (def add-diacritics-func (atom identity)) ; set this to proper diacritics expander from C#
 
 (defn set-add-diacritics-func! [ f ] (reset! add-diacritics-func f))
@@ -65,30 +63,15 @@
       ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
       { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))
 
-(defn add-diacritics-to-word [ { pinyin :pinyin :as word } ]
-  (assoc word :pinyin-diacritics (@add-diacritics-func pinyin)))
-
-; This is slow, so do only for a word when needed (mainly when fetched to form current sentence words), not for all words in dictionary
-(defn characters [ { hanyu :hanyu pinyin :pinyin } ]
+(defn characters [ hanyu pinyin ]
   (->> (zip (map str hanyu) (str/split pinyin #" "))
-    (map (fn [ [h p] ] (find-char h p)))
-    (map add-diacritics-to-word)
-    (vec)))
+    (map (fn [ [h p] ] (find-char h p)))))
 
-(defn expand-hanyu-word [ { :keys [hanyu pinyin] } ]
-  (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (merge
-      (get-word key)
-      { :pinyin-diacritics (@add-diacritics-func pinyin) }
-      (word-info key) ; info has been already merged at load, but re-merge as it might change runtime
-      { :characters (characters key) })))
-
-(defn expand-word [ {:keys [hanyu pinyin] :as word} ]
-  (if (and hanyu pinyin)
-    (expand-hanyu-word word)
-    word )) ; can be literal text
-
-(defn expand-all-words [ words ] (map expand-word words))
+(defn word-breakdown [ hanyu pinyin ]
+  (let [ word (get-word { :hanyu hanyu :pinyin pinyin } ) ]
+    (concat
+       [ word ]
+       (if (= 1 (count hanyu)) [] (characters hanyu pinyin)))))
 
 ;--------------- Loading database -------------------------------------
 
@@ -118,7 +101,6 @@
 ; part of a single global atom that is reset in one operation.
 (defn set-word-database-inner! [ sorted-words ]
   (let [ dictionary (create-combined-dict sorted-words) ]
-    (reset! word-search-cache {})
     (reset! all-words sorted-words)
     (reset! word-dict dictionary)))
 
@@ -174,29 +156,13 @@
   (fn [ { english :english } ]
     (if english (some #(starts-with % english-start) (str/split english #" ")) false )))
 
-(defn find-words-cached [ input english ]
-  (let [ key { :input input :english english } ]
-    (or (@word-search-cache key)
-      (let [ key-shorter { :input (apply str (drop-last input)) :english english }
-             source (or (@word-search-cache key-shorter) @all-words)
-             matcher ((if english english-matcher pinyin-matcher) input)
-             res (filter matcher source) ]
-        (do
-          ; TODO: Now we "memoize" without limit. If this seems to lead to too high memory consumption,
-          ; make a more intelligent cache limiting the contained data
-          (swap! word-search-cache #(assoc % key res))
-          res )))))
-
 ; Although filtering the whole dictionary is slowish, this function quickly returns
 ; a lazy-seq which we process in background-thread in the UI, so no delay is noticeable.
 ; The key here is to have all-words pre-sorted in order of :known, so no new sorting is needed:
 ; Top results come quickly from top of the list.
 ; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
-; to consume less processor power, limit to 5000 (we will never expect to need more words)
+; to consume less processor power, limit to 5000 (we never expect to need more words)
 
 (defn find-words [ input english ]
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
-    (->> (find-words-cached input english)
-      (map expand-word)
-      (take 5000))))
-
+    (take 5000 (filter matcher @all-words))))

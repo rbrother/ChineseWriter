@@ -49,6 +49,10 @@ namespace ChineseWriter {
             get { return (string)Get("english" ); }
             set { Set("english", value ); }
         }
+        public string Finnish {
+            get { return (string)Get( "finnish" ); }
+            set { Set( "finnish", value ); }
+        }
         internal void Delete( ) {
             WordDatabase.DeleteWordInfo( _hanyu, _pinyin );
         }
@@ -88,13 +92,8 @@ namespace ChineseWriter {
             return word.HasKeyword( "known" ) && word.Get<int>( "known" ) >= 2;
         }
 
-        public static IDictionary<object, object>[] Characters( this IDictionary<object, object> word ) {
-            return word.GetList( "characters" ).Cast<IDictionary<object, object>>( ).ToArray();
-        }
-
         public static string PinyinDiacritics( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "pinyin-diacritics" ) ? word.Get<string>( "pinyin-diacritics" ) :
-                word.HasKeyword( "pinyin" ) ? word.Get<string>( "pinyin" ) :
+            return word.HasKeyword( "pinyin" ) ? DiacriticsAdderFunc.AddDiacritics( word.Get<string>( "pinyin" ) ) :
                 word.Get<string>( "text" );
         }
 

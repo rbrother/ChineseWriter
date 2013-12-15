@@ -19,8 +19,12 @@ namespace ChineseWriter {
             Tuple.Create("ü", "ü"), Tuple.Create("m", "m") };  // 呣 呣 [m4] /interjection expressing consent/um/
 
         public override object invoke( object pinyin ) {
-            return string.Join( " ", ((string)pinyin).Replace( "u:", "ü" ).Split( ' ' ).
-                Select( syllable => AddToneDiacritic(syllable) ).ToArray( ) );
+            return AddDiacritics( (string)pinyin );
+        }
+
+        public static string AddDiacritics( string pinyin ) {
+            return string.Join( " ", pinyin.Replace( "u:", "ü" ).Split( ' ' ).
+                Select( syllable => AddToneDiacritic( syllable ) ).ToArray( ) );
         }
 
         /// <summary>

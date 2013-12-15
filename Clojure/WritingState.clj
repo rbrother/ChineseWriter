@@ -31,21 +31,12 @@
   (swap! state delete-word pos ))
 
 (defn insert-words [ { :keys [ text cursor-pos ] } new-words ]
-  { :text
-   (concat
-     (take cursor-pos text)
-     (expand-all-words new-words)
-     (drop cursor-pos text))
-   :cursor-pos (+ cursor-pos (count new-words)) } )
+  (let [ new-text (concat (take cursor-pos text) new-words (drop cursor-pos text))
+         new-cursor-pos (+ cursor-pos (count new-words)) ]
+    { :text new-text :cursor-pos new-cursor-pos } ))
 
 (defn insert-words! [ words ]
   (swap! state insert-words words ))
-
-(defn expand-words [ { :keys [ text ] :as original } ]
-  (assoc original :text (expand-all-words text)))
-
-(defn expand-words! []
-  (swap! state expand-words))
 
 (defn moved-cursor-pos [ { :keys [ text cursor-pos ] } dir ]
   (case dir
