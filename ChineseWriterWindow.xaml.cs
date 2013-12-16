@@ -119,7 +119,7 @@ namespace ChineseWriter {
                     RT.load( "WritingState" );
                     RT.load( "ExportText" );
                     RT.load( "ParseChinese" );
-                    RT.var( "WordDatabase", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
+                    RT.var( "ExportText", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
                     Dispatcher.Invoke( new Action( ( ) => WritingState.LoadText( ) ) );
                     WordDatabase.LoadWords( );
                 } catch ( Exception ex ) {

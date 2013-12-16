@@ -66,47 +66,6 @@
    :pinyin-no-spaces-no-tones "women"
    :known true })
 
-(def wo-expanded
-  {:hanyu "我", :pinyin "wo3", :english "I, me, my",
-   :pinyin-no-spaces-no-tones "wo",
-   :pinyin-no-spaces "wo3",
-   :pinyin-diacritics "wo3",
-   :short-english "I", :known true,
-   :characters
-   [ {:hanyu "我", :pinyin "wo3", :english "I, me, my",
-      :pinyin-no-spaces-no-tones "wo",
-      :pinyin-no-spaces "wo3",
-      :pinyin-diacritics "wo3",
-      :short-english "I", :known true } ]} )
-
-(def wo-men-word-expanded
-  {:characters
-   [{:short-english "I",
-     :pinyin-no-spaces-no-tones "wo",
-     :pinyin-no-spaces "wo3",
-     :known true,
-     :hanyu "我",
-     :pinyin "wo3",
-     :pinyin-diacritics "wo3",
-     :english "I, me, my" }
-    {:short-english "plural marker for pronouns"
-     :pinyin-no-spaces-no-tones "men",
-     :pinyin-no-spaces "men5",
-     :known false,
-     :hanyu "们",
-     :pinyin "men5",
-     :pinyin-diacritics "men5",
-     :english "plural marker for pronouns, and nouns referring to individuals" }]
-   :pinyin-no-spaces-no-tones "women",
-   :pinyin-no-spaces "wo3men5",
-   :known true,
-   :hanyu "我们",
-   :pinyin "wo3 men5",
-   :pinyin-diacritics "wo3 men5",
-   :english "we, us, ourselves, our",
-   :short-english "xxx" ; by the time we get to test this, we have changed it
-})
-
 (def word-info-dict-test
   {{:pinyin "wo3", :hanyu "我"}
        {:pinyin "wo3", :hanyu "我", :short-english "I", :known true },
@@ -127,7 +86,7 @@
    } )
 
 
-(set-word-database! test-words-raw test-word-info)
+(set-word-database! test-words-raw)
 
 (def yi-dai {:hanyu "一代", :pinyin "yi1 dai4" } )
 
@@ -135,7 +94,7 @@
 
 (def women-word-calculated (first (get-word { :hanyu "我们" })))
 
-(def airen-chars ((expand-word { :hanyu "爱人" :pinyin "ai4 ren5" } ) :characters))
+(def airen-chars (characters "爱人" "ai4 ren5"))
 
 (def xiang-words (get-word { :hanyu "向" } ))
 
@@ -153,14 +112,12 @@
   1 (count (find-words "people" true))
   0 (count (find-words "zoobaba" true))
   wo-men-word women-word-calculated
-  wo-men-word-expanded (expand-word { :hanyu "我们" :pinyin "wo3 men5" } )
-  "back, behind, rear, afterwards, after, later. empress, queen" (:english (get-word { :hanyu "后", :pinyin "hou4" }))
+  "back, behind, rear, afterwards, after, later" (:english (get-word { :hanyu "后", :pinyin "hou4" }))
   "ren2" ((find-char "人" "ren2") :pinyin)
   "ren2" ((find-char "人" "Ren2") :pinyin)
   "ren2" ((find-char "人" "ren5") :pinyin)
   2 (count airen-chars)
   "人" (second-airen-char :hanyu)
-  wo-expanded (expand-word { :hanyu "我" :pinyin "wo3" } )
   2 (count xiang-words)
   2 (count (hanyu-to-words "我们女友" ))
   3 (count (hanyu-to-words "我们QQ女友" ))
@@ -182,19 +139,16 @@
 (deftest export-test
   (are [ expected calculated ] (= expected calculated)
        "<span style='color: #00B000;'>我</span><span style='color: #808080;'>们</span>"
-       (ExportText/word-hanyu-html wo-men-word-expanded)
+       (ExportText/word-hanyu-html wo-men-word)
        "<span style='color: #00B000;'>wo3</span> <span style='color: #808080;'>men5</span>"
-       (ExportText/word-pinyin-html wo-men-word-expanded)
+       (ExportText/word-pinyin-html wo-men-word)
 ))
 
 (deftest database-info-test
   (are [ expected calculated ] (= expected calculated)
-    "32 words, level 4: 0, level 3: 0, level 2: 0, level 1: 0" (database-info)))
+    "33 words, level 4: 0, level 3: 0, level 2: 0, level 1: 0" (database-info)))
 
 (delete-word-info! "一了百了" "yi1 liao3 bai3 liao3")
 
 (run-tests)
-
-
-
 

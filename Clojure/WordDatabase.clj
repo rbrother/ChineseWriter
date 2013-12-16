@@ -21,10 +21,6 @@
 ; Keyed by { :hanyu hanyu :pinyin pinyin }
 (def word-info-dict (atom {}))
 
-(def add-diacritics-func (atom identity)) ; set this to proper diacritics expander from C#
-
-(defn set-add-diacritics-func! [ f ] (reset! add-diacritics-func f))
-
 ;----------------------- Dictionary accessors ----------------------------------
 
 (defn get-word
@@ -63,9 +59,11 @@
       ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
       { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))
 
-(defn characters [ hanyu pinyin ]
-  (->> (zip (map str hanyu) (str/split pinyin #" "))
-    (map (fn [ [h p] ] (find-char h p)))))
+(defn characters
+  ( [ { hanyu :hanyu pinyin :pinyin } ] (characters hanyu pinyin) )
+  ( [ hanyu pinyin ]
+    (->> (zip (map str hanyu) (str/split pinyin #" "))
+      (map (fn [ [h p] ] (find-char h p))))))
 
 (defn word-breakdown [ hanyu pinyin ]
   (let [ word (get-word { :hanyu hanyu :pinyin pinyin } ) ]
@@ -99,7 +97,7 @@
 ; possibility of mismatch should be minimal,
 ; but consider if we should set all of the following atoms in one go, i.e. make them
 ; part of a single global atom that is reset in one operation.
-(defn set-word-database-inner! [ sorted-words ]
+(defn set-word-database! [ sorted-words ]
   (let [ dictionary (create-combined-dict sorted-words) ]
     (reset! all-words sorted-words)
     (reset! word-dict dictionary)))
@@ -109,12 +107,12 @@
          short-dict (create-hanyu-pinyin-dict short-words) ]
     (reset! info-file-name short-dict-file)
     (reset! word-info-dict short-dict)
-    (set-word-database-inner! short-words) ; words.clj is sorted upon saving, so no need to sort here
+    (set-word-database! short-words) ; words.clj is sorted upon saving, so no need to sort here
     ; At this point user can start writing with the short dictionary, rest is slower...
     (let [ full-words (load-from-file cc-dict-file)
            full-dict (create-hanyu-pinyin-dict full-words)
            merged-words (sort-suggestions (vals (merge-with merge full-dict short-dict))) ] ; merge-with merge :-)
-      (set-word-database-inner! merged-words))))
+      (set-word-database! merged-words))))
 
 ;----------------------- Updating word info  ---------------------
 
@@ -165,4 +163,6 @@
 
 (defn find-words [ input english ]
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
-    (take 5000 (filter matcher @all-words))))
+    (take 5000 (filter matcher @all-words))))
+
+
