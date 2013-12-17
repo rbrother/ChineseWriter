@@ -8,16 +8,16 @@
         FontSize="14" Activated="Window_Activated">
     <Window.Resources>
         <Style x:Key="WidgetStyle" TargetType="FrameworkElement">
-            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Margin" Value="4"/>
         </Style>
         <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource WidgetStyle}">
-            <Setter Property="Padding" Value="16,0,16,0"/>            
+            <Setter Property="Padding" Value="16,2,16,2"/>            
         </Style>
         <Style x:Key="CheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource WidgetStyle}">
             <Setter Property="VerticalAlignment" Value="Center"/>            
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -27,25 +27,19 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" >
-            <StackPanel.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="Gray"/>
-                        <GradientStop Color="LightGray" Offset="0.4" />
-                        <GradientStop Color="LightGray" Offset="0.5" />
-                        <GradientStop Color="Gray" Offset="1.0"/>
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </StackPanel.Background> 
             <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource ButtonStyle}" 
                         Click="Clear_Text_Click" Focusable="False">C_lear Text</Button>
-                <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy" Focusable="False"></Button>
                 <Button Click="PasteChineseClick" Style="{StaticResource ButtonStyle}" Content="Paste Chinese" Focusable="False"></Button>
-                <CheckBox Name="CopyPinyin" Content="Pinyin" Focusable="False" Style="{StaticResource CheckBoxStyle}" />
-                <CheckBox Name="CopyEnglish" Content="English" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
-                <CheckBox Name="CopyFullEnglish" Content="Full Definition" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
-                <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy" Focusable="False"></Button>
+                        <CheckBox Name="CopyPinyin" Content="Pinyin" Focusable="False" Style="{StaticResource CheckBoxStyle}" />
+                        <CheckBox Name="CopyEnglish" Content="English" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
+                        <CheckBox Name="CopyFullEnglish" Content="Full Definition" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
+                        <CheckBox Name="CopyHtml" Content="As _Html" IsChecked="False" Focusable="False" Style="{StaticResource CheckBoxStyle}"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
@@ -53,17 +47,15 @@
                           Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>
                 <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False"
                               Style="{StaticResource CheckBoxStyle}" Content="Suggest _English"></CheckBox>
-                <Border BorderThickness="1" BorderBrush="Black">
-                    <Label Name="ProcessingLabel">Suggestions</Label>
+                <Border Margin="10,5,5,5" BorderThickness="2" BorderBrush="Black">
+                    <Label Background="White" Name="ProcessingLabel">Suggestions</Label>
                 </Border>
             </StackPanel>
             <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Background="Transparent">
-                <WrapPanel Orientation="Horizontal" MaxWidth="1024" Name="Characters" Style="{StaticResource WidgetStyle}" Background="Transparent"/>
+                <WrapPanel Orientation="Horizontal" MaxWidth="800" Name="Characters" Style="{StaticResource WidgetStyle}" Background="Transparent"/>
             </ScrollViewer>
         </StackPanel>
         <!--                   -->
-        <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Style="{StaticResource WidgetStyle}">
-            <cw:SuggestionsTable x:Name="Suggestions"/>
-        </Border>
+        <cw:SuggestionsTable Grid.Row="2" x:Name="Suggestions"/>
     </Grid>
 </Window>

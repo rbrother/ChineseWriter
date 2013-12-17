@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using RT = clojure.lang.RT;
 
@@ -25,6 +26,8 @@ namespace ChineseWriter {
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
+
+        public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
         public void InitClojureLoadPath( ) {
             var loadPath = Environment.GetEnvironmentVariable( "CLOJURE_LOAD_PATH" ) ?? "";
@@ -79,6 +82,12 @@ namespace ChineseWriter {
                 WritingState.WordsChanges.
                     ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
                 WritingState.WordsChanges.Subscribe( words => WritingState.SaveCurrentText( ) );
+
+                MessageStream.Merge(Suggestions.MessageStream).
+                    ObserveOnDispatcher( ).Subscribe( messageAndColor => {
+                        ProcessingLabel.Content = messageAndColor.Item1;
+                        ProcessingLabel.Foreground = new SolidColorBrush( messageAndColor.Item2 );
+                    } );
                 _pinyinInput.Focus( );
             } catch ( Exception ex ) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
@@ -180,18 +189,10 @@ namespace ChineseWriter {
         }
 
         void ShowTempMessage( string message ) {
-            ProcessingLabel.Foreground = new SolidColorBrush( Colors.DarkGreen );
-            ProcessingLabel.Content = message;
+            MessageStream.OnNext( Tuple.Create( message, Colors.DarkGreen ) );
             ThreadPool.QueueUserWorkItem( state => {
-                try {
-                    Thread.Sleep(1000);
-                    Dispatcher.Invoke( new Action( ( ) => { 
-                        ProcessingLabel.Content = "";
-                        ProcessingLabel.Foreground = new SolidColorBrush( Colors.Black );
-                    } ));                    
-                } catch ( Exception ex ) {
-                    ReportErrorThreadSafe( ex );
-                }
+                Thread.Sleep( 1000 );
+                MessageStream.OnNext( Tuple.Create( "", Colors.Black ) );
             } );
         }
 

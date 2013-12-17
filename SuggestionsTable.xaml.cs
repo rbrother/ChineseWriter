@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Reactive.Subjects;
@@ -17,6 +18,7 @@ namespace ChineseWriter {
         private ObservableCollection<SuggestionWord> _suggestions = new ObservableCollection<SuggestionWord>( );
 
         public Subject<SuggestionWord> SuggestionSelected = new Subject<SuggestionWord>( );
+        public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
         public SuggestionsTable( ) {
             InitializeComponent( );
@@ -48,11 +50,8 @@ namespace ChineseWriter {
                     Thread.Sleep( 10 );
                     if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
                 }
-                this.Dispatcher.BeginInvoke( new Action( ( ) => {
-                    //ProcessingLabel.Content = "Searching dictionary...";
-                    //ProcessingLabel.Foreground = new SolidColorBrush( Colors.Red );
-                    _suggestions.Clear( );
-                } ));
+                MessageStream.OnNext( Tuple.Create( "Searching dictionary...", Colors.Red ) );
+                this.Dispatcher.BeginInvoke( new Action( ( ) => { _suggestions.Clear( ); } ));
                 var index = 1;
                 foreach ( var suggestion in suggestions ) {
                     if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
@@ -62,10 +61,7 @@ namespace ChineseWriter {
                     this.Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
                     index++;
                 }
-                this.Dispatcher.BeginInvoke( new Action( ( ) => {
-                    //ProcessingLabel.Foreground = new SolidColorBrush( Colors.Black );
-                    //ProcessingLabel.Content = string.Format( "{0} suggestions", Suggestions.Items.Count );
-                } ) );
+                MessageStream.OnNext( Tuple.Create( string.Format( "{0} suggestions", Suggestions.Items.Count ), Colors.Black ) );
             } finally {
                 ActiveUpdaters--;
             }
