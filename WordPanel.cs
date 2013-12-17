@@ -39,7 +39,7 @@ namespace ChineseWriter {
             _mainPanel.Background = new SolidColorBrush( Color.FromRgb( colorLevel, colorLevel, colorLevel ) );
         }
 
-        private static StackPanel WordStackPanel( params FrameworkElement[] content ) {
+        private static StackPanel CreateStackPanel( params FrameworkElement[] content ) {
             var panel = new StackPanel {
                 Orientation = Orientation.Vertical,
                 Background = new SolidColorBrush( Colors.White ),
@@ -85,7 +85,7 @@ namespace ChineseWriter {
 
         private FrameworkElement CreateForHanyu( string hanyu, string pinyin, string shortEnglish ) {
             var chars = WordDatabase.Characters( hanyu, pinyin );
-            _mainPanel = WordStackPanel(
+            _mainPanel = CreateStackPanel(
                 CreateTextBlock( "SimSun", 30,
                     chars.Select( c => new Run {
                         Text = c.Hanyu(),
@@ -102,7 +102,7 @@ namespace ChineseWriter {
         }
 
         private FrameworkElement CreateForLiteral( string text ) {
-            _mainPanel = WordStackPanel( CreateTextBlock( "Times New Roman", 30, text ) );
+            _mainPanel = CreateStackPanel( CreateTextBlock( "Times New Roman", 30, text ) );
             return _mainPanel;
         }
     }

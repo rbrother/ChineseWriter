@@ -22,7 +22,7 @@ namespace ChineseWriter {
         private TextBox _pinyinInput;
         private FrameworkElement _cursorPanel;
         private bool _draggingSelection = false;
-        private WordPanel _selectionStart, _selectionEnd;
+        private Tuple<WordPanel,WordPanel> _selection = null;
         private WordPanel[] _wordPanels = new WordPanel[] {};
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
@@ -86,8 +86,7 @@ namespace ChineseWriter {
         }
 
         void RemoveTextSelection( ) {
-            _selectionStart = null;
-            _selectionEnd = null;
+            _selection = Tuple.Create<WordPanel, WordPanel>( null, null );
             MarkDraggedSelection( );            
         }
 
@@ -289,8 +288,7 @@ namespace ChineseWriter {
         }
 
         private void PopulateCharGrid( IEnumerable<IDictionary<object, object>> words, int cursorPos ) {
-            _selectionStart = null;
-            _selectionEnd = null;
+            _selection = Tuple.Create<WordPanel, WordPanel>( null, null );
             _wordPanels = words.Select( word => new WordPanel( word ) ).ToArray();
             Characters.Children.Clear( );
             int pos = 0;            
@@ -300,24 +298,28 @@ namespace ChineseWriter {
                 wordPanel.MouseEnter += wordPanel_MouseEnter;
                 wordPanel.MouseLeftButtonDown += wordPanel_MouseLeftButtonDown;
                 wordPanel.MouseLeftButtonUp += wordPanel_MouseLeftButtonUp;
+                wordPanel.MouseRightButtonUp += wordPanel_MouseRightButtonUp;
                 pos++;
             }
             if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
         }
 
+        void wordPanel_MouseRightButtonUp( object sender, MouseButtonEventArgs e ) {
+            
+        }
+
         void wordPanel_MouseLeftButtonDown( object sender, MouseButtonEventArgs e ) {
             var wordPanel = (WordPanel)sender;
             _draggingSelection = true;
-            _selectionStart = wordPanel;
-            _selectionEnd = wordPanel;
+            _selection = Tuple.Create( wordPanel, wordPanel );
             MarkDraggedSelection( );
         }
 
         void wordPanel_MouseEnter( object sender, MouseEventArgs e ) {
             var thisPanel = (WordPanel)sender;
             if (Mouse.LeftButton != MouseButtonState.Pressed) _draggingSelection = false;
-            if ( _draggingSelection ) _selectionEnd = thisPanel;
+            if ( _draggingSelection ) _selection = Tuple.Create( _selection.Item1, thisPanel );
             MarkDraggedSelection( );
         }
 
@@ -325,7 +327,7 @@ namespace ChineseWriter {
             if ( _draggingSelection ) {
                 _draggingSelection = false;
                 CopyNow( );
-                if ( object.ReferenceEquals( _selectionStart, _selectionEnd ) ) {
+                if ( object.ReferenceEquals( _selection.Item1, _selection.Item2 ) ) {
                     var word = ( (WordPanel)sender ).Word;
                     // Show word breakdown and Move cursor only on clicking on single field, not dragging selection
                     UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
@@ -356,11 +358,11 @@ namespace ChineseWriter {
 
         WordPanel[] SelectedWordPanels {
             get {
-                if ( _selectionStart == null ) {
+                if ( _selection.Item1 == null ) {
                     return new WordPanel[] {};
                 } else {
-                    int startIndex = WordPanelIndex( _selectionStart );
-                    int endIndex = WordPanelIndex( _selectionEnd );
+                    int startIndex = WordPanelIndex( _selection.Item1 );
+                    int endIndex = WordPanelIndex( _selection.Item2 );
                     var first = Math.Min( startIndex, endIndex );
                     var last = Math.Max( startIndex, endIndex );
                     return _wordPanels.Skip( first ).Take( last - first + 1 ).ToArray( );           
@@ -389,7 +391,7 @@ namespace ChineseWriter {
 
         private IEnumerable<IDictionary<object, object>> SelectedWords {
             get {
-                if ( _selectionEnd == null && _selectionEnd == null ) return null;
+                if ( _selection.Item1 == null ) return null;
                 return SelectedWordPanels.Select( panel => panel.Word );
             }
         }
