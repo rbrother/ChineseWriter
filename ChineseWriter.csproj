@@ -85,6 +85,9 @@
     <Compile Include="ClipboardTool.cs" />
     <Compile Include="GuiUtils.cs" />
     <Compile Include="StringUtils.cs" />
+    <Compile Include="SuggestionsTable.xaml.cs">
+      <DependentUpon>SuggestionsTable.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WordPanel.cs" />
     <Compile Include="WordDatabase.cs" />
     <Compile Include="WritingState.cs" />
@@ -101,6 +104,10 @@
       <DependentUpon>ChineseWriterWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SuggestionsTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

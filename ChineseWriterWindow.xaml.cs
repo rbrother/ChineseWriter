@@ -2,8 +2,6 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -30,7 +28,7 @@ namespace ChineseWriter {
 
         public void InitClojureLoadPath( ) {
             var loadPath = Environment.GetEnvironmentVariable( "CLOJURE_LOAD_PATH" ) ?? "";
-            loadPath = AppendToPath( loadPath, "c:/github/ChineseWriter/Clojure" );
+            loadPath = AppendToPath( loadPath, "c:/github/ChineseWriter/Clojure" ); // TODO: USE relative path, from SearchUpwardFile
             loadPath = loadPath.Replace( '\\', '/' );
             Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath );
         }
@@ -58,9 +56,16 @@ namespace ChineseWriter {
                 ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains( key ) ).
                     Subscribe( key => TextEdit( key ) );
 
-                ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
+                var suggestionChanges = ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
-                    Subscribe( pinyinIndex => SelectSuggestionIndex( pinyinIndex ) );
+                    Select( index => Suggestions.GetSuggestion( index - 1 ) ).
+                    Merge( Suggestions.SuggestionSelected );
+
+                suggestionChanges.Subscribe( word => WritingState.InsertWord( word.Hanyu, word.Pinyin ) );
+                suggestionChanges.ObserveOnDispatcher().Subscribe( word => {
+                        ShowEnglish.IsChecked = false;
+                        _pinyinInput.Text = "";                    
+                    } );
 
                 var PinyinChanges = Observable.
                     FromEventPattern<TextChangedEventArgs>( _pinyinInput, "TextChanged" ).
@@ -70,12 +75,11 @@ namespace ChineseWriter {
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     CombineLatest( PinyinChanges, ( english, input ) => Tuple.Create( english, input ) ).
                     ObserveOnDispatcher( ).
-                    Subscribe( tuple => UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
+                    Subscribe( tuple => Suggestions.UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 WritingState.WordsChanges.
                     ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
                 WritingState.WordsChanges.Subscribe( words => WritingState.SaveCurrentText( ) );
                 _pinyinInput.Focus( );
-
             } catch ( Exception ex ) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
             }
@@ -175,53 +179,6 @@ namespace ChineseWriter {
             this.Dispatcher.Invoke( new Action( ( ) => { this.Title = title; } ) );
         }
 
-        private int CurrentUpdater = 0;
-        private int ActiveUpdaters = 0;
-
-        private void UpdateSuggestions( IEnumerable<IDictionary<object, object>> suggestions ) {
-            ThreadPool.QueueUserWorkItem(
-                state => UpdateSuggestionsBackground( (IEnumerable<IDictionary<object, object>>)state ), suggestions );
-        }
-
-        /// <summary>
-        /// TODO: Use dotnet Task-framework for this?
-        /// </summary>
-        /// <param name="suggestions"></param>
-        private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object, object>> suggestions ) {
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-            CurrentUpdater++;
-            var id = CurrentUpdater;
-            ActiveUpdaters++;
-            try {
-                while ( ActiveUpdaters > 1 ) {
-                    Thread.Sleep( 10 );
-                    if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
-                }
-                var items = new ObservableCollection<SuggestionWord>( ); // The default ItemsCollection of DataGrid does not allow editing
-                items.CollectionChanged += items_CollectionChanged;
-                this.Dispatcher.Invoke( new Action( ( ) => {
-                    ProcessingLabel.Content = "Searching dictionary...";
-                    ProcessingLabel.Foreground = new SolidColorBrush( Colors.Red );
-                    Suggestions.ItemsSource = items;
-                } ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
-                var index = 1;
-                foreach ( var suggestion in suggestions ) {
-                    if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
-                    var shortcut = index == 1 ? "Enter" :
-                        index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
-                    var dataWord = new SuggestionWord( index, suggestion, shortcut );
-                    this.Dispatcher.Invoke( new Action( ( ) => items.Add( dataWord ) ), TimeSpan.FromSeconds( 0.5 ), DispatcherPriority.Background );
-                    index++;
-                }
-                this.Dispatcher.Invoke( new Action( ( ) => {
-                    ProcessingLabel.Foreground = new SolidColorBrush( Colors.Black );
-                    ProcessingLabel.Content = string.Format( "{0} suggestions", Suggestions.Items.Count );
-                } ) );
-            } finally {
-                ActiveUpdaters--;
-            }
-        }
-
         void ShowTempMessage( string message ) {
             ProcessingLabel.Foreground = new SolidColorBrush( Colors.DarkGreen );
             ProcessingLabel.Content = message;
@@ -236,14 +193,6 @@ namespace ChineseWriter {
                     ReportErrorThreadSafe( ex );
                 }
             } );
-        }
-
-        void items_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) {
-            if ( e.Action == NotifyCollectionChangedAction.Remove ) {
-                foreach ( SuggestionWord item in e.OldItems ) {
-                    item.Delete();
-                }
-            }
         }
 
         private FrameworkElement CreateCursorPanel( ) {
@@ -265,26 +214,14 @@ namespace ChineseWriter {
 
         void PinyinInput_KeyUp( object sender, KeyEventArgs e ) {
             if ( e.Key == Key.Enter ) {
-                if ( Suggestions.Items.Count == 0 ) {
+                if ( Suggestions.Empty ) {
                     WritingState.LiteralInput( _pinyinInput.Text );
                     _pinyinInput.Text = "";
                 } else {
-                    SelectSuggestion( (SuggestionWord)Suggestions.Items[0] );
+                    Suggestions.SelectFirst( );
                 }
                 e.Handled = true;
             }
-        }
-
-        private void SelectSuggestionIndex( int pinyinIndex ) {
-            if ( pinyinIndex <= Suggestions.Items.Count ) {
-                SelectSuggestion( (SuggestionWord)Suggestions.Items[pinyinIndex - 1] );
-            }
-        }
-
-        private void SelectSuggestion( SuggestionWord word ) {
-            WritingState.InsertWord( word.Hanyu, word.Pinyin );
-            ShowEnglish.IsChecked = false;
-            _pinyinInput.Text = "";
         }
 
         private void PopulateCharGrid( IEnumerable<IDictionary<object, object>> words, int cursorPos ) {
@@ -330,7 +267,7 @@ namespace ChineseWriter {
                 if ( object.ReferenceEquals( _selection.Item1, _selection.Item2 ) ) {
                     var word = ( (WordPanel)sender ).Word;
                     // Show word breakdown and Move cursor only on clicking on single field, not dragging selection
-                    UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
+                    Suggestions.UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
                     WritingState.SetCursorPos( WordPanelIndex( (WordPanel)sender ) + 1 );
                 }
             }
@@ -420,18 +357,6 @@ namespace ChineseWriter {
         private void PasteChineseClick( object sender, RoutedEventArgs e ) {
             WritingState.LiteralInput(
                 Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ) );
-        }
-
-        private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {
-            Console.WriteLine( sender );
-            var source = (DependencyObject)e.OriginalSource;
-            var row = (DataGridRow)GuiUtils.FindParent( source, typeof( DataGridRow ) );
-            var cell = (DataGridCell)GuiUtils.FindParent( source, typeof( DataGridCell ) );
-            if ( row == null || cell == null ) return;
-            if ( cell.Column.Header.ToString( ) == "Shortcut" ) {
-                SelectSuggestion( (SuggestionWord)row.Item );
-                e.Handled = true;
-            }
         }
 
     } // class

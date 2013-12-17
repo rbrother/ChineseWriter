@@ -12,10 +12,6 @@ using Keyword = clojure.lang.Keyword;
 
 namespace ChineseWriter {
 
-    /// <summary>
-    /// TODO: Make this non-static class. Now that we actually manipulate the panels it
-    /// is better to have proper state, getters and setters...
-    /// </summary>
     class WordPanel : UserControl {
 
         private Panel _mainPanel;
