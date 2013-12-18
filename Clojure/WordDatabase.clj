@@ -140,6 +140,18 @@
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
 
+
+(defn add-new-combination-word [ list-of-words ]
+  (let [ hanyu (str/join "" (map :hanyu list-of-words))
+         pinyin (str/join " " (map :pinyin list-of-words))
+         key { :hanyu hanyu :pinyin pinyin }
+         new-word { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } ]
+    (do
+      (update-word-props! key new-word )
+      ; Here we would re-merge, but that is slow, so just add to the beginning
+      (swap! all-words (fn [words] (cons new-word words))))))
+
+
 ;-------------------  Finding suggestions based on starting pinyin or english  -----------------------
 
 (defn pinyin-matcher [ pinyin-start ]
@@ -164,5 +176,7 @@
 (defn find-words [ input english ]
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
     (take 5000 (filter matcher @all-words))))
+
+
 
 

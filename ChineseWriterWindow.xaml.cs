@@ -23,6 +23,7 @@ namespace ChineseWriter {
         private bool _draggingSelection = false;
         private Tuple<WordPanel,WordPanel> _selection = null;
         private WordPanel[] _wordPanels = new WordPanel[] {};
+        private ContextMenu _wordPanelContextMenu;
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
         private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
@@ -191,7 +192,7 @@ namespace ChineseWriter {
         void ShowTempMessage( string message ) {
             MessageStream.OnNext( Tuple.Create( message, Colors.DarkGreen ) );
             ThreadPool.QueueUserWorkItem( state => {
-                Thread.Sleep( 1000 );
+                Thread.Sleep( 1500 );
                 MessageStream.OnNext( Tuple.Create( "", Colors.Black ) );
             } );
         }
@@ -236,15 +237,29 @@ namespace ChineseWriter {
                 wordPanel.MouseEnter += wordPanel_MouseEnter;
                 wordPanel.MouseLeftButtonDown += wordPanel_MouseLeftButtonDown;
                 wordPanel.MouseLeftButtonUp += wordPanel_MouseLeftButtonUp;
-                wordPanel.MouseRightButtonUp += wordPanel_MouseRightButtonUp;
+                wordPanel.ContextMenu = WordPanelContextMenu;
                 pos++;
             }
             if ( pos == cursorPos ) Characters.Children.Add( _cursorPanel );
             _pinyinInput.Focus( );
         }
 
-        void wordPanel_MouseRightButtonUp( object sender, MouseButtonEventArgs e ) {
-            
+
+        private ContextMenu WordPanelContextMenu {
+            get {
+                if ( _wordPanelContextMenu == null ) {
+                    _wordPanelContextMenu = new ContextMenu( );
+                    var addWordItem = new MenuItem { Header = "New word from the selection" };
+                    addWordItem.Click += addWordItem_Click;
+                    _wordPanelContextMenu.Items.Add( addWordItem );
+                }
+                return _wordPanelContextMenu;
+            }
+        }
+
+        void addWordItem_Click( object sender, RoutedEventArgs e ) {
+            WordDatabase.AddNewWord( SelectedWords );
+            ShowTempMessage( "Word added" );
         }
 
         void wordPanel_MouseLeftButtonDown( object sender, MouseButtonEventArgs e ) {
@@ -313,18 +328,22 @@ namespace ChineseWriter {
         }
 
         private void CopyNow( ) {
-            if ( CopyHtml.IsChecked ?? false ) {
-                ClipboardTool.CopyToClipboard(
-                    (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ),
-                    new Uri( "http://www.brotherus.net" ) );
-            } else {
-                var data = WritingState.HanyiPinyinLines(
-                    SelectedWords,
-                    CopyPinyin.IsChecked ?? false,
-                    CopyEnglish.IsChecked ?? false );
-                HandleExceptions( ( ) => Clipboard.SetText( data, TextDataFormat.UnicodeText ) );
+            try {
+                if ( CopyHtml.IsChecked ?? false ) {
+                    ClipboardTool.CopyToClipboard(
+                        (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ),
+                        new Uri( "http://www.brotherus.net" ) );
+                } else {
+                    var data = WritingState.HanyiPinyinLines(
+                        SelectedWords,
+                        CopyPinyin.IsChecked ?? false,
+                        CopyEnglish.IsChecked ?? false );
+                        Clipboard.SetText( data, TextDataFormat.UnicodeText );
+                }
+                ShowTempMessage( "Copied" );
+            } catch( Exception ex ) {
+                ShowTempMessage( ex.Message ); // Usually the exception does not prevent the copying
             }
-            ShowTempMessage( "Copied" );
         }
 
         private IEnumerable<IDictionary<object, object>> SelectedWords {

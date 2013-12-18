@@ -94,6 +94,10 @@ namespace ChineseWriter {
             RT.var( "WordDatabase", "set-word-info-prop" ).invoke( hanyu, pinyin, propName, value );
         }
 
+
+        internal static void AddNewWord( IEnumerable<IDictionary<object, object>> SelectedWords ) {
+            RT.var( "WordDatabase", "add-new-combination-word" ).invoke( SelectedWords );
+        }
     } // class
 
 } // namespace
