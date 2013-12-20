@@ -37,7 +37,7 @@ namespace ChineseWriter {
         }
 
         /// <summary>
-        /// TODO: Use dotnet Task-framework for this?
+        /// TODO: Use dotnet Task-framework for this? Or simply lock-block?
         /// </summary>
         /// <param name="suggestions"></param>
         private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object, object>> suggestions ) {

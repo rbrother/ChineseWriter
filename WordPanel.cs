@@ -24,6 +24,7 @@ namespace ChineseWriter {
 
         public WordPanel( IDictionary<object, object> word ) {
             this.Content = GuiUtils.WrapToBorder(
+                word == null ? new Label { Content = "NULL" } :
                 word.HasKeyword( "text" ) ?
                 CreateForLiteral( word.Get<string>( "text" ) ) :
                 CreateForHanyu( word.Hanyu(), word.Pinyin(), word.Known( ) ? "" : word.ShortEnglish() ) );
