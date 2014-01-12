@@ -74,12 +74,16 @@
 ;--------------- Loading database -------------------------------------
 
 (defn suggestion-comparer [
-     { known1 :known hsk-index1 :hsk-index rarity1 :hanzi-rarity }
-     { known2 :known hsk-index2 :hsk-index rarity2 :hanzi-rarity } ]
+     { pinyin1 :pinyin known1 :known hsk-index1 :hsk-index rarity1 :hanzi-rarity }
+     { pinyin2 :pinyin known2 :known hsk-index2 :hsk-index rarity2 :hanzi-rarity } ]
   (cond
     ; anything with known-level first
     (and known1 (not known2)) -1
     (and known2 (not known1)) 1
+    ; shorter words next priority. This must be done because unfortunately HSK does
+    ; often not have entries for *parts* of words (eg. hai2shi4 is 333, but there is no
+    ; entry at all for hai2, although that is commonly used separately)
+    (not= (count pinyin1) (count pinyin2)) (compare (count pinyin1) (count pinyin2))
     ; anything with hsk-index first (our custom words later)
     (and hsk-index1 (not hsk-index2)) -1
     (and hsk-index2 (not hsk-index1)) 1
