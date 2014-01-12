@@ -18,10 +18,6 @@
 
 (def cc-line-regex #"(\S+)\s+(\S+)\s+\[([\w\:\s]+)\]\s+\/(.+)\/" )
 
-(defn is-variant [word]
-  (let [variant-regex #"^(variant of|old variant of|archaic variant of|Japanese variant of)"]
-    (re-find variant-regex (word :english))))
-
 (defn add-default-english [ {:keys [english short-english] :as word} ]
   (merge { :english (or short-english "") } word ))
 
@@ -39,11 +35,12 @@
     (round)))
 
 (defn add-word-attributes [ { :keys [pinyin english hanyu] :as word } freqs hsk-freqs ]
-  (let [ pinyin-nospace (str/replace pinyin " " "") ]
+  (let [ pinyin-nospace (str/replace pinyin " " "")
+         hsk-index (get hsk-freqs { :hanyu hanyu :pinyin pinyin-nospace }) ]
     (merge word
       { :short-english (if english (first (str/split english #",")) "" )
-        :hanzi-rarity (hanyu-rarity hanyu freqs)
-        :hsk-index (get hsk-freqs { :hanyu hanyu :pinyin pinyin-nospace } 10000) } )))
+        :hanzi-rarity (hanyu-rarity hanyu freqs) }
+      (if hsk-index { :hsk-index hsk-index} {} ))))
 
 ; cc-dict can contain multiple entries with same hanyu+pinyin but different english,
 ; for example 后 Combine those.
@@ -60,7 +57,6 @@
       (map #(regex-groups cc-line-regex %))
       (remove nil?)
       (map line-items-to-word)
-      (remove is-variant)
       (map add-word-attributes-freq) )))
 
 (defn load-words [ file freqs hsk-freqs ]
@@ -88,7 +84,7 @@
 (defn convert-dict [ infile freq-file hsk-freq-file outfile ]
   (let [ freqs (parse-freqs (System.IO.File/ReadAllLines freq-file))
          hsk-freqs (parse-hsk (System.IO.File/ReadAllLines hsk-freq-file))
-         converted-words (sort-by :hsk-index (combine-duplicates (load-words infile freqs hsk-freqs)))
+         converted-words (combine-duplicates (load-words infile freqs hsk-freqs))
          lines (concat ["["] (map pr-str converted-words) ["]"]) ]
     (System.IO.File/WriteAllLines outfile lines)))
 
