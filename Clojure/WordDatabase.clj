@@ -74,13 +74,17 @@
 ;--------------- Loading database -------------------------------------
 
 (defn suggestion-comparer [
-     { hanyu1 :hanyu pinyin1 :pinyin known1 :known }
-     { hanyu2 :hanyu pinyin2 :pinyin known2 :known } ]
+     { known1 :known hsk-index1 :hsk-index rarity1 :hanzi-rarity }
+     { known2 :known hsk-index2 :hsk-index rarity2 :hanzi-rarity } ]
   (cond
-    (not= known1 known2) (if (> (or known1 0) (or known2 0)) -1 1 )
-    (not= (count hanyu1) (count hanyu2)) (if (> (count hanyu1) (count hanyu2)) 1 -1 )
-    (not= pinyin1 pinyin2) (compare pinyin1 pinyin2)
-    :else (compare hanyu1 hanyu2)))
+    ; anything with known-level first
+    (and known1 (not known2)) -1
+    (and known2 (not known1)) 1
+    ; anything with hsk-index first (our custom words later)
+    (and hsk-index1 (not hsk-index2)) -1
+    (and hsk-index2 (not hsk-index1)) 1
+    (not= hsk-index1 hsk-index2) (compare hsk-index1 hsk-index2)
+    :else (compare rarity1 rarity2)))
 
 (defn sort-suggestions [ words ] (sort suggestion-comparer words))
 
@@ -177,6 +181,3 @@
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
     (take 5000 (filter matcher @all-words))))
 
-
-
-

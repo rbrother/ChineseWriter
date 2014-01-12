@@ -41,6 +41,8 @@
             <DataGridTextColumn Header="Short English" FontFamily="Times New Roman" Binding="{Binding Path=ShortEnglish}" MaxWidth="150" />
             <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" MaxWidth="500" />
             <DataGridTextColumn Header="Source" FontFamily="Times New Roman" Binding="{Binding Path=Source}"/>
+            <DataGridTextColumn Header="HSK Index" FontFamily="Times New Roman" Binding="{Binding Path=HSKIndex}"/>
+            <DataGridTextColumn Header="Hanzi rarity" FontFamily="Times New Roman" Binding="{Binding Path=HanziRarity}"/>
             <DataGridTextColumn Header="Finnish" FontFamily="Times New Roman" Binding="{Binding Path=Finnish}"/>
         </DataGrid.Columns>
     </DataGrid>

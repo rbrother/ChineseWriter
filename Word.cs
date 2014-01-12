@@ -45,6 +45,14 @@ namespace ChineseWriter {
             get { return (string)Get( "source" ); }
             set { Set( "source", value ); }
         }
+        public object HSKIndex {
+            get { return Get( "hsk-index" ); }
+            set { Set( "hsk-index", value ); }
+        }
+        public object HanziRarity {
+            get { return Get( "hanzi-rarity" ); }
+            set { Set( "hanzi-rarity", value ); }
+        }
         public string English {
             get { return (string)Get("english" ); }
             set { Set("english", value ); }
