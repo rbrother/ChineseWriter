@@ -74,21 +74,27 @@
 ;--------------- Loading database -------------------------------------
 
 (defn suggestion-comparer [
-     { pinyin1 :pinyin known1 :known hsk-index1 :hsk-index rarity1 :hanzi-rarity }
-     { pinyin2 :pinyin known2 :known hsk-index2 :hsk-index rarity2 :hanzi-rarity } ]
-  (cond
-    ; anything with known-level first
-    (and known1 (not known2)) -1
-    (and known2 (not known1)) 1
-    ; shorter words next priority. This must be done because unfortunately HSK does
-    ; often not have entries for *parts* of words (eg. hai2shi4 is 333, but there is no
-    ; entry at all for hai2, although that is commonly used separately)
-    (not= (count pinyin1) (count pinyin2)) (compare (count pinyin1) (count pinyin2))
-    ; anything with hsk-index first (our custom words later)
-    (and hsk-index1 (not hsk-index2)) -1
-    (and hsk-index2 (not hsk-index1)) 1
-    (not= hsk-index1 hsk-index2) (compare hsk-index1 hsk-index2)
-    :else (compare rarity1 rarity2)))
+     { pinyin1 :pinyin known1 :known hsk-index1-raw :hsk-index rarity1 :hanzi-rarity }
+     { pinyin2 :pinyin known2 :known hsk-index2-raw :hsk-index rarity2 :hanzi-rarity } ]
+  (let [ hsk-index1 (or hsk-index1-raw 10000) hsk-index2 (or hsk-index2-raw 10000) ]
+    (cond
+      ; anything with known-level first
+      (and known1 (not known2)) -1
+      (and known2 (not known1)) 1
+      (and known1 known2)
+        (cond
+          ; shorter words priority for known words. This must be done because unfortunately HSK does
+          ; often not have entries for *parts* of words (eg. hai2shi4 is 333, but there is no
+          ; entry at all for hai2, although that is commonly used separately). This is done
+          ; by pinyin so that fully written pinyin (eg. "xi") would take predecense over partial (ef. "xin")
+          (not= (count pinyin1) (count pinyin2)) (compare (count pinyin1) (count pinyin2))
+          ; For *known* words, use rarity directly. This is done to avoid problem
+          ; of HSK not often having entries for *parts* of words
+          :else (compare rarity1 rarity2))
+      ; For unknown words (most likely searched with english?) use hsk-index before rarity
+      ; and don't care of length directly (rarity will take care of that to some extent)
+      (not= hsk-index1 hsk-index2) (compare hsk-index1 hsk-index2)
+      :else (compare rarity1 rarity2))))
 
 (defn sort-suggestions [ words ] (sort suggestion-comparer words))
 
