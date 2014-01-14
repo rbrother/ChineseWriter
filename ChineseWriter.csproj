@@ -43,10 +43,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Clojure">
-      <HintPath>..\..\Google Drive\Programs\clojure-clr\Clojure.dll</HintPath>
+      <HintPath>..\..\Google Drive\Programs\clojure-clr\bin\4.0\Debug\Clojure.dll</HintPath>
     </Reference>
     <Reference Include="clojure.core.clj">
-      <HintPath>..\..\Google Drive\Programs\clojure-clr\clojure.core.clj.dll</HintPath>
+      <HintPath>..\..\Google Drive\Programs\clojure-clr\bin\4.0\Debug\clojure.core.clj.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
