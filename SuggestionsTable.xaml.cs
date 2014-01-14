@@ -90,5 +90,13 @@ namespace ChineseWriter {
         internal void SelectFirst( ) {
             SuggestionSelected.OnNext( _suggestions[0] );
         }
+
+        private void Suggestions_RowEditEnding( object sender, DataGridRowEditEndingEventArgs e ) {
+            if ( SuggestionWord.WordUpdateException != null ) {
+                var ex = SuggestionWord.WordUpdateException;
+                SuggestionWord.WordUpdateException = null;
+                MessageBox.Show( Window.GetWindow( this ), ex.ToString(), "Error during word editing" );
+            }
+        }
     }
 }

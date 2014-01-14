@@ -14,6 +14,8 @@ namespace ChineseWriter {
     /// </summary>
     public class SuggestionWord {
 
+        public static Exception WordUpdateException = null;
+
         private string _hanyu, _pinyin, _pinyinDiacritics; // Immutable word ID stuff, make a copy
 
         public SuggestionWord( int index, IDictionary<object, object> word, string shortCut ) {
@@ -68,7 +70,11 @@ namespace ChineseWriter {
             return WordDatabase.GetWordProp( _hanyu, _pinyin, propName );
         }
         private void Set( string propName, object value ) {
-            WordDatabase.SetWordProp( _hanyu, _pinyin, propName, value );
+            try {
+                WordDatabase.SetWordProp( _hanyu, _pinyin, propName, value );
+            } catch ( Exception ex ) {
+                WordUpdateException = ex;
+            }
         }
     }
 
