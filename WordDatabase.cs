@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Reactive.Subjects;
 using RT = clojure.lang.RT;
 using Keyword = clojure.lang.Keyword;
+using Brotherus;
 
 namespace ChineseWriter {
 
@@ -29,29 +30,12 @@ namespace ChineseWriter {
 
         public static string[] KNOWLEDGE_DESCRIPTIONS = KNOWLEDGE_LEVEL_DESCR.Values.ToArray( );
 
-        private static string FilePath(string fileName) {
-            return SearchUpwardFile( ExeDir, fileName );
-        }
 
         public static string SmallDictionaryFile { get { return @"C:\Google Drive\Ann\chinese study\words.clj"; } }
 
         public static void LoadWords( ) {
             RT.var( "WordDatabase", "load-database" )
-                .invoke( FilePath( "cedict_ts.clj" ), SmallDictionaryFile );
-        }
-
-        public static DirectoryInfo ExeDir {
-            get {
-                var exePath = new Uri( Assembly.GetExecutingAssembly( ).CodeBase ).LocalPath;
-                var exeDir = new FileInfo( exePath ).Directory;
-                return exeDir;
-            }
-        }
-
-        private static string SearchUpwardFile( DirectoryInfo startDir, string fileName ) {
-            var theFile = startDir.GetFiles( ).FirstOrDefault( file => file.Name == fileName );
-            if (theFile != null) return theFile.FullName;
-            return SearchUpwardFile( startDir.Parent, fileName );            
+                .invoke( Utils.FindRelativeFile( "cedict_ts.clj" ), SmallDictionaryFile );
         }
 
         private static IEnumerable<IDictionary<object, object>> ToWordList( object words ) {

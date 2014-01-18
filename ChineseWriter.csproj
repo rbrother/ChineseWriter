@@ -88,6 +88,7 @@
     <Compile Include="SuggestionsTable.xaml.cs">
       <DependentUpon>SuggestionsTable.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
     <Compile Include="WordPanel.cs" />
     <Compile Include="WordDatabase.cs" />
     <Compile Include="WritingState.cs" />

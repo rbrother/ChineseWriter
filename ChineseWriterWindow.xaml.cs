@@ -13,6 +13,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using RT = clojure.lang.RT;
+using Brotherus;
 
 namespace ChineseWriter {
 
@@ -32,7 +33,7 @@ namespace ChineseWriter {
 
         public void InitClojureLoadPath( ) {
             var loadPath = Environment.GetEnvironmentVariable( "CLOJURE_LOAD_PATH" ) ?? "";
-            loadPath = AppendToPath( loadPath, "c:/github/ChineseWriter/Clojure" ); // TODO: USE relative path, from SearchUpwardFile
+            loadPath = AppendToPath( loadPath, Utils.FindRelativeFile("Clojure") ); // TODO: USE relative path, from SearchUpwardFile
             loadPath = loadPath.Replace( '\\', '/' );
             Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath );
         }

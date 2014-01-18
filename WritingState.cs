@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Reactive.Subjects;
 using RT = clojure.lang.RT;
+using Brotherus;
 
 namespace ChineseWriter {
 
@@ -96,7 +97,7 @@ namespace ChineseWriter {
 
         internal static string TextSaveFileName {
             get {
-                return Path.Combine( WordDatabase.ExeDir.ToString( ), "text.clj" );
+                return Path.Combine( Utils.ExeDir.ToString( ), "text.clj" );
             }
         }
 
