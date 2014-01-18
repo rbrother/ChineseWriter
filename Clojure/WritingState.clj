@@ -1,7 +1,8 @@
 (ns WritingState
   (:require [clojure.string :as str])
   (:use Utils)
-  (:use WordDatabase))
+  (:use WordDatabase)
+  (:use ParseChinese))
 
 (def state (atom { :text [] :cursor-pos 0 }))
 
@@ -35,8 +36,17 @@
          new-cursor-pos (+ cursor-pos (count new-words)) ]
     { :text new-text :cursor-pos new-cursor-pos } ))
 
-(defn insert-words! [ words ]
-  (swap! state insert-words words ))
+(defn insert-words! [ words ] (swap! state insert-words words) )
+
+(defn insert-word!
+  ( [ word ] (insert-words! [ word ] ))
+  ( [ hanyu pinyin ] (insert-word! { :hanyu hanyu :pinyin pinyin } )))
+
+(defn literal-input! [ text ]
+  (insert-word! { :text text } ))
+
+(defn insert-chinese! [ text ]
+  (insert-words! (hanyu-to-words text)))
 
 (defn moved-cursor-pos [ { :keys [ text cursor-pos ] } dir ]
   (case dir
@@ -56,5 +66,3 @@
 
 (defn reset-cursor! [ pos ]
   (swap! state set-cursor pos ))
-
-

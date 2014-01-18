@@ -31,16 +31,16 @@ namespace ChineseWriter {
             return ( index < Suggestions.Items.Count ) ? _suggestions[index] : null;
         }
 
-        internal void UpdateSuggestions( IEnumerable<IDictionary<object, object>> suggestions ) {
+        internal void UpdateSuggestions( IEnumerable<Word> suggestions ) {
             ThreadPool.QueueUserWorkItem(
-                state => UpdateSuggestionsBackground( (IEnumerable<IDictionary<object, object>>)state ), suggestions );
+                state => UpdateSuggestionsBackground( (IEnumerable<Word>)state ), suggestions );
         }
 
         /// <summary>
         /// TODO: Use dotnet Task-framework for this? Or simply lock-block?
         /// </summary>
         /// <param name="suggestions"></param>
-        private void UpdateSuggestionsBackground( IEnumerable<IDictionary<object, object>> suggestions ) {
+        private void UpdateSuggestionsBackground( IEnumerable<Word> suggestions ) {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             CurrentUpdater++;
             var id = CurrentUpdater;
@@ -57,8 +57,8 @@ namespace ChineseWriter {
                     if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
                     var shortcut = index == 1 ? "Enter" :
                         index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
-                    var hanyuPinyuin = new HanyuPinyin { Hanyu = suggestion.Hanyu( ), Pinyin = suggestion.Pinyin( ) };
-                    var dataWord = new Word( index, hanyuPinyin, shortcut );
+                    var hanyuPinyin = new HanyuPinyin { Hanyu = suggestion.Hanyu, Pinyin = suggestion.Pinyin };
+                    var dataWord = new Word( hanyuPinyin, shortcut, index );
                     this.Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
                     index++;
                 }

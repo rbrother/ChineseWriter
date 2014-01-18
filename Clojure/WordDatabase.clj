@@ -20,7 +20,7 @@
 
 ;----------------------- Dictionary accessors (from C#) ----------------------------------
 
-(defn get-word [ hanyu pinyin ] (hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ))
+(defn get-word [ hanyu pinyin ] (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ))
 
 ;--------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@
 
 (defn create-hanyu-pinyin-dict [ words ] (map-map-values first (index words [ :hanyu :pinyin ])))
 
-(defn only-hanyu-pinyin [ word ] (select-keys word [ :hanyu :pinyin ] ))
+(defn simple-props [ word ] (select-keys word [ :hanyu :pinyin :english ] ))
 
 (defn load-database [ cc-dict-file short-dict-file ]
   (let [ short-dict (create-hanyu-pinyin-dict (load-from-file short-dict-file))
@@ -105,8 +105,9 @@
          full-dict (merge-with merge large-dict short-dict)
          merged-words (sort-suggestions (vals full-dict))
          hanyu-indexed (index merged-words [ :hanyu ])
-         sort-and-simplify (fn [word-list] (map only-hanyu-pinyin (sort-suggestions word-list))) ]
-      (reset! all-words (map only-hanyu-pinyin merged-words))
+         sort-and-simplify (fn [word-list] (map simple-props (sort-suggestions word-list))) ]
+      (reset! info-file-name short-dict-file)
+      (reset! all-words (map simple-props merged-words))
       (reset! hanyu-pinyin-dict full-dict)
       (reset! hanyu-dict (map-map-keys-values :hanyu sort-and-simplify hanyu-indexed ))))
 
@@ -114,22 +115,23 @@
 
 (defn get-word-prop [ hanyu pinyin prop-name ]
   (let [ word (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
-    (word (keyword prop-name))))
+    (if word (word (keyword prop-name)) nil)))
 
-;(defn swap-word-info! [ swap-func ]
-;  (do
-;    (swap! word-info-dict swap-func)
-;    (if @info-file-name
-;      (let [ words-str (pretty-pr (sort-suggestions (map combined-properties (vals @word-info-dict)))) ]
-;        (System.IO.File/WriteAllText @info-file-name words-str) nil ))))
+(defn known? [word] (> (get word :known 0) 0) )
 
-;(defn update-word-props! [ hanyu-pinyin new-props ]
-;  (swap-word-info! (fn [ dict ] (assoc dict hanyu-pinyin new-props))))
+(defn swap-hanyu-pinyin-dict! [ swap-func ]
+  (do
+    (swap! hanyu-pinyin-dict swap-func)
+    (if @info-file-name
+      (let [ words-str (pretty-pr (sort-suggestions (filter known? (vals @hanyu-pinyin-dict)))) ]
+        (System.IO.File/WriteAllText @info-file-name words-str)))))
 
-;(defn set-word-info-prop [hanyu pinyin prop-name value ]
-;  (let [ key { :hanyu hanyu :pinyin pinyin }
-;         old-props (combined-properties key) ]
-;    (update-word-props! key (assoc old-props (keyword prop-name) value))))
+(defn update-word-props! [ hanyu-pinyin new-props ]
+  (swap-hanyu-pinyin-dict! (fn [ dict ] (assoc dict hanyu-pinyin (merge (dict hanyu-pinyin) new-props)))))
+
+(defn set-word-prop [hanyu pinyin prop-name value ]
+  (let [ key { :hanyu hanyu :pinyin pinyin } ]
+    (update-word-props! key { (keyword prop-name) value } )))
 
 ;(defn delete-word-info! [ hanyu pinyin ]
 ;  (let [ key { :hanyu hanyu :pinyin pinyin } ]

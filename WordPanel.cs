@@ -16,19 +16,26 @@ namespace ChineseWriter {
 
         private Panel _mainPanel;
 
-        public Word Word { get; set; }
+        public IDictionary<object, object> WordProperties { get; set; }
+
+        public bool IsHanyuWord { get { return !WordProperties.HasKeyword( "text" ); } }
+
+        public Word HanyuWord { 
+            get {
+                return IsHanyuWord ? new Word( WordProperties.Hanyu(), WordProperties.Pinyin() ) : null;
+            } 
+        } 
 
         private static readonly Color[] TONE_COLORS = { 
             Color.FromRgb(255,0,0), Color.FromRgb(160,160,0), Color.FromRgb(0,180,0), 
             Color.FromRgb(0,0,255), Colors.Black };
 
-        public WordPanel( Word word ) {
+        public WordPanel( IDictionary<object, object> word ) {
             this.Content = GuiUtils.WrapToBorder(
-                word == null ? new Label { Content = "NULL" } :
                 word.HasKeyword( "text" ) ?
-                CreateForLiteral( word.Get<string>( "text" ) ) :
-                CreateForHanyu( word.Hanyu(), word.Pinyin(), word.Known( ) ? "" : word.ShortEnglish() ) );
-            this.Word = word;
+                    CreateForLiteral( word.Get<string>( "text" ) ) :
+                    CreateForHanyu( new Word( word.Hanyu( ), word.Pinyin( ) )));
+            this.WordProperties = word;
         }
 
         public void SetSelected( bool selected ) {
@@ -80,20 +87,20 @@ namespace ChineseWriter {
             return TONE_COLORS[tone - 1];
         }
 
-        private FrameworkElement CreateForHanyu( string hanyu, string pinyin, string shortEnglish ) {
-            var chars = WordDatabase.Characters( hanyu, pinyin );
+        private FrameworkElement CreateForHanyu( Word word ) {
+            var chars = WordDatabase.Characters( word );
             _mainPanel = CreateStackPanel(
                 CreateTextBlock( "SimSun", 30,
                     chars.Select( c => new Run {
-                        Text = c.Hanyu(),
-                        Foreground = new SolidColorBrush( ToneColor( c.Pinyin() ) )
+                        Text = c.Hanyu,
+                        Foreground = new SolidColorBrush( ToneColor( c.Pinyin ) )
                     } ).ToArray( ) ),
                 CreateTextBlock( "Times New Roman", 20,
                     chars.Select( c => new Run {
-                        Text = " " + c.PinyinDiacritics() + " ",
-                        Foreground = new SolidColorBrush( ToneColor( c.Pinyin( ) ) )
+                        Text = " " + c.PinyinDiacritics + " ",
+                        Foreground = new SolidColorBrush( ToneColor( c.Pinyin ) )
                     } ).ToArray( ) ),
-                CreateEnglishPanel( shortEnglish ) );
+                    CreateEnglishPanel( word.KnownLevel < 2 ? word.ShortEnglish : "" ) );
             _mainPanel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             return _mainPanel;
         }

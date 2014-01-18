@@ -28,15 +28,26 @@ namespace ChineseWriter {
         private IHanyuPinyin _hanyuPinyin;
         private string _pinyinDiacritics; // Immutable word ID stuff, make a copy
 
-        public Word( int index, IHanyuPinyin hanyuPinyin, string shortCut ) {
+        public Word( string hanyu, string pinyin ) {
+            _hanyuPinyin = new HanyuPinyin { Hanyu = hanyu, Pinyin = pinyin };
+        }
+
+        public Word( IHanyuPinyin hanyuPinyin, string shortCut, int index = 0 ) {
+            _hanyuPinyin = hanyuPinyin;
             Index = index;
-            _pinyinDiacritics = DiacriticsAdderFunc.AddDiacritics( hanyuPinyin.Pinyin );
             Shortcut = shortCut;
         }
 
         public int Index { get; set; }
         public string Shortcut { get; set; }
-        public string PinyinDiacritics { get { return _pinyinDiacritics; } set { } }
+        public string PinyinDiacritics { 
+            get {
+                if ( _pinyinDiacritics == null ) {
+                    _pinyinDiacritics = DiacriticsAdderFunc.AddDiacritics( Pinyin );
+                }
+                return _pinyinDiacritics; } 
+            set { } 
+        }
         public string Pinyin { get { return _hanyuPinyin.Pinyin; } }
         public string Hanyu { get { return _hanyuPinyin.Hanyu; } set { } }
         public string Known {
@@ -72,14 +83,14 @@ namespace ChineseWriter {
             set { Set( "finnish", value ); }
         }
         internal void Delete( ) {
-            WordDatabase.DeleteWordInfo( _hanyu, _pinyin );
+            WordDatabase.DeleteWordInfo( this );
         }
         private object Get( string propName ) { 
-            return WordDatabase.GetWordProp( _hanyu, _pinyin, propName );
+            return WordDatabase.GetWordProp( this, propName );
         }
         private void Set( string propName, object value ) {
             try {
-                WordDatabase.SetWordProp( _hanyu, _pinyin, propName, value );
+                WordDatabase.SetWordProp( this, propName, value );
             } catch ( Exception ex ) {
                 WordUpdateException = ex;
             }

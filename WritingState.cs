@@ -56,22 +56,18 @@ namespace ChineseWriter {
             WordsChanges.OnNext( Words );
         }
 
-        internal static void LiteralInput( string text ) {
-            var words = (IEnumerable<object>)RT.var( "ParseChinese", "hanyu-to-words" ).invoke( text );
-            InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
-        }
-
         internal static void InsertWord( IHanyuPinyin word ) {
-            InsertWords( new IDictionary<object, object>[] { 
-                new Dictionary<object,object>() { 
-                    { RT.keyword("","hanyu"), word.Hanyu },
-                    { RT.keyword("","pinyin"), word.Pinyin } 
-                } 
-            } );
+            RT.var( "WritingState", "insert-word!" ).invoke( word.Hanyu, word.Pinyin );
+            WordsChanges.OnNext( Words );
         }
 
-        private static void InsertWords( IDictionary<object, object>[] newWords ) {
-            RT.var( "WritingState", "insert-words!" ).invoke( newWords );
+        internal static void LiteralInput( string text ) {
+            RT.var( "WritingState", "literal-input!" ).invoke( text );
+            WordsChanges.OnNext( Words );
+        }
+
+        internal static void InsertChinese( string hanyuText ) {
+            RT.var( "WritingState", "insert-chinese!" ).invoke( hanyuText );
             WordsChanges.OnNext( Words );
         }
 
@@ -114,6 +110,7 @@ namespace ChineseWriter {
             RT.var( "WritingState", "reset-cursor!" ).invoke( pos );
             WordsChanges.OnNext( Words );
         }
+
     } // class
 
 } // namespace

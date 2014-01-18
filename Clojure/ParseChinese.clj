@@ -4,7 +4,7 @@
 
 (defn find-first-word-len [ chinese len ]
   (if (zero? len) { :text (subs chinese 0 1) }
-    (let [words (@hanyu-dict { :hanyu (subs chinese 0 len) } )]
+    (let [words (@hanyu-dict (subs chinese 0 len) )]
       (if words (first words)
         (find-first-word-len chinese (dec len))))))
 

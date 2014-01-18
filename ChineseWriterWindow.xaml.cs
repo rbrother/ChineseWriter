@@ -61,13 +61,13 @@ namespace ChineseWriter {
                 ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains( key ) ).
                     Subscribe( key => TextEdit( key ) );
 
-                var suggestionChanges = ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
+                var suggestionSelections = ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
                     Select( index => Suggestions.GetSuggestion( index - 1 ) ).
                     Merge( Suggestions.SuggestionSelected );
 
-                suggestionChanges.Subscribe( word => WritingState.InsertWord( word ) );
-                suggestionChanges.ObserveOnDispatcher().Subscribe( word => {
+                suggestionSelections.Subscribe( word => WritingState.InsertWord( word ) );
+                suggestionSelections.ObserveOnDispatcher().Subscribe( word => {
                         ShowEnglish.IsChecked = false;
                         _pinyinInput.Text = "";                    
                     } );
@@ -282,10 +282,13 @@ namespace ChineseWriter {
                 _draggingSelection = false;
                 CopyNow( );
                 if ( object.ReferenceEquals( _selection.Item1, _selection.Item2 ) ) {
-                    var word = ( (WordPanel)sender ).Word;
-                    // Show word breakdown and Move cursor only on clicking on single field, not dragging selection
-                    Suggestions.UpdateSuggestions( WordDatabase.BreakDown( word.Hanyu( ), word.Pinyin( ) ) );
-                    WritingState.SetCursorPos( WordPanelIndex( (WordPanel)sender ) + 1 );
+                    var panel = (WordPanel)sender;
+                    if ( panel.IsHanyuWord ) {
+                        var word = ( (WordPanel)sender ).HanyuWord;
+                        // Show word breakdown and Move cursor only on clicking on single field, not dragging selection
+                        Suggestions.UpdateSuggestions( WordDatabase.BreakDown( word ) );
+                        WritingState.SetCursorPos( WordPanelIndex( panel ) + 1 );
+                    }
                 }
             }
         }
@@ -347,7 +350,7 @@ namespace ChineseWriter {
         private IEnumerable<IDictionary<object, object>> SelectedWords {
             get {
                 if ( _selection.Item1 == null ) return null;
-                return SelectedWordPanels.Select( panel => panel.Word );
+                return SelectedWordPanels.Select( panel => panel.WordProperties );
             }
         }
 
@@ -373,7 +376,7 @@ namespace ChineseWriter {
         }
 
         private void PasteChineseClick( object sender, RoutedEventArgs e ) {
-            WritingState.LiteralInput(
+            WritingState.InsertChinese(
                 Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ) );
         }
 

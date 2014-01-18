@@ -14,111 +14,34 @@
   (is (starts-with "moikka" "moi"))
   (is (not (starts-with "moikka" "hei"))))
 
-(def test-words-raw
-  [
-   {:hanyu "一下子", :pinyin "yi1 xia4 zi5", :english "in a short while, all at once, all of a sudden"},
-   {:hanyu "一世", :pinyin "yi1 shi4", :english "generation, period of 30 years, one's whole lifetime, lifelong, age, era, times, the whole world, the First (of numbered European kings)"},
-   {:hanyu "一丘之貉", :pinyin "yi1 qiu1 zhi1 he2", :english "jackals of the same tribe (idiom); fig. They are all just as bad as each other."},
-   {:hanyu "一中一台", :pinyin "yi1 Zhong1 yi1 Tai2", :english "one China and one Taiwan (policy)"},
-   {:hanyu "一中原则", :pinyin "yi1 zhong1 yuan2 ze2", :english "One-China principle, the official doctrine that Taiwan is a province of China"},
-   {:hanyu "一串", :pinyin "yi1 chuan4", :english "strand"},
-   {:hanyu "一之为甚", :pinyin "yi1 zhi1 wei2 shen4", :english "Once is enough (idiom)"},
-   {:hanyu "一之谓甚", :pinyin "yi1 zhi1 wei4 shen4", :english "see 一之為甚|一之为甚[yi1 zhi1 wei2 shen4]"},
-   {:hanyu "一干二净", :pinyin "yi1 gan1 er4 jing4", :english "thoroughly (idiom), completely, one and all, very clean"},
-   {:hanyu "一了百了", :pinyin "yi1 liao3 bai3 liao3", :english "once the main problem is solved, all troubles are solved, death ends all one's troubles"},
-   {:hanyu "一事无成", :pinyin "yi1 shi4 wu2 cheng2", :english "to have achieved nothing, to be a total failure, to get nowhere"},
-   {:hanyu "一二八事变", :pinyin "yi1 er4 ba1 shi4 bian4", :english "Shanghai incident of 28th January 1932, Chinese uprising against Japanese quarters of Shanghai"},
-   {:hanyu "一五一十", :pinyin "yi1 wu3 yi1 shi2", :english "lit. count by fives and tens (idiom); to narrate systematically and in full detail"},
-   {:hanyu "一些", :pinyin "yi1 xie1", :english "some, a few, a little"},
-   {:hanyu "一代", :pinyin "yi1 dai4", :english "generation"},
-   {:hanyu "一代不如一代", :pinyin "yi1 dai4 bu4 ru2 yi1 dai4", :english "to be getting worse with each generation"},
-   {:hanyu "一并", :pinyin "yi1 bing4", :english "to lump together, to treat along with all the others"},
-   {:hanyu "一来", :pinyin "yi1 lai2", :english "on one hand,..."},
-   {:hanyu "一来二去", :pinyin "yi1 lai2 er4 qu4", :english "gradually, little by little, in the course of time"},
-   {:hanyu "一个中国政策", :pinyin "yi1 ge4 Zhong1 guo2 zheng4 ce4", :english "one China policy"},
-   {:hanyu "一个人", :pinyin "yi1 ge4 ren2", :english "alone"},
-   {:hanyu "我", :pinyin "wo3", :english "I, me, my"},
-   {:hanyu "们", :pinyin "men5", :english "plural marker for pronouns, and nouns referring to individuals"},
-   {:hanyu "我们", :pinyin "wo3 men5", :english "we, us, ourselves, our"},
-   {:hanyu "女友", :pinyin "nu:3 you3", :english "girlfriend"},
-   {:hanyu "爱人", :pinyin "ai4 ren5", :english "spouse, husband, wife, sweetheart, CL:個|个[ge4]"}
-   {:hanyu "爱", :pinyin "ai4", :english "to love, affection, to be fond of, to like"}
-   {:hanyu "人", :pinyin "ren2", :english "man, person, people, CL:個|个[ge4],位[wei4]"}
-   {:hanyu "向", :pinyin "Xiang4", :english "surname Xiang"},
-   {:hanyu "向", :pinyin "xiang4", :english "towards, to face, to turn towards, direction, to support, to side with, shortly before, formerly, always, all along"},
-	 {:hanyu "后", :pinyin "hou4", :english "empress, queen"}
-	 {:hanyu "后", :pinyin "Hou4", :english "surname Hou"}
-	 {:hanyu "后", :pinyin "hou4", :english "back, behind, rear, afterwards, after, later"}
-])
-
-(def test-word-info
-  [ { :pinyin "wo3", :hanyu "我", :short-english "I", :known true }
-    { :pinyin "wo3 men5", :hanyu "我们", :known true }
-    { :hanyu "向", :pinyin "xiang4" }
-    { :hanyu "一了百了", :pinyin "yi1 liao3 bai3 liao3" } ])
-
 (def wo-men-word
   {:hanyu "我们",
    :pinyin "wo3 men5",
-   :english "we, us, ourselves, our"
-   :short-english "we"
-   :pinyin-no-spaces "wo3men5"
-   :pinyin-no-spaces-no-tones "women"
-   :known true })
+   :english "we, us, ourselves, our." })
 
-(def word-info-dict-test
-  {{:pinyin "wo3", :hanyu "我"}
-       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true },
-   {:pinyin "wo3 men5", :hanyu "我们"}
-       {:pinyin "wo3 men5", :hanyu "我们", :known true },
-   {:pinyin "xiang4", :hanyu "向"}
-       {:pinyin "xiang4", :hanyu "向" } })
+(def wo-men-word-full
+  {:known 4, :hsk-index 9, :hanzi-rarity 114, :short-english "we",
+   :hanyu "我们", :pinyin "wo3 men5", :english "we, us, ourselves, our."} )
 
-(def word-info-dict-modified
-  {{:pinyin "wo3", :hanyu "我"}
-       {:pinyin "wo3", :hanyu "我", :short-english "I", :known true, :pinyin-no-spaces-no-tones "wo", :pinyin-no-spaces "wo3" },
-   {:pinyin "wo3 men5", :hanyu "我们"}
-       {:pinyin "wo3 men5", :hanyu "我们", :known true, :short-english "xxx", :pinyin-no-spaces-no-tones "women", :pinyin-no-spaces "wo3men5" },
-   {:pinyin "xiang4", :hanyu "向"}
-       {:pinyin "xiang4", :hanyu "向", :known true, :pinyin-no-spaces-no-tones "xiang", :pinyin-no-spaces "xiang4"}
-   { :hanyu "一代", :pinyin "yi1 dai4" }
-       { :hanyu "一代", :pinyin "yi1 dai4", :known true  }
-   } )
-
-
-(set-word-database! test-words-raw)
+(load-database "C:\\github\\ChineseWriter\\cedict_ts.clj" "C:\\Google Drive\\Ann\\chinese study\\words.clj")
 
 (def yi-dai {:hanyu "一代", :pinyin "yi1 dai4" } )
 
-(update-word-props! yi-dai { :known true } )
-
-(def women-word-calculated (first (get-word { :hanyu "我们" })))
-
-(def airen-chars (characters "爱人" "ai4 ren5"))
-
-(def xiang-words (get-word { :hanyu "向" } ))
-
-(def second-airen-char (nth airen-chars 1))
+(update-word-props! yi-dai { :known 2 } )
 
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
-       word-info-dict-modified
-         (do
-           (set-word-info-prop "我们" "wo3 men5" "short-english" "xxx")
-           (set-word-info-prop "我们" "wo3 men5" "known" true)
-           @word-info-dict)
-  2 (count (find-words "wo3" false))
-  1 (count (find-words "girlfriend" true))
-  1 (count (find-words "people" true))
+  12 (count (find-words "wo3" false))
+  7 (count (find-words "girlfriend" true))
   0 (count (find-words "zoobaba" true))
-  wo-men-word women-word-calculated
-  "back, behind, rear, afterwards, after, later" (:english (get-word { :hanyu "后", :pinyin "hou4" }))
+  wo-men-word (first (@hanyu-dict "我们"))
+  wo-men-word-full (get-word "我们" "wo3 men5")
+  "empress, queen. back, behind, rear, afterwards, after, later" (:english (get-word "后" "hou4"))
   "ren2" ((find-char "人" "ren2") :pinyin)
   "ren2" ((find-char "人" "Ren2") :pinyin)
   "ren2" ((find-char "人" "ren5") :pinyin)
-  2 (count airen-chars)
-  "人" (second-airen-char :hanyu)
-  2 (count xiang-words)
+  2 (count (characters "爱人" "ai4 ren5"))
+  2 (count (@hanyu-dict "向" ))
   2 (count (hanyu-to-words "我们女友" ))
   3 (count (hanyu-to-words "我们QQ女友" ))
 ))
@@ -144,11 +67,6 @@
        (ExportText/word-pinyin-html wo-men-word)
 ))
 
-(deftest database-info-test
-  (are [ expected calculated ] (= expected calculated)
-    "33 words, level 4: 0, level 3: 0, level 2: 0, level 1: 0" (database-info)))
-
-(delete-word-info! "一了百了" "yi1 liao3 bai3 liao3")
-
 (run-tests)
-
+
+
