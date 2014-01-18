@@ -65,7 +65,7 @@ namespace ChineseWriter {
                     Select( index => Suggestions.GetSuggestion( index - 1 ) ).
                     Merge( Suggestions.SuggestionSelected );
 
-                suggestionChanges.Subscribe( word => WritingState.InsertWord( word.Hanyu, word.Pinyin ) );
+                suggestionChanges.Subscribe( word => WritingState.InsertWord( word ) );
                 suggestionChanges.ObserveOnDispatcher().Subscribe( word => {
                         ShowEnglish.IsChecked = false;
                         _pinyinInput.Text = "";                    
@@ -334,11 +334,8 @@ namespace ChineseWriter {
                         (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ),
                         new Uri( "http://www.brotherus.net" ) );
                 } else {
-                    var data = WritingState.HanyiPinyinLines(
-                        SelectedWords,
-                        CopyPinyin.IsChecked ?? false,
-                        CopyEnglish.IsChecked ?? false );
-                        Clipboard.SetText( data, TextDataFormat.UnicodeText );
+                    var data = WritingState.HanyiPinyinLines(SelectedWords);
+                    Clipboard.SetText( data, TextDataFormat.UnicodeText );
                 }
                 ShowTempMessage( "Copied" );
             } catch( Exception ex ) {

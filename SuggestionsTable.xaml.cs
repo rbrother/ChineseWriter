@@ -15,9 +15,9 @@ namespace ChineseWriter {
 
         private int CurrentUpdater = 0;
         private int ActiveUpdaters = 0;
-        private ObservableCollection<SuggestionWord> _suggestions = new ObservableCollection<SuggestionWord>( );
+        private ObservableCollection<Word> _suggestions = new ObservableCollection<Word>( );
 
-        public Subject<SuggestionWord> SuggestionSelected = new Subject<SuggestionWord>( );
+        public Subject<Word> SuggestionSelected = new Subject<Word>( );
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
         public SuggestionsTable( ) {
@@ -27,7 +27,7 @@ namespace ChineseWriter {
 
         public bool Empty { get { return _suggestions.Count == 0; } }
 
-        public SuggestionWord GetSuggestion( int index ) {
+        public Word GetSuggestion( int index ) {
             return ( index < Suggestions.Items.Count ) ? _suggestions[index] : null;
         }
 
@@ -57,7 +57,8 @@ namespace ChineseWriter {
                     if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
                     var shortcut = index == 1 ? "Enter" :
                         index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
-                    var dataWord = new SuggestionWord( index, suggestion, shortcut );
+                    var hanyuPinyuin = new HanyuPinyin { Hanyu = suggestion.Hanyu( ), Pinyin = suggestion.Pinyin( ) };
+                    var dataWord = new Word( index, hanyuPinyin, shortcut );
                     this.Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
                     index++;
                 }
@@ -74,14 +75,14 @@ namespace ChineseWriter {
             var cell = (DataGridCell)GuiUtils.FindParent( source, typeof( DataGridCell ) );
             if ( row == null || cell == null ) return;
             if ( cell.Column.Header.ToString( ) == "Shortcut" ) {
-                SuggestionSelected.OnNext( (SuggestionWord) row.Item );
+                SuggestionSelected.OnNext( (Word) row.Item );
                 e.Handled = true;
             }
         }
 
         void items_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) {
             if ( e.Action == NotifyCollectionChangedAction.Remove ) {
-                foreach ( SuggestionWord item in e.OldItems ) {
+                foreach ( Word item in e.OldItems ) {
                     item.Delete( );
                 }
             }
@@ -92,9 +93,9 @@ namespace ChineseWriter {
         }
 
         private void Suggestions_RowEditEnding( object sender, DataGridRowEditEndingEventArgs e ) {
-            if ( SuggestionWord.WordUpdateException != null ) {
-                var ex = SuggestionWord.WordUpdateException;
-                SuggestionWord.WordUpdateException = null;
+            if ( Word.WordUpdateException != null ) {
+                var ex = Word.WordUpdateException;
+                Word.WordUpdateException = null;
                 MessageBox.Show( Window.GetWindow( this ), ex.ToString(), "Error during word editing" );
             }
         }

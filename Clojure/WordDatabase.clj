@@ -9,33 +9,26 @@
 
 (def info-file-name (atom nil)) ; For storing info-file-name so at save we can use same name
 
-(def all-words (atom [])) ; list for filtering suggestions
+(def all-words (atom [])) ; list for filtering suggestions. ONLY { :hanyu :pinyin } pairs
 
 ; dictionaries for all words. Immutable once set (could they be just defs?)
-; Keyed by:
-; { :hanyu hanyu }  (values are lists of words)
-; { :hanyu hanyu :pinyin pinyin }  (values are single words)
-(def word-dict (atom {}))
+; Keyed by: hanyu  (values are lists of words, ONLY { :hanyu :pinyin } pairs)
+(def hanyu-dict (atom {}))
 
-; retain so that properties like :known can be changed at runtime.
-; Keyed by { :hanyu hanyu :pinyin pinyin }
-(def word-info-dict (atom {}))
+; Keyed by: { :hanyu hanyu :pinyin pinyin }  (values are full word properties)
+(def hanyu-pinyin-dict (atom {}))
 
-;----------------------- Dictionary accessors ----------------------------------
+;----------------------- Dictionary accessors (from C#) ----------------------------------
 
-(defn get-word
-  ( [ key ] (@word-dict key))
-  ( [ hanyu pinyin ] (get-word { :hanyu hanyu :pinyin pinyin } )))
-
-(defn word-info [ hanyu-pinyin ] (get @word-info-dict hanyu-pinyin hanyu-pinyin ))
+(defn get-word [ hanyu pinyin ] (hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ))
 
 ;--------------------------------------------------------------------------------
 
-(defn database-info []
-  (let [ known-level-count (fn [level] (count (filter #(= (:known %) level) (vals @word-info-dict))))
-         known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
-         known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
-    (str (count @all-words) " words, " known-levels)))
+(defn database-info [] "***" )
+;  (let [ known-level-count (fn [level] (count (filter #(= (:known %) level) (vals @word-info-dict))))
+;         known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
+;         known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
+;    (str (count @all-words) " words, " known-levels)))
 
 ;--------------------- Expanding word characters ------------------------------------
 
@@ -51,13 +44,13 @@
   (first (filter (word-pinyin-matcher pinyin compare-func) words)))
 
 (defn find-char [ hanyu pinyin ]
-  (let [ hanyu-matches (get-word { :hanyu hanyu }) ]
+  (let [ hanyu-matches (@hanyu-dict hanyu) ]
     (or
-      (get-word { :hanyu hanyu :pinyin pinyin }) ; exact match?
+      (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ; exact match?
       (pinyin-matching-word equal-caseless pinyin hanyu-matches) ; only case difference?
       (pinyin-matching-word toneless-equal pinyin hanyu-matches) ; Tone changes of char as part of a word
       ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
-      { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } )))
+      { :hanyu hanyu :pinyin pinyin } )))
 
 (defn characters
   ( [ { hanyu :hanyu pinyin :pinyin } ] (characters hanyu pinyin) )
@@ -66,7 +59,7 @@
       (map (fn [ [h p] ] (find-char h p))))))
 
 (defn word-breakdown [ hanyu pinyin ]
-  (let [ word (get-word { :hanyu hanyu :pinyin pinyin } ) ]
+  (let [ word (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ) ]
     (concat
        [ word ]
        (if (= 1 (count hanyu)) [] (characters hanyu pinyin)))))
@@ -90,7 +83,11 @@
           (not= (count pinyin1) (count pinyin2)) (compare (count pinyin1) (count pinyin2))
           ; For *known* words, use rarity directly. This is done to avoid problem
           ; of HSK not often having entries for *parts* of words
-          :else (compare rarity1 rarity2))
+          (not= rarity1 rarity2) (compare rarity1 rarity2)
+          ; Identical rarity usually means that the hanzi are identical but correspond to
+          ; different possible pinyin interpretations. Use hsk-index as "desperate" attempt
+          ; to find better of them.
+          :else (compare hsk-index1 hsk-index2))
       ; For unknown words (most likely searched with english?) use hsk-index before rarity
       ; and don't care of length directly (rarity will take care of that to some extent)
       (not= hsk-index1 hsk-index2) (compare hsk-index1 hsk-index2)
@@ -98,72 +95,55 @@
 
 (defn sort-suggestions [ words ] (sort suggestion-comparer words))
 
-(defn index-hanyu-pinyin [ words ] (index words [ :hanyu :pinyin ]))
+(defn create-hanyu-pinyin-dict [ words ] (map-map-values first (index words [ :hanyu :pinyin ])))
 
-(defn create-hanyu-pinyin-dict [words] (map-map-values first (index-hanyu-pinyin words)))
-
-(defn create-combined-dict [words]
-  (merge
-    (map-map-values sort-suggestions (index words [ :hanyu ]))
-    (create-hanyu-pinyin-dict words)))
-
-; TODO: Now these global fields are set almost at the same time, so
-; possibility of mismatch should be minimal,
-; but consider if we should set all of the following atoms in one go, i.e. make them
-; part of a single global atom that is reset in one operation.
-(defn set-word-database! [ sorted-words ]
-  (let [ dictionary (create-combined-dict sorted-words) ]
-    (reset! all-words sorted-words)
-    (reset! word-dict dictionary)))
+(defn only-hanyu-pinyin [ word ] (select-keys word [ :hanyu :pinyin ] ))
 
 (defn load-database [ cc-dict-file short-dict-file ]
-  (let [ short-words (load-from-file short-dict-file)
-         short-dict (create-hanyu-pinyin-dict short-words) ]
-    (reset! info-file-name short-dict-file)
-    (reset! word-info-dict short-dict)
-    (set-word-database! short-words) ; words.clj is sorted upon saving, so no need to sort here
-    ; At this point user can start writing with the short dictionary, rest is slower...
-    (let [ full-words (load-from-file cc-dict-file)
-           full-dict (create-hanyu-pinyin-dict full-words)
-           merged-words (sort-suggestions (vals (merge-with merge full-dict short-dict))) ] ; merge-with merge :-)
-      (set-word-database! merged-words))))
+  (let [ short-dict (create-hanyu-pinyin-dict (load-from-file short-dict-file))
+         large-dict (create-hanyu-pinyin-dict (load-from-file cc-dict-file))
+         full-dict (merge-with merge large-dict short-dict)
+         merged-words (sort-suggestions (vals full-dict))
+         hanyu-indexed (index merged-words [ :hanyu ])
+         sort-and-simplify (fn [word-list] (map only-hanyu-pinyin (sort-suggestions word-list))) ]
+      (reset! all-words (map only-hanyu-pinyin merged-words))
+      (reset! hanyu-pinyin-dict full-dict)
+      (reset! hanyu-dict (map-map-keys-values :hanyu sort-and-simplify hanyu-indexed ))))
 
 ;----------------------- Updating word info  ---------------------
 
-(defn combined-properties [ hanyu-pinyin ] (merge (get-word hanyu-pinyin) (word-info hanyu-pinyin)))
-
 (defn get-word-prop [ hanyu pinyin prop-name ]
-  ((combined-properties { :hanyu hanyu :pinyin pinyin }) (keyword prop-name)))
+  (let [ word (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
+    (word (keyword prop-name))))
 
-(defn swap-word-info! [ swap-func ]
-  (do
-    (swap! word-info-dict swap-func)
-    (if @info-file-name
-      (let [ words-str (pretty-pr (sort-suggestions (vals @word-info-dict))) ]
-        (System.IO.File/WriteAllText @info-file-name words-str) nil ))))
+;(defn swap-word-info! [ swap-func ]
+;  (do
+;    (swap! word-info-dict swap-func)
+;    (if @info-file-name
+;      (let [ words-str (pretty-pr (sort-suggestions (map combined-properties (vals @word-info-dict)))) ]
+;        (System.IO.File/WriteAllText @info-file-name words-str) nil ))))
 
-(defn update-word-props! [ hanyu-pinyin new-props ]
-  (swap-word-info! (fn [ dict ] (assoc dict hanyu-pinyin new-props))))
+;(defn update-word-props! [ hanyu-pinyin new-props ]
+;  (swap-word-info! (fn [ dict ] (assoc dict hanyu-pinyin new-props))))
 
-(defn set-word-info-prop [hanyu pinyin prop-name value ]
-  (let [ key { :hanyu hanyu :pinyin pinyin }
-         old-props (combined-properties key) ]
-    (update-word-props! key (assoc old-props (keyword prop-name) value))))
+;(defn set-word-info-prop [hanyu pinyin prop-name value ]
+;  (let [ key { :hanyu hanyu :pinyin pinyin }
+;         old-props (combined-properties key) ]
+;    (update-word-props! key (assoc old-props (keyword prop-name) value))))
 
-(defn delete-word-info! [ hanyu pinyin ]
-  (let [ key { :hanyu hanyu :pinyin pinyin } ]
-    (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
+;(defn delete-word-info! [ hanyu pinyin ]
+;  (let [ key { :hanyu hanyu :pinyin pinyin } ]
+;    (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
 
-
-(defn add-new-combination-word [ list-of-words ]
-  (let [ hanyu (str/join "" (map :hanyu list-of-words))
-         pinyin (str/join " " (map :pinyin list-of-words))
-         key { :hanyu hanyu :pinyin pinyin }
-         new-word { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } ]
-    (do
-      (update-word-props! key new-word )
-      ; Here we would re-merge, but that is slow, so just add to the beginning
-      (swap! all-words (fn [words] (cons new-word words))))))
+;(defn add-new-combination-word [ list-of-words ]
+;  (let [ hanyu (str/join "" (map :hanyu list-of-words))
+;         pinyin (str/join " " (map :pinyin list-of-words))
+;         key { :hanyu hanyu :pinyin pinyin }
+;         new-word { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } ]
+;    (do
+;      (update-word-props! key new-word )
+;      ; Here we would re-merge, but that is slow, so just add to the beginning
+;      (swap! all-words (fn [words] (cons new-word words))))))
 
 
 ;-------------------  Finding suggestions based on starting pinyin or english  -----------------------

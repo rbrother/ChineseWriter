@@ -4,8 +4,8 @@
 
 (defn find-first-word-len [ chinese len ]
   (if (zero? len) { :text (subs chinese 0 1) }
-    (let [words (get-word { :hanyu (subs chinese 0 len) } )]
-      (if words (first words) 
+    (let [words (@hanyu-dict { :hanyu (subs chinese 0 len) } )]
+      (if words (first words)
         (find-first-word-len chinese (dec len))))))
 
 (defn find-first-word [ chinese ]
@@ -19,10 +19,10 @@
 
 ; example: 很抱歉.没有信号 -> ["很","抱歉",".","没有","信号"]
 (defn hanyu-to-words [ chinese ]
-  (cond 
+  (cond
     (= chinese "") []
     (starts-with chinese " ") (hanyu-to-words (subs chinese 1))
-    :else 
+    :else
     (let [ first-word (find-first-word chinese )
-          remaining-chinese (subs chinese (word-len first-word)) ]    
+          remaining-chinese (subs chinese (word-len first-word)) ]
       (cons first-word (hanyu-to-words remaining-chinese)))))

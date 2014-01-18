@@ -9,28 +9,36 @@ using RT = clojure.lang.RT;
 
 namespace ChineseWriter {
 
+    public interface IHanyuPinyin {
+        string Hanyu { get; }
+        string Pinyin { get; }
+    }
+
+    public class HanyuPinyin : IHanyuPinyin {
+        public string Hanyu { get; set; }
+        public string Pinyin { get; set; }
+    }
+
     /// <summary>
     /// Object for data-grid inteop
     /// </summary>
-    public class SuggestionWord {
+    public class Word : IHanyuPinyin {
 
         public static Exception WordUpdateException = null;
+        private IHanyuPinyin _hanyuPinyin;
+        private string _pinyinDiacritics; // Immutable word ID stuff, make a copy
 
-        private string _hanyu, _pinyin, _pinyinDiacritics; // Immutable word ID stuff, make a copy
-
-        public SuggestionWord( int index, IDictionary<object, object> word, string shortCut ) {
+        public Word( int index, IHanyuPinyin hanyuPinyin, string shortCut ) {
             Index = index;
-            _hanyu = word.Hanyu( );
-            _pinyin = word.Pinyin( );
-            _pinyinDiacritics = word.PinyinDiacritics( );
+            _pinyinDiacritics = DiacriticsAdderFunc.AddDiacritics( hanyuPinyin.Pinyin );
             Shortcut = shortCut;
         }
 
         public int Index { get; set; }
         public string Shortcut { get; set; }
         public string PinyinDiacritics { get { return _pinyinDiacritics; } set { } }
-        public string Pinyin { get { return _pinyin; } }
-        public string Hanyu { get { return _hanyu; } set { } }
+        public string Pinyin { get { return _hanyuPinyin.Pinyin; } }
+        public string Hanyu { get { return _hanyuPinyin.Hanyu; } set { } }
         public string Known {
             get { return WordDatabase.KNOWLEDGE_LEVEL_DESCR[ KnownLevel ]; }
             set { KnownLevel = WordDatabase.KNOWLEDGE_LEVEL_VALUE[value]; }
@@ -78,6 +86,9 @@ namespace ChineseWriter {
         }
     }
 
+    /// <summary>
+    /// NOTE: A word can be also a literal word! Not just Hanyu-Pinyin!
+    /// </summary>
     public static class WordExtensions {
 
         public static T Get<T>( this IDictionary<object, object> dict, string key ) {
@@ -97,18 +108,9 @@ namespace ChineseWriter {
                 word.Get<string>( "pinyin" ) : word.Get<string>( "text" );
         }
 
-        public static string ShortEnglish( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "text" ) ? word.Get<string>( "text" ) :
-                word.Known( ) ? "" : word.Get<string>( "short-english" );
-        }
 
         public static bool Known( this IDictionary<object, object> word ) {
             return word.HasKeyword( "known" ) && word.Get<int>( "known" ) >= 2;
-        }
-
-        public static string PinyinDiacritics( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "pinyin" ) ? DiacriticsAdderFunc.AddDiacritics( word.Get<string>( "pinyin" ) ) :
-                word.Get<string>( "text" );
         }
 
         public static string Hanyu( this IDictionary<object, object> word ) {

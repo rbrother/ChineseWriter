@@ -13,6 +13,7 @@ namespace ChineseWriter {
         public static Subject<IEnumerable<IDictionary<object, object>>> WordsChanges =
             new Subject<IEnumerable<IDictionary<object, object>>>( );
 
+        // TODO: Don't handle the atom here, make accessors that give parts
         private static IDictionary<object, object> WritingStateData {
             get {
                 return (IDictionary<object, object>)
@@ -59,8 +60,13 @@ namespace ChineseWriter {
             InsertWords( words.Cast<IDictionary<object, object>>( ).ToArray( ) );
         }
 
-        internal static void InsertWord( string hanyu, string pinyin ) {
-            InsertWords( new IDictionary<object, object>[] { WordDatabase.GetWord( hanyu, pinyin ) } );
+        internal static void InsertWord( IHanyuPinyin word ) {
+            InsertWords( new IDictionary<object, object>[] { 
+                new Dictionary<object,object>() { 
+                    { RT.keyword("","hanyu"), word.Hanyu },
+                    { RT.keyword("","pinyin"), word.Pinyin } 
+                } 
+            } );
         }
 
         private static void InsertWords( IDictionary<object, object>[] newWords ) {
@@ -73,39 +79,10 @@ namespace ChineseWriter {
             return s.PadRight( latinLength - hanyuExtraLen );
         }
 
-        public static string HanyiPinyinLines( IEnumerable<IDictionary<object, object>> words, bool copyPinyin, bool copyEnglish ) {
+        public static string HanyiPinyinLines( IEnumerable<IDictionary<object, object>> words ) {
             var finalWords = words != null ? words : Words;
             var hanyus = finalWords.Select( word => word.Hanyu( ) );
-            if ( !copyPinyin && !copyEnglish ) {
-                // simple case: only hanyu
-                return string.Join( " ", hanyus.ToArray( ) );
-            }
-            else { // complex case: aligned lines (use monospaced font)
-                var pinyins = Words.Select( word => word.PinyinDiacritics( ) );
-                var english = Words.Select( word => word.ShortEnglish( ) );
-                var hanyuLengths = hanyus.Select( word => word.Length + 1 );
-                var pinyinLengths = pinyins.Select( word => word.Length + 1 );
-                var englishLengths = english.Select( word => word.Length + 1 );
-                var lengths = hanyuLengths;
-                if ( copyPinyin ) lengths = lengths.Zip( pinyinLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
-                if ( copyEnglish ) lengths = lengths.Zip( englishLengths, ( l1, l2 ) => Math.Max( l1, l2 ) );
-                // could not think of way to do this with the base LINQ funcs:
-                var cumulativeLengths = new List<int>( );
-                int cumulativeLength = 0;
-                foreach ( int length in lengths ) {
-                    cumulativeLength += length;
-                    cumulativeLengths.Add( cumulativeLength );
-                }
-                // Chinese characters in a monospaced font are ~1.5 times as wide as Latin
-                // characters in the same font, so take account into padding:
-                var hanyuLine = hanyus
-                    .Zip( cumulativeLengths, ( h, len ) => Tuple.Create( h, len ) )
-                    .Aggregate( "", ( hanyu, tuple ) => PadHanyu( hanyu + tuple.Item1, tuple.Item2 ) );
-                var pinyinLine = string.Join( "", pinyins.Zip( lengths, ( h, len ) => h.PadRight( len ) ) );
-                var englishLine = string.Join( "", english.Zip( lengths, ( h, len ) => h.PadRight( len ) ) );
-                return hanyuLine + ( copyPinyin ? "\n" + pinyinLine : "" ) +
-                    ( copyEnglish ? "\n" + englishLine : "" );
-            }
+            return string.Join( " ", hanyus.ToArray( ) );
         }
 
         internal static void Clear( ) {

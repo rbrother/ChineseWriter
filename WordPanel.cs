@@ -16,13 +16,13 @@ namespace ChineseWriter {
 
         private Panel _mainPanel;
 
-        public IDictionary<object, object> Word { get; set; }
+        public Word Word { get; set; }
 
         private static readonly Color[] TONE_COLORS = { 
             Color.FromRgb(255,0,0), Color.FromRgb(160,160,0), Color.FromRgb(0,180,0), 
             Color.FromRgb(0,0,255), Colors.Black };
 
-        public WordPanel( IDictionary<object, object> word ) {
+        public WordPanel( Word word ) {
             this.Content = GuiUtils.WrapToBorder(
                 word == null ? new Label { Content = "NULL" } :
                 word.HasKeyword( "text" ) ?
