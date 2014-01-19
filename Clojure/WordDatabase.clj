@@ -87,11 +87,14 @@
           ; Identical rarity usually means that the hanzi are identical but correspond to
           ; different possible pinyin interpretations. Use hsk-index as "desperate" attempt
           ; to find better of them.
-          :else (compare hsk-index1 hsk-index2))
+          (not= hsk-index1 hsk-index2) (compare hsk-index1 hsk-index2)
+          ; for cases with same Hanzi but different pinyin sort alphabetically, so order does not randomly change
+          :else (compare pinyin1 pinyin2))
       ; For unknown words (most likely searched with english?) use hsk-index before rarity
       ; and don't care of length directly (rarity will take care of that to some extent)
       (not= hsk-index1 hsk-index2) (compare hsk-index1 hsk-index2)
-      :else (compare rarity1 rarity2))))
+      (not= rarity1 rarity2) (compare rarity1 rarity2)
+      :else (compare pinyin1 pinyin2))))
 
 (defn sort-suggestions [ words ] (sort suggestion-comparer words))
 
