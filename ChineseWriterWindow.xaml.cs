@@ -245,17 +245,23 @@ namespace ChineseWriter {
             _pinyinInput.Focus( );
         }
 
-
         private ContextMenu WordPanelContextMenu {
             get {
                 if ( _wordPanelContextMenu == null ) {
                     _wordPanelContextMenu = new ContextMenu( );
+                    var copySelectionItem = new MenuItem { Header = "Copy selected words" };
+                    copySelectionItem.Click += copySelectionItem_Click;
+                    _wordPanelContextMenu.Items.Add( copySelectionItem );                    
                     var addWordItem = new MenuItem { Header = "New word from the selection" };
                     addWordItem.Click += addWordItem_Click;
                     _wordPanelContextMenu.Items.Add( addWordItem );
                 }
                 return _wordPanelContextMenu;
             }
+        }
+
+        void copySelectionItem_Click( object sender, RoutedEventArgs e ) {
+            CopyNow( );
         }
 
         void addWordItem_Click( object sender, RoutedEventArgs e ) {
@@ -280,7 +286,6 @@ namespace ChineseWriter {
         void wordPanel_MouseLeftButtonUp( object sender, MouseButtonEventArgs e ) {
             if ( _draggingSelection ) {
                 _draggingSelection = false;
-                CopyNow( );
                 if ( object.ReferenceEquals( _selection.Item1, _selection.Item2 ) ) {
                     var panel = (WordPanel)sender;
                     if ( panel.IsHanyuWord ) {
@@ -332,19 +337,25 @@ namespace ChineseWriter {
         }
 
         private void CopyNow( ) {
+            CopyWrapper( () => 
+                Clipboard.SetText( WritingState.HanyiText( SelectedWords ), TextDataFormat.UnicodeText ));
+        }
+
+        private void CopyHtmlClick( object sender, RoutedEventArgs e ) {
+            CopyWrapper( () => 
+                ClipboardTool.CopyToClipboard(
+                    (string)RT.var( "ExportText", "html" ).invoke( true, false ),
+                    new Uri( "http://www.brotherus.net" )));
+        }
+
+        private void CopyWrapper( Action copyAction ) {
             try {
-                if ( CopyHtml.IsChecked ?? false ) {
-                    ClipboardTool.CopyToClipboard(
-                        (string)RT.var( "ExportText", "html" ).invoke( CopyEnglish.IsChecked, CopyFullEnglish.IsChecked ),
-                        new Uri( "http://www.brotherus.net" ) );
-                } else {
-                    var data = WritingState.HanyiPinyinLines(SelectedWords);
-                    Clipboard.SetText( data, TextDataFormat.UnicodeText );
-                }
+                copyAction.Invoke( );
                 ShowTempMessage( "Copied" );
-            } catch( Exception ex ) {
+            } catch ( Exception ex ) {
                 ShowTempMessage( ex.Message ); // Usually the exception does not prevent the copying
             }
+
         }
 
         private IEnumerable<IDictionary<object, object>> SelectedWords {
