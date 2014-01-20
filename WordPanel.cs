@@ -18,7 +18,7 @@ namespace ChineseWriter {
 
         public IDictionary<object, object> WordProperties { get; set; }
 
-        public bool IsHanyuWord { get { return !WordProperties.HasKeyword( "text" ); } }
+        public bool IsHanyuWord { get { return !WordProperties.IsLiteralText(); } }
 
         public Word HanyuWord { 
             get {
@@ -31,11 +31,11 @@ namespace ChineseWriter {
             Color.FromRgb(0,0,255), Colors.Black };
 
         public WordPanel( IDictionary<object, object> word ) {
-            this.Content = GuiUtils.WrapToBorder(
-                word.HasKeyword( "text" ) ?
-                    CreateForLiteral( word.Get<string>( "text" ) ) :
-                    CreateForHanyu( new Word( word.Hanyu( ), word.Pinyin( ) )));
             this.WordProperties = word;
+            this.Content = GuiUtils.WrapToBorder(
+                word.IsLiteralText() ?
+                    CreateForLiteral( word.Text() ) :
+                    CreateForHanyu( HanyuWord ) );            
         }
 
         public void SetSelected( bool selected ) {

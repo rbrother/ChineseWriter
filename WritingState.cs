@@ -78,7 +78,7 @@ namespace ChineseWriter {
 
         public static string HanyiPinyinLines( IEnumerable<IDictionary<object, object>> words ) {
             var finalWords = words != null ? words : Words;
-            var hanyus = finalWords.Select( word => word.Hanyu( ) );
+            var hanyus = finalWords.Select( word => word.Text( ) );
             return string.Join( " ", hanyus.ToArray( ) );
         }
 

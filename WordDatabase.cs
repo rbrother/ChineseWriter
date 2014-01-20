@@ -45,10 +45,6 @@ namespace ChineseWriter {
                 Select( props => new Word( props.Hanyu( ), props.Pinyin( ) ) );
         }
 
-        public static IDictionary<object, object> GetWord( string hanyu, string pinyin ) {
-            return (IDictionary<object, object>) RT.var( "WordDatabase", "get-word" ).invoke( hanyu, pinyin );            
-        }
-
         public static IEnumerable<Word> Suggestions( string input, bool english ) {
             var findWords = RT.var( "WordDatabase", "find-words" );
             return findWords.isBound ?

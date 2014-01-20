@@ -114,20 +114,21 @@ namespace ChineseWriter {
             return dict.ContainsKey( RT.keyword( null, key ) );
         }
 
-        public static string Pinyin( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "pinyin" ) ?
-                word.Get<string>( "pinyin" ) : word.Get<string>( "text" );
-        }
+        public static bool IsLiteralText( this IDictionary<object, object> word ) { return word.HasKeyword( "text" ); }
 
+        public static string Pinyin( this IDictionary<object, object> word ) { return word.Get<string>( "pinyin" ); }
+
+        public static string Hanyu( this IDictionary<object, object> word ) { return word.Get<string>( "hanyu" ); }
+
+        public static string Text( this IDictionary<object, object> word ) { 
+            return IsLiteralText(word) ? word.Get<string>( "text" ) : Hanyu(word); 
+        }
 
         public static bool Known( this IDictionary<object, object> word ) {
             return word.HasKeyword( "known" ) && word.Get<int>( "known" ) >= 2;
         }
 
-        public static string Hanyu( this IDictionary<object, object> word ) {
-            return word.HasKeyword( "hanyu" ) ?
-                word.Get<string>( "hanyu" ) : word.Get<string>( "text" );
-        }
+        
 
     }
 
