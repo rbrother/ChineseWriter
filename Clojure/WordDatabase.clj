@@ -116,9 +116,11 @@
 
 ;----------------------- Updating word info  ---------------------
 
-(defn get-word-prop [ hanyu pinyin prop-name ]
-  (let [ word (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ]
-    (if word (word (keyword prop-name)) nil)))
+(defn get-word-prop
+  ( [ hanyu pinyin prop-name ] (get-word-prop { :hanyu hanyu :pinyin pinyin } (keyword prop-name)) )
+  ( [ hanyu-pinyin prop ]
+      (let [ word (@hanyu-pinyin-dict hanyu-pinyin) ]
+        (if word (word prop) nil))))
 
 (defn known? [word] (> (get word :known 0) 0) )
 

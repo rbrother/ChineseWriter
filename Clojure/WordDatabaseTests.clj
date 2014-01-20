@@ -36,7 +36,7 @@
   0 (count (find-words "zoobaba" true))
   wo-men-word (first (@hanyu-dict "我们"))
   wo-men-word-full (get-word "我们" "wo3 men5")
-  "empress, queen. back, behind, rear, afterwards, after, later" (:english (get-word "后" "hou4"))
+  "back, behind, rear, afterwards, after, later. empress, queen." (:english (get-word "后" "hou4"))
   "ren2" ((find-char "人" "ren2") :pinyin)
   "ren2" ((find-char "人" "Ren2") :pinyin)
   "ren2" ((find-char "人" "ren5") :pinyin)

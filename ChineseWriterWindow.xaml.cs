@@ -344,7 +344,7 @@ namespace ChineseWriter {
         private void CopyHtmlClick( object sender, RoutedEventArgs e ) {
             CopyWrapper( () => 
                 ClipboardTool.CopyToClipboard(
-                    (string)RT.var( "ExportText", "html" ).invoke( true, false ),
+                    (string)RT.var( "ExportText", "html" ).invoke( ),
                     new Uri( "http://www.brotherus.net" )));
         }
 
