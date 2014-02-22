@@ -64,6 +64,7 @@ namespace ChineseWriter {
                 var suggestionSelections = ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
                     Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
                     Select( index => Suggestions.GetSuggestion( index - 1 ) ).
+                    Where( word => word != null).
                     Merge( Suggestions.SuggestionSelected );
 
                 suggestionSelections.Subscribe( word => WritingState.InsertWord( word ) );
