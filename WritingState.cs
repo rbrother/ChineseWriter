@@ -28,6 +28,16 @@ namespace ChineseWriter {
             }
         }
 
+        /// <summary>
+        /// List of pinyin-forms of all words
+        /// </summary>
+        public static IEnumerable<string> WordPinyins {
+            get {
+                var words = (IEnumerable<object>) RT.var( "WritingState", "pinyin-text" ).invoke( );
+                return words.Cast<string>( );
+            }
+        }
+
         public static int CursorPos {
             get {
                 return WritingStateData.Get<int>( "cursor-pos" );

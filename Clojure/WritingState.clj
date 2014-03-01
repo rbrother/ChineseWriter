@@ -12,6 +12,8 @@
 
 (defn clear-current-text! [] (reset! state { :text [] :cursor-pos 0 } ))
 
+(defn pinyin-text [] (map :pinyin (current-text)))
+
 (defn load-current-text [ path ]
   (let [ text (load-from-file path) ]
     (reset! state { :text text :cursor-pos (count text) } )))

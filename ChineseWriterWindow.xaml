@@ -34,11 +34,12 @@
             <Button Click="PasteChineseClick" Style="{StaticResource ButtonStyle}" Content="Paste Chinese" Focusable="False"></Button>
             <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy Hanyu" Focusable="False"></Button>
             <Button Click="CopyHtmlClick" Style="{StaticResource ButtonStyle}" Content="Copy _Html" Focusable="False"></Button>
+            <Button Click="SayClick" Style="{StaticResource ButtonStyle}" Content="_Speak" Background="#FF62D662"></Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}" 
-                          Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>
+                          Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">Stay On Top</CheckBox>
             <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False"
                               Style="{StaticResource CheckBoxStyle}" Content="Suggest _English"></CheckBox>
             <Border Margin="10,5,5,5" BorderThickness="2" BorderBrush="Black">

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Windows;
 using System.Windows.Threading;
 using System.Windows.Controls;
@@ -390,6 +391,17 @@ namespace ChineseWriter {
         private void PasteChineseClick( object sender, RoutedEventArgs e ) {
             WritingState.InsertChinese(
                 Regex.Replace( Clipboard.GetText( ), @"\s", "", RegexOptions.None ) );
+        }
+
+        private void SayClick( object sender, RoutedEventArgs e ) {
+            var soundsFolder = Utils.FindRelativeFile( "sounds" );
+            var pinyins = WritingState.WordPinyins.Where( pinyin => pinyin != null).
+                SelectMany( pinyin => pinyin.ToLower().Split( ' ' ) );
+            var players = pinyins.Select( pinyin => pinyin.EndsWith("5") ? pinyin.DropLast() + "1" : pinyin ).
+                Select( pinyin => new SoundPlayer( Path.Combine( soundsFolder, pinyin + ".wav" ) ) ).ToArray();
+            foreach ( var player in players ) { 
+                player.PlaySync( );
+            }
         }
 
     } // class
