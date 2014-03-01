@@ -24,31 +24,31 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Vertical" >
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource ButtonStyle}" 
+        <StackPanel Orientation="Horizontal">
+            <Button Style="{StaticResource ButtonStyle}" 
                         Click="Clear_Text_Click" Focusable="False">C_lear Text</Button>
-                <Button Click="PasteChineseClick" Style="{StaticResource ButtonStyle}" Content="Paste Chinese" Focusable="False"></Button>
-                <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy Hanyu" Focusable="False"></Button>
-                <Button Click="CopyHtmlClick" Style="{StaticResource ButtonStyle}" Content="Copy _Html" Focusable="False"></Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
+            <Button Click="PasteChineseClick" Style="{StaticResource ButtonStyle}" Content="Paste Chinese" Focusable="False"></Button>
+            <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy Hanyu" Focusable="False"></Button>
+            <Button Click="CopyHtmlClick" Style="{StaticResource ButtonStyle}" Content="Copy _Html" Focusable="False"></Button>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"
                           Style="{StaticResource WidgetStyle}" 
                           Checked="StayOnTop_Checked" Unchecked="StayOnTop_Checked">_Stay On Top</CheckBox>
-                <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False"
+            <CheckBox Name="ShowEnglish" Focusable="False" IsChecked="False"
                               Style="{StaticResource CheckBoxStyle}" Content="Suggest _English"></CheckBox>
-                <Border Margin="10,5,5,5" BorderThickness="2" BorderBrush="Black">
-                    <Label Background="White" Name="ProcessingLabel">Suggestions</Label>
-                </Border>
-            </StackPanel>
-            <ScrollViewer Name="TextScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Background="Transparent">
-                <WrapPanel Orientation="Horizontal" MaxWidth="800" Name="Characters" Style="{StaticResource WidgetStyle}" Background="Transparent"/>
-            </ScrollViewer>
+            <Border Margin="10,5,5,5" BorderThickness="2" BorderBrush="Black">
+                <Label Background="White" Name="ProcessingLabel">Suggestions</Label>
+            </Border>
         </StackPanel>
-        <!--                   -->
-        <cw:SuggestionsTable Grid.Row="2" x:Name="Suggestions"/>
+        <ScrollViewer Grid.Row="2" Name="TextScrollView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+            <WrapPanel Orientation="Horizontal" MaxWidth="800" Name="Characters" Style="{StaticResource WidgetStyle}" />
+        </ScrollViewer>
+        <GridSplitter Grid.Row="3" Height="10" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+        <cw:SuggestionsTable Grid.Row="4" x:Name="Suggestions"/>
     </Grid>
 </Window>
