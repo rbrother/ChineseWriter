@@ -75,7 +75,6 @@ namespace ChineseWriter {
             RT.var( "WordDatabase", "set-word-prop" ).invoke( word.Hanyu, word.Pinyin, propName, value );
         }
 
-
         internal static void AddNewWord( IEnumerable<IDictionary<object, object>> SelectedWords ) {
             RT.var( "WordDatabase", "add-new-combination-word" ).invoke( SelectedWords );
         }

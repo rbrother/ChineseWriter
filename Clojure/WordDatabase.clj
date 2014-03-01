@@ -142,16 +142,13 @@
 ;  (let [ key { :hanyu hanyu :pinyin pinyin } ]
 ;    (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
 
-;(defn add-new-combination-word [ list-of-words ]
-;  (let [ hanyu (str/join "" (map :hanyu list-of-words))
-;         pinyin (str/join " " (map :pinyin list-of-words))
-;         key { :hanyu hanyu :pinyin pinyin }
-;         new-word { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" } ]
-;    (do
-;      (update-word-props! key new-word )
-;      ; Here we would re-merge, but that is slow, so just add to the beginning
-;      (swap! all-words (fn [words] (cons new-word words))))))
-
+(defn add-new-combination-word [ list-of-words ]
+  (let [ hanyu (str/join "" (map :hanyu list-of-words))
+         pinyin (str/join " " (map :pinyin list-of-words))
+         key { :hanyu hanyu :pinyin pinyin }
+         new-word { :hanyu hanyu :pinyin pinyin :english "?" :short-english "?" :known 1
+                    :hanzi-rarity (apply + (map #(get-word-prop % :hanzi-rarity) list-of-words)) } ]
+    (update-word-props! key new-word)))
 
 ;-------------------  Finding suggestions based on starting pinyin or english  -----------------------
 
