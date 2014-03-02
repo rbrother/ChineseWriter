@@ -28,7 +28,6 @@ namespace ChineseWriter {
         private ContextMenu _wordPanelContextMenu;
 
         private Key[] TEXT_EDIT_KEYS = new Key[] { Key.Back, Key.Delete, Key.Left, Key.Right, Key.Home, Key.End };
-        private Key[] DECIMAL_KEYS = new Key[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9 };
 
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
@@ -62,25 +61,29 @@ namespace ChineseWriter {
                 ControlKeyPresses.Where( key => TEXT_EDIT_KEYS.Contains( key ) ).
                     Subscribe( key => TextEdit( key ) );
 
-                var suggestionSelections = ControlKeyPresses.Where( key => DECIMAL_KEYS.Contains( key ) ).
-                    Select( key => Array.IndexOf<Key>( DECIMAL_KEYS, key ) ).
-                    Select( index => Suggestions.GetSuggestion( index - 1 ) ).
-                    Where( word => word != null).
-                    Merge( Suggestions.SuggestionSelected );
-
-                suggestionSelections.Subscribe( word => WritingState.InsertWord( word ) );
-                suggestionSelections.ObserveOnDispatcher().Subscribe( word => {
-                        ShowEnglish.IsChecked = false;
-                        _pinyinInput.Text = "";                    
-                    } );
-
                 var PinyinChanges = Observable.
                     FromEventPattern<TextChangedEventArgs>( _pinyinInput, "TextChanged" ).
                     ObserveOnDispatcher( ).
                     Select( args => ( (TextBox)args.Sender ).Text );
+
+                var suggestionSelections = PinyinChanges.
+                    Where( pinyin => EndsWithNumber(pinyin) ).
+                    Select( pinyin => Convert.ToInt32( pinyin.TakeLast( ) ) ).
+                    Select( index => Suggestions.GetSuggestion( index - 1 ) ).
+                    Where( word => word != null ).
+                    Merge( Suggestions.SuggestionSelected );
+
+                suggestionSelections.Subscribe( word => WritingState.InsertWord( word ) );
+                suggestionSelections.ObserveOnDispatcher( ).Subscribe( word => {
+                    ShowEnglish.IsChecked = false;
+                    _pinyinInput.Text = "";
+                } );
+
+                var PinyinInputChanges = PinyinChanges.Where( pinyin => !EndsWithNumber( pinyin ) );
+
                 // Update UI based on writing state changes
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
-                    CombineLatest( PinyinChanges, ( english, input ) => Tuple.Create( english, input ) ).
+                    CombineLatest( PinyinInputChanges, ( english, input ) => Tuple.Create( english, input ) ).
                     ObserveOnDispatcher( ).
                     Subscribe( tuple => Suggestions.UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 WritingState.WordsChanges.
@@ -96,6 +99,10 @@ namespace ChineseWriter {
             } catch ( Exception ex ) {
                 MessageBox.Show( ex.ToString( ), "Error in startup of ChineseWriter" );
             }
+        }
+
+        private static bool EndsWithNumber( string s ) {
+            return s.Length > 0 && char.IsNumber( s.ToCharArray( ).Last( ) );
         }
 
         void _pinyinInput_GotFocus( object sender, RoutedEventArgs e ) {

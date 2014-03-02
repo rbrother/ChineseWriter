@@ -31,7 +31,7 @@
 
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
-  12 (count (find-words "wo3" false))
+  131 (count (find-words "wo" false))
   7 (count (find-words "girlfriend" true))
   0 (count (find-words "zoobaba" true))
   wo-men-word (first (@hanyu-dict "我们"))

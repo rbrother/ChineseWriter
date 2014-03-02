@@ -56,7 +56,7 @@ namespace ChineseWriter {
                 foreach ( var suggestion in suggestions ) {
                     if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
                     var shortcut = index == 1 ? "Enter" :
-                        index <= 10 ? string.Format( "CTRL+{0}", index ) : "<click>";
+                        index <= 10 ? string.Format( "{0}", index ) : "<click>";
                     var hanyuPinyin = new HanyuPinyin { Hanyu = suggestion.Hanyu, Pinyin = suggestion.Pinyin };
                     var dataWord = new Word( hanyuPinyin, shortcut, index );
                     this.Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );

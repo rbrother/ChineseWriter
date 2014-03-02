@@ -154,11 +154,8 @@
 
 (defn pinyin-matcher [ pinyin-start ]
   (fn [ { pinyin :pinyin } ]
-    (let [ pinyin-no-spaces (str/lower-case (str/replace pinyin #"[: ]" ""))
-           pinyin-no-tones (remove-tone-numbers pinyin-no-spaces) ]
-      (or
-       (starts-with pinyin-no-spaces pinyin-start)
-       (starts-with pinyin-no-tones pinyin-start)))))
+    (let [ pinyin-no-tones (-> pinyin (str/replace #"[: ]" "") str/lower-case remove-tone-numbers ) ]
+       (starts-with pinyin-no-tones pinyin-start))))
 
 (defn english-matcher [ english-start ]
   (fn [ { english :english } ]
