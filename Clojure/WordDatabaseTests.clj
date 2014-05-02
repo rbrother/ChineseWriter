@@ -25,6 +25,8 @@
 
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
+  107033 (count @all-words)
+  "107033 words, level 4: 414, level 3: 411, level 2: 421, level 1: 684" (database-info)
   131 (count (find-words "wo" false))
   7 (count (find-words "girlfriend" true))
   0 (count (find-words "zoobaba" true))
@@ -39,7 +41,6 @@
   2 (count (hanyu-to-words "我们女友" ))
   3 (count (hanyu-to-words "我们QQ女友" ))
 ))
-;"we, us, ourselves, our"
 
 (def current-text-data { :text [ nil nil nil nil nil ] :cursor-pos 2 } )
 

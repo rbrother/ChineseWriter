@@ -9,10 +9,10 @@
 
 (def info-file-name (atom nil)) ; For storing info-file-name so at save we can use same name
 
-(def all-words (atom [])) ; list for filtering suggestions. ONLY { :hanyu :pinyin } pairs
+(def all-words (atom [])) ; list for filtering suggestions. ONLY { :hanyu :pinyin :english } pairs
 
 ; dictionaries for all words. Immutable once set (could they be just defs?)
-; Keyed by: hanyu  (values are lists of words, ONLY { :hanyu :pinyin } pairs)
+; Keyed by: hanyu  (values are lists of words, ONLY { :hanyu :pinyin :english } pairs)
 (def hanyu-dict (atom {}))
 
 ; Keyed by: { :hanyu hanyu :pinyin pinyin }  (values are full word properties)
@@ -24,11 +24,12 @@
 
 ;--------------------------------------------------------------------------------
 
-(defn database-info [] "***" )
-;  (let [ known-level-count (fn [level] (count (filter #(= (:known %) level) (vals @word-info-dict))))
-;         known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
-;         known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
-;    (str (count @all-words) " words, " known-levels)))
+(defn database-info []
+  (let [ known-words (filter :known (vals @hanyu-pinyin-dict)) 
+         known-level-count (fn [level] (count (filter #(= (:known %) level) known-words)))
+         known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
+         known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
+    (str (count @all-words) " words, " known-levels)))
 
 ;--------------------- Expanding word characters ------------------------------------
 
@@ -137,10 +138,6 @@
 (defn set-word-prop [hanyu pinyin prop-name value ]
   (let [ key { :hanyu hanyu :pinyin pinyin } ]
     (update-word-props! key { (keyword prop-name) value } )))
-
-;(defn delete-word-info! [ hanyu pinyin ]
-;  (let [ key { :hanyu hanyu :pinyin pinyin } ]
-;    (swap-word-info! (fn [info-dict] (filter-map #(not= key %) info-dict)))))
 
 (defn add-new-combination-word [ list-of-words ]
   (let [ hanyu (str/join "" (map :hanyu list-of-words))
