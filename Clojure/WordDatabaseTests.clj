@@ -8,12 +8,6 @@
   (:use clojure.pprint)
   (:use clojure.test))
 
-(deftest zip-test (is (= [ [1 :a] [2 :b] [3 :c] ] (zip [ 1 2 3 ] [ :a :b :c ] ))))
-
-(deftest starts-with-test
-  (is (starts-with "moikka" "moi"))
-  (is (not (starts-with "moikka" "hei"))))
-
 (def wo-men-word
   {:hanyu "我们",
    :pinyin "wo3 men5",

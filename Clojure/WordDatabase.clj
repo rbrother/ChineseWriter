@@ -47,7 +47,7 @@
   (let [ hanyu-matches (@hanyu-dict hanyu) ]
     (or
       (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ; exact match?
-      (pinyin-matching-word equal-caseless pinyin hanyu-matches) ; only case difference?
+      (pinyin-matching-word equal-caseless? pinyin hanyu-matches) ; only case difference?
       (pinyin-matching-word toneless-equal pinyin hanyu-matches) ; Tone changes of char as part of a word
       ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
       { :hanyu hanyu :pinyin pinyin } )))
