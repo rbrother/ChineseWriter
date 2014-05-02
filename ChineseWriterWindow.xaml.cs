@@ -143,8 +143,8 @@ namespace ChineseWriter {
                     RT.load( "ExportText" );
                     RT.load( "ParseChinese" );
                     RT.var( "ExportText", "set-add-diacritics-func!" ).invoke( StringUtils.AddDiacriticsFunc );
-                    Dispatcher.Invoke( new Action( ( ) => WritingState.LoadText( ) ) );
                     WordDatabase.LoadWords( );
+                    WritingState.LoadText( );
                 } catch ( Exception ex ) {
                     ReportErrorThreadSafe( ex );
                 }
@@ -154,25 +154,16 @@ namespace ChineseWriter {
 
         private void ReportLoadStateTask( ) {
             var start = DateTime.Now;
-            var wordCount = 0;
-            var ready = false;
             SetTitleThreadsafe( "Loading Clojure runtime..." );
             try {
                 while ( true ) {
-                    string status;
-                    if ( RT.var( "WordDatabase", "all-words" ).isBound ) {
-                        var wordsList = (IList<object>)( (clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( ) ).deref( );
-                        wordCount = wordsList.Count;
-                        ready = wordCount > 10000;
-                        status = wordCount == 0 ? "Loading word list..." :
-                            !ready ? "Short word list loaded (start writing!), loading full dictionary..." :
-                            "ChineseWriter. " + RT.var( "WordDatabase", "database-info" ).invoke( ).ToString( ) + " --- ";
-                    } else {
-                        status = "Loading Clojure runtime...";
-                    }
+                    var clojureLoaded = RT.var( "WordDatabase", "all-words" ).isBound;
+                    var databaseLoaded = clojureLoaded && WordDatabase.IsDatabaseLoaded;
+                    var status = databaseLoaded ? "ChineseWriter. " + WordDatabase.DatabaseInfo : 
+                            clojureLoaded ? "Loading word list..." : "Loading Clojure runtime...";
                     var dur = DateTime.Now - start;
                     SetTitleThreadsafe( string.Format( "{0} {1:0} s", status, dur.TotalSeconds ) );
-                    if ( ready ) return;
+                    if ( databaseLoaded ) return;
                     Thread.Sleep( 100 );
                 }
             } catch ( Exception ex ) {
@@ -237,6 +228,7 @@ namespace ChineseWriter {
         }
 
         private void PopulateCharGrid( IEnumerable<IDictionary<object, object>> words, int cursorPos ) {
+            if ( !WordDatabase.IsDatabaseLoaded ) throw new ApplicationException( "Word database must be loaded to show characters" );
             _selection = Tuple.Create<WordPanel, WordPanel>( null, null );
             _wordPanels = words.Select( word => new WordPanel( word ) ).ToArray();
             Characters.Children.Clear( );

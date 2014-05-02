@@ -38,6 +38,19 @@ namespace ChineseWriter {
                 .invoke( Utils.FindRelativeFile( "cedict_ts.clj" ), SmallDictionaryFile );
         }
 
+        public static bool IsDatabaseLoaded {
+            get {
+                var wordsList = (IList<object>)( (clojure.lang.Atom)RT.var( "WordDatabase", "all-words" ).deref( ) ).deref( );
+                return wordsList.Count > 0;
+            }
+        }
+
+        public static string DatabaseInfo {
+            get {
+                return RT.var( "WordDatabase", "database-info" ).invoke( ).ToString( );
+            }
+        }
+
         private static IEnumerable<Word> ToWordList( object words ) {
             // Do *not* cast the list to Array here! That kills the performance since it forces
             // the lazy list to be fully evaluated

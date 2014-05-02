@@ -3,7 +3,8 @@
   (:require [clojure.string :as str])
   (:use clojure.pprint)
   (:use clojure.set)
-  (:use clojure.clr.io))
+  (:use clojure.clr.io)
+  (:use clojure.test))
 
 ;----------------------- Atoms for the dictionary data etc. ----------------------------------
 
@@ -33,11 +34,18 @@
 
 ;--------------------- Expanding word characters ------------------------------------
 
-; TODO: Add function-test
-(defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))
+(defn remove-tone-numbers 
+  { :test (fn [] (are [x y] (= x y)
+     "nan hai" (remove-tone-numbers "nan2 hai4") )) }
+  [ s ] 
+  { :pre [ (string? s) ] }
+  (str/replace s #"\d" ""))
 
-; TODO: Add function-test
-(defn toneless-equal [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
+(defn toneless-equal 
+  { :test (fn [] (are [x y] (= x y)
+    true (toneless-equal "nan hai" "nan2 hai4")
+    false (toneless-equal "nan guo" "nan2 hai4") )) }
+  [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
 
 ; TODO: Add function-test
 (defn pinyin-matching-word [ compare-func pinyin words ]
@@ -45,14 +53,14 @@
     (first (filter word-pinyin-matcher words))))
 
 (defn find-char [ hanyu pinyin ]
+  { :pre [ (string? hanyu) (string? pinyin) ] 
+    :post [ (:hanyu %) (:pinyin %) ] }
   (or
     (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ; exact match?
     (let [ hanyu-matches (@hanyu-dict hanyu) ]
       (or
         (pinyin-matching-word equal-caseless? pinyin hanyu-matches) ; only case difference?
-        (pinyin-matching-word toneless-equal pinyin hanyu-matches) ; Tone changes of char as part of a word
-        ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
-        { :hanyu hanyu :pinyin pinyin } ))))
+        (pinyin-matching-word toneless-equal pinyin hanyu-matches))))) ; Tone changes of char as part of a word
 
 (defn characters
   ( [ { hanyu :hanyu pinyin :pinyin } ] (characters hanyu pinyin) )
@@ -170,3 +178,5 @@
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
     (take 5000 (filter matcher @all-words))))
 
+    
+(run-tests)
