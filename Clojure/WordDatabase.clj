@@ -33,25 +33,26 @@
 
 ;--------------------- Expanding word characters ------------------------------------
 
+; TODO: Add function-test
 (defn remove-tone-numbers [ s ] (str/replace s #"\d" ""))
 
+; TODO: Add function-test
 (defn toneless-equal [ a b ] (= (remove-tone-numbers a) (remove-tone-numbers b) ))
 
-(defn word-pinyin-matcher [ pinyin compare-func ]
-  (fn [ { word-pinyin :pinyin } ]
-    (compare-func word-pinyin pinyin)))
-
+; TODO: Add function-test
 (defn pinyin-matching-word [ compare-func pinyin words ]
-  (first (filter (word-pinyin-matcher pinyin compare-func) words)))
+  (let [ word-pinyin-matcher (fn [ { word-pinyin :pinyin } ] (compare-func word-pinyin pinyin)) ]
+    (first (filter word-pinyin-matcher words))))
 
 (defn find-char [ hanyu pinyin ]
-  (let [ hanyu-matches (@hanyu-dict hanyu) ]
-    (or
-      (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ; exact match?
-      (pinyin-matching-word equal-caseless? pinyin hanyu-matches) ; only case difference?
-      (pinyin-matching-word toneless-equal pinyin hanyu-matches) ; Tone changes of char as part of a word
-      ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
-      { :hanyu hanyu :pinyin pinyin } )))
+  (or
+    (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ; exact match?
+    (let [ hanyu-matches (@hanyu-dict hanyu) ]
+      (or
+        (pinyin-matching-word equal-caseless? pinyin hanyu-matches) ; only case difference?
+        (pinyin-matching-word toneless-equal pinyin hanyu-matches) ; Tone changes of char as part of a word
+        ; If we are using reduced dictionary, character might truly not be found. Then just construct it from hanyu and pinyin
+        { :hanyu hanyu :pinyin pinyin } ))))
 
 (defn characters
   ( [ { hanyu :hanyu pinyin :pinyin } ] (characters hanyu pinyin) )
@@ -97,9 +98,9 @@
       (not= rarity1 rarity2) (compare rarity1 rarity2)
       :else (compare pinyin1 pinyin2))))
 
-(defn sort-suggestions [ words ] (sort suggestion-comparer words))
+(defn- sort-suggestions [ words ] (sort suggestion-comparer words))
 
-(defn create-hanyu-pinyin-dict [ words ] (map-map-values first (index words [ :hanyu :pinyin ])))
+(defn- create-hanyu-pinyin-dict [ words ] (map-map-values first (index words [ :hanyu :pinyin ])))
 
 (defn simple-props [ word ] (select-keys word [ :hanyu :pinyin :english ] ))
 
@@ -111,7 +112,7 @@
          hanyu-indexed (index merged-words [ :hanyu ])
          sort-and-simplify (fn [word-list] (map simple-props (sort-suggestions word-list))) ]
       (reset! info-file-name short-dict-file)
-      (reset! all-words (map simple-props merged-words))
+      (reset! all-words (vec (map simple-props merged-words)))
       (reset! hanyu-pinyin-dict full-dict)
       (reset! hanyu-dict (map-map-keys-values :hanyu sort-and-simplify hanyu-indexed ))))
 

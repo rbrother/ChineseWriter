@@ -9,10 +9,15 @@
   (:use clojure.test))
 
 (def wo-men-word
-  {:hanyu "我们",
-   :pinyin "wo3 men5",
-   :english "we, us, ourselves, our." })
+  { :hanyu "我们",
+    :pinyin "wo3 men5",
+    :english "we, us, ourselves, our." })
 
+(def man-word
+  { :english "man, person, people, CL:个[ge4],位[wei4]"
+    :pinyin "ren2"
+    :hanyu "人" } )
+   
 (def wo-men-word-full
   {:known 4, :hsk-index 9, :hanzi-rarity 114, :short-english "we",
    :hanyu "我们", :pinyin "wo3 men5", :english "we, us, ourselves, our."} )
@@ -26,16 +31,15 @@
 (deftest cc-lines-test
   (are [ expected calculated ] (= expected calculated)
   107033 (count @all-words)
-  "107033 words, level 4: 414, level 3: 411, level 2: 421, level 1: 684" (database-info)
   131 (count (find-words "wo" false))
   7 (count (find-words "girlfriend" true))
   0 (count (find-words "zoobaba" true))
   wo-men-word (first (@hanyu-dict "我们"))
   wo-men-word-full (get-word "我们" "wo3 men5")
   "back, behind, rear, afterwards, after, later. empress, queen." (:english (get-word "后" "hou4"))
-  "ren2" ((find-char "人" "ren2") :pinyin)
-  "ren2" ((find-char "人" "Ren2") :pinyin)
-  "ren2" ((find-char "人" "ren5") :pinyin)
+  man-word (simple-props (find-char "人" "ren2"))
+  man-word (simple-props (find-char "人" "Ren2"))
+  man-word (simple-props (find-char "人" "ren5"))
   2 (count (characters "爱人" "ai4 ren5"))
   2 (count (@hanyu-dict "向" ))
   2 (count (hanyu-to-words "我们女友" ))
