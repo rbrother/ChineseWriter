@@ -49,7 +49,7 @@
 (defn parse-cc-lines [ lines freqs hsk-freqs ]
   (let [ add-word-attributes-freq (fn [word] (add-word-attributes word freqs hsk-freqs)) ]
     (->> lines
-      (map #(regex-groups cc-line-regex %))
+      (map (partial regex-groups cc-line-regex))
       (remove nil?)
       (map line-items-to-word)
       (map add-word-attributes-freq) )))
@@ -63,14 +63,14 @@
 
 (defn parse-freqs [freq-lines]
   (->> freq-lines
-    (map #(regex-groups #"^\d+\t([^\t])\t(\d+)" %))
+    (map (partial regex-groups #"^\d+\t([^\t])\t(\d+)"))
     (remove nil?)
     (map make-freq-item)
     (apply merge)))
 
 (defn parse-hsk [hsk-lines]
   (->> hsk-lines
-    (map #(regex-groups #"^([^\t]+)\t[^\t]+\t([^\t]+)" %))
+    (map (partial regex-groups #"^([^\t]+)\t[^\t]+\t([^\t]+)"))
     (map-indexed (fn [ index [all hanyu pinyin] ] { { :hanyu hanyu :pinyin pinyin } (inc index) } ))
     (apply merge)))
 

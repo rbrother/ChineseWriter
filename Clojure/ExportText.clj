@@ -36,10 +36,11 @@
     (if (and known (> known 1)) "" (or (get-word-prop key :short-english) "" ))))
 
 (defn html-row [ words selector attr ]
-  (->> words
-    (map selector)
-    (map #(format "<td style='%s'>%s </td>" attr %))
-    (apply str)))
+  (let [ td-tag (format "<td style='%s'>" attr) ]
+    (->> words
+      (map selector)
+      (map #(str td-tag % "</td>"))
+      (apply str))))
 
 (defn html
   ([ ] (html (current-text)))
