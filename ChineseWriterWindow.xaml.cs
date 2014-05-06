@@ -397,7 +397,9 @@ namespace ChineseWriter {
             var pinyins = WritingState.WordPinyins.Where( pinyin => pinyin != null).
                 SelectMany( pinyin => pinyin.ToLower().Split( ' ' ) );
             var players = pinyins.Select( pinyin => pinyin.EndsWith("5") ? pinyin.DropLast() + "1" : pinyin ).
-                Select( pinyin => new SoundPlayer( Path.Combine( soundsFolder, pinyin + ".wav" ) ) ).ToArray();
+                Select( pinyin => Path.Combine( soundsFolder, pinyin + ".wav" )).
+                Where( path => File.Exists(path) ).
+                Select( path => new SoundPlayer( path ) ).ToArray();
             foreach ( var player in players ) { 
                 player.PlaySync( );
             }
