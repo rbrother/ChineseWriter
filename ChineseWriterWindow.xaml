@@ -35,6 +35,7 @@
             <Button Click="CopyClick" Style="{StaticResource ButtonStyle}" Content="_Copy Hanyu" Focusable="False"></Button>
             <Button Click="CopyHtmlClick" Style="{StaticResource ButtonStyle}" Content="Copy _Html" Focusable="False"></Button>
             <Button Click="SayClick" Style="{StaticResource ButtonStyle}" Content="_Speak" Background="#FF62D662"></Button>
+            <Button Click="FlashCardsClick" Style="{StaticResource ButtonStyle}" Content="_FlashCards"></Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <CheckBox Name="StayOnTop" Focusable="False" IsChecked="False" VerticalAlignment="Center"

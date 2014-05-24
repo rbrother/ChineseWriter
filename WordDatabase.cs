@@ -91,6 +91,11 @@ namespace ChineseWriter {
         internal static void AddNewWord( IEnumerable<IDictionary<object, object>> SelectedWords ) {
             RT.var( "WordDatabase", "add-new-combination-word" ).invoke( SelectedWords );
         }
+
+        internal static IDictionary<object, object> GetRandomWord( ) {
+            return  (IDictionary<object, object>) RT.var( "WordDatabase", "get-random-word" ).invoke();
+        }
+
     } // class
 
 } // namespace

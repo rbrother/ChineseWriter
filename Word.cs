@@ -28,6 +28,9 @@ namespace ChineseWriter {
         private IHanyuPinyin _hanyuPinyin;
         private string _pinyinDiacritics; // Immutable word ID stuff, make a copy
 
+        public Word( IDictionary<object,object> word ) : this(word.Hanyu(), word.Pinyin())  {
+        }
+
         public Word( string hanyu, string pinyin ) {
             _hanyuPinyin = new HanyuPinyin { Hanyu = hanyu, Pinyin = pinyin };
         }

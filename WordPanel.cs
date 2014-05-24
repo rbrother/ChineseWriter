@@ -30,12 +30,12 @@ namespace ChineseWriter {
             Color.FromRgb(255,0,0), Color.FromRgb(160,160,0), Color.FromRgb(0,180,0), 
             Color.FromRgb(0,0,255), Colors.Black };
 
-        public WordPanel( IDictionary<object, object> word ) {
+        public WordPanel( IDictionary<object, object> word, bool? showEnglish = null ) {
             this.WordProperties = word;
             this.Content = GuiUtils.WrapToBorder(
                 word.IsLiteralText() ?
                     CreateForLiteral( word.Text() ) :
-                    CreateForHanyu( HanyuWord ) );            
+                    CreateForHanyu( HanyuWord, showEnglish.HasValue ? showEnglish.Value : HanyuWord.KnownLevel < 2 ) );            
         }
 
         public void SetSelected( bool selected ) {
@@ -87,7 +87,7 @@ namespace ChineseWriter {
             return TONE_COLORS[tone - 1];
         }
 
-        private FrameworkElement CreateForHanyu( Word word ) {
+        private FrameworkElement CreateForHanyu( Word word, bool showEnglish = false ) {
             var chars = WordDatabase.Characters( word );
             _mainPanel = CreateStackPanel(
                 CreateTextBlock( "SimSun", 30,
@@ -100,7 +100,7 @@ namespace ChineseWriter {
                         Text = " " + c.PinyinDiacritics + " ",
                         Foreground = new SolidColorBrush( ToneColor( c.Pinyin ) )
                     } ).ToArray( ) ),
-                    CreateEnglishPanel( word.KnownLevel < 2 ? word.ShortEnglish : "" ) );
+                    CreateEnglishPanel( showEnglish ? word.ShortEnglish : "" ) );
             _mainPanel.SetValue( ToolTipService.ShowDurationProperty, 60000 );
             return _mainPanel;
         }

@@ -83,6 +83,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClipboardTool.cs" />
+    <Compile Include="FlashCards.xaml.cs">
+      <DependentUpon>FlashCards.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GuiUtils.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="SuggestionsTable.xaml.cs">
@@ -105,6 +108,10 @@
       <DependentUpon>ChineseWriterWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="FlashCards.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SuggestionsTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

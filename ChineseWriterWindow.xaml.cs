@@ -405,6 +405,11 @@ namespace ChineseWriter {
             }
         }
 
+        private void FlashCardsClick( object sender, RoutedEventArgs e ) {
+            var flashCardsWindow = new FlashCards( );
+            flashCardsWindow.Owner = this;
+            flashCardsWindow.Show( );
+        }
     } // class
 
 } // namespace
