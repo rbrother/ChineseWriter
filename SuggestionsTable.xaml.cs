@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -13,12 +14,13 @@ namespace ChineseWriter {
 
     public partial class SuggestionsTable : UserControl {
 
-        private int CurrentUpdater = 0;
-        private int ActiveUpdaters = 0;
         private ObservableCollection<Word> _suggestions = new ObservableCollection<Word>( );
 
         public Subject<Word> SuggestionSelected = new Subject<Word>( );
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
+        private Task _updaterTask = null;
+        private CancellationTokenSource _cancellationSource = null;
+        private CancellationToken _cancellationToken;
 
         public SuggestionsTable( ) {
             InitializeComponent( );
@@ -32,40 +34,29 @@ namespace ChineseWriter {
         }
 
         internal void UpdateSuggestions( IEnumerable<Word> suggestions ) {
-            ThreadPool.QueueUserWorkItem(
-                state => UpdateSuggestionsBackground( (IEnumerable<Word>)state ), suggestions );
+            if ( _cancellationSource != null ) {
+                _cancellationSource.Cancel( );
+                _updaterTask.Wait( );
+            }
+            MessageStream.OnNext( Tuple.Create( "Searching dictionary...", Colors.Red ) );
+            _suggestions.Clear( ); 
+            _cancellationSource = new CancellationTokenSource( );
+            _cancellationToken = _cancellationSource.Token;
+            _updaterTask = Task.Factory.StartNew( new Action( ( ) => UpdateSuggestionsBackground( suggestions ) ), _cancellationToken );
         }
 
-        /// <summary>
-        /// TODO: Use dotnet Task-framework for this? Or simply lock-block?
-        /// </summary>
-        /// <param name="suggestions"></param>
         private void UpdateSuggestionsBackground( IEnumerable<Word> suggestions ) {
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-            CurrentUpdater++;
-            var id = CurrentUpdater;
-            ActiveUpdaters++;
-            try {
-                while ( ActiveUpdaters > 1 ) {
-                    Thread.Sleep( 10 );
-                    if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
-                }
-                MessageStream.OnNext( Tuple.Create( "Searching dictionary...", Colors.Red ) );
-                this.Dispatcher.BeginInvoke( new Action( ( ) => { _suggestions.Clear( ); } ));
-                var index = 1;
-                foreach ( var suggestion in suggestions ) {
-                    if ( id != CurrentUpdater ) return; // abort old updaters that have been replaced with newer ones
-                    var shortcut = index == 1 ? "Enter" :
-                        index <= 10 ? string.Format( "{0}", index ) : "<click>";
-                    var hanyuPinyin = new HanyuPinyin { Hanyu = suggestion.Hanyu, Pinyin = suggestion.Pinyin };
-                    var dataWord = new Word( hanyuPinyin, shortcut, index );
-                    this.Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
-                    index++;
-                }
-                MessageStream.OnNext( Tuple.Create( string.Format( "{0} suggestions", Suggestions.Items.Count ), Colors.Black ) );
-            } finally {
-                ActiveUpdaters--;
+            var index = 0;
+            foreach ( var suggestion in suggestions ) {
+                if ( _cancellationToken.IsCancellationRequested ) return;
+                index++;
+                var shortcut = index == 1 ? "Enter" :
+                    index <= 10 ? string.Format( "{0}", index ) : "<click>";
+                var hanyuPinyin = new HanyuPinyin { Hanyu = suggestion.Hanyu, Pinyin = suggestion.Pinyin };
+                var dataWord = new Word( hanyuPinyin, shortcut, index );
+                Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
             }
+            MessageStream.OnNext( Tuple.Create( string.Format( "{0} suggestions", index ), Colors.Black ) );
         }
 
         private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {

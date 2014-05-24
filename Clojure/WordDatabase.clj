@@ -26,7 +26,7 @@
 ;--------------------------------------------------------------------------------
 
 (defn database-info []
-  (let [ known-words (filter :known (vals @hanyu-pinyin-dict)) 
+  (let [ known-words (filter :known (vals @hanyu-pinyin-dict))
          known-level-count (fn [level] (count (filter #(= (:known %) level) known-words)))
          known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
          known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
@@ -34,14 +34,14 @@
 
 ;--------------------- Expanding word characters ------------------------------------
 
-(defn remove-tone-numbers 
+(defn remove-tone-numbers
   { :test (fn [] (are [x y] (= x y)
      "nan hai" (remove-tone-numbers "nan2 hai4") )) }
-  [ s ] 
+  [ s ]
   { :pre [ (string? s) ] }
   (str/replace s #"\d" ""))
 
-(defn toneless-equal 
+(defn toneless-equal
   { :test (fn [] (are [x y] (= x y)
     true (toneless-equal "nan hai" "nan2 hai4")
     false (toneless-equal "nan guo" "nan2 hai4") )) }
@@ -53,7 +53,7 @@
     (first (filter word-pinyin-matcher words))))
 
 (defn find-char [ hanyu pinyin ]
-  { :pre [ (string? hanyu) (string? pinyin) ] 
+  { :pre [ (string? hanyu) (string? pinyin) ]
     :post [ (:hanyu %) (:pinyin %) ] }
   (or
     (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin }) ; exact match?
@@ -178,5 +178,5 @@
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
     (take 5000 (filter matcher @all-words))))
 
-    
+
 (run-tests)
