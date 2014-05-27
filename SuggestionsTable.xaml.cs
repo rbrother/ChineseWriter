@@ -46,6 +46,7 @@ namespace ChineseWriter {
         }
 
         private void UpdateSuggestionsBackground( IEnumerable<Word> suggestions ) {
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             var index = 0;
             foreach ( var suggestion in suggestions ) {
                 if ( _cancellationToken.IsCancellationRequested ) return;
@@ -57,6 +58,12 @@ namespace ChineseWriter {
                 Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
             }
             MessageStream.OnNext( Tuple.Create( string.Format( "{0} suggestions", index ), Colors.Black ) );
+            Dispatcher.BeginInvoke( new Action( ( ) => {
+                foreach ( var col in Suggestions.Columns ) {
+                    col.Width = DataGridLength.SizeToHeader;
+                    col.Width = DataGridLength.SizeToCells;
+                }
+            } ));
         }
 
         private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {

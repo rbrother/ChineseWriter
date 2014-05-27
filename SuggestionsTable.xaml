@@ -16,7 +16,7 @@
             <DataGridTextColumn Header="Hanyu" FontSize="22" FontFamily="SimSun" Binding="{Binding Path=Hanyu}" IsReadOnly="True" />
             <DataGridComboBoxColumn Header="Known" SelectedValueBinding="{Binding Path=Known}"
                                             ItemsSource="{x:Static cw:WordDatabase.KNOWLEDGE_DESCRIPTIONS}"
-                                            MaxWidth="150">
+                                            MaxWidth="70">
                 <DataGridComboBoxColumn.CellStyle>
                     <Style TargetType="{x:Type DataGridCell}">
                         <Style.Triggers>
@@ -39,12 +39,12 @@
                     </Style>
                 </DataGridComboBoxColumn.CellStyle>
             </DataGridComboBoxColumn>
-            <DataGridTextColumn Header="Short English" FontFamily="Times New Roman" Binding="{Binding Path=ShortEnglish}" MaxWidth="150" />
-            <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" MaxWidth="500" />
-            <DataGridTextColumn Header="Source" FontFamily="Times New Roman" Binding="{Binding Path=Source}"/>
-            <DataGridTextColumn Header="HSK Index" FontFamily="Times New Roman" Binding="{Binding Path=HSKIndex}"/>
-            <DataGridTextColumn Header="Hanzi rarity" FontFamily="Times New Roman" Binding="{Binding Path=HanziRarity}"/>
-            <DataGridTextColumn Header="Finnish" FontFamily="Times New Roman" Binding="{Binding Path=Finnish}"/>
+            <DataGridTextColumn Header="Short English" FontFamily="Times New Roman" Binding="{Binding Path=ShortEnglish}" MinWidth="50" MaxWidth="100" />
+            <DataGridTextColumn Header="English" FontFamily="Times New Roman" Binding="{Binding Path=English}" MinWidth="50" MaxWidth="300" />
+            <DataGridTextColumn Header="Source" FontFamily="Times New Roman" Binding="{Binding Path=Source}" MinWidth="50" MaxWidth="120"/>
+            <DataGridTextColumn Header="HSK Index" FontFamily="Times New Roman" Binding="{Binding Path=HSKIndex}" MinWidth="50"/>
+            <DataGridTextColumn Header="Hanzi rarity" FontFamily="Times New Roman" Binding="{Binding Path=HanziRarity}" MinWidth="50"/>
+            <DataGridTextColumn Header="Finnish" FontFamily="Times New Roman" Binding="{Binding Path=Finnish}" MinWidth="50"/>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>
