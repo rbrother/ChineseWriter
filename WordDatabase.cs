@@ -73,7 +73,7 @@ namespace ChineseWriter {
         /// Word itself and it's characters
         /// </summary>
         public static IEnumerable<Word> BreakDown( IHanyuPinyin word ) {
-            return ToWordList( RT.var( "WordDatabase", "word-breakdown" ).invoke( word.Hanyu, word.Pinyin ) );
+            return ToWordList( RT.var( "ParseChinese", "word-breakdown" ).invoke( word.Hanyu, word.Pinyin ) );
         }
 
         internal static void DeleteWordInfo( IHanyuPinyin word ) {

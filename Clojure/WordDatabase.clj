@@ -70,12 +70,6 @@
     (->> (zip (map str hanyu) (str/split pinyin #" "))
       (map (fn [ [h p] ] (find-char h p))))))
 
-(defn word-breakdown [ hanyu pinyin ]
-  (let [ word (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ) ]
-    (concat
-       [ word ]
-       (if (= 1 (count hanyu)) [] (characters hanyu pinyin)))))
-
 ;--------------- Loading database -------------------------------------
 
 (defn suggestion-comparer [
