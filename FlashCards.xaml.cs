@@ -23,17 +23,41 @@ namespace ChineseWriter {
             NextCard( );
         }
 
+        private FrameworkElement[] HintFields {
+            get {
+                return ChineseEnglish.IsChecked.Value ?
+                    new FrameworkElement[] { HanyuBox, Source } :
+                    new FrameworkElement[] { EnglishBox, Picture };
+            }
+        }
+
+        private FrameworkElement[] AllFields {
+            get {
+                return new FrameworkElement[] {  HanyuBox, EnglishBox, Picture, KnownLevel, Source };
+            }
+        }
+
+        private void SetVisibility( FrameworkElement[] widgets, Visibility vis ) {
+            foreach ( var widget in widgets ) { widget.Visibility = vis; }
+        }
+
         public void NextCard( ) {
+            SetVisibility( AllFields, Visibility.Hidden );
+            SetVisibility( HintFields, Visibility.Visible );
             var props = WordDatabase.GetRandomWord( );
-            HanyuBox.Child = new WordPanel( props, showEnglish: false );
             _word = new Word( props );
-            EnglishBox.Text = "";
+            HanyuBox.Child = new WordPanel( props, showEnglish: false );
+            EnglishBox.Text = _word.English;
             KnownLevel.Content = WordDatabase.KNOWLEDGE_LEVEL_DESCR[_word.KnownLevel];
             Source.Content = _word.Source;
+            CheckPanel.Visibility = Visibility.Visible;
+            CorrectIncorrectPanel.Visibility = Visibility.Collapsed;
         }
 
         private void Check_Click( object sender, RoutedEventArgs e ) {
-            EnglishBox.Text = _word.English;
+            CheckPanel.Visibility = Visibility.Collapsed;
+            CorrectIncorrectPanel.Visibility = Visibility.Visible;
+            SetVisibility( AllFields, Visibility.Visible );
         }
 
         private void Correct_Click( object sender, RoutedEventArgs e ) {

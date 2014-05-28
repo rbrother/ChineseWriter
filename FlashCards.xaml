@@ -12,6 +12,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -22,14 +23,21 @@
         <Label Grid.Row="2">English</Label>
         <TextBlock Grid.Row="2" Grid.Column="1" Name="EnglishBox" TextWrapping="Wrap" Width="250" Height="60" Margin="4"/>
         <Border Grid.Row="3" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1" Margin="4">
-            <Image Height="100" Width="100"></Image>
+            <Image Height="100" Width="100" Name="Picture"></Image>
         </Border>
         <Label Grid.Row="4">Known level</Label>
         <Label Grid.Row="4" Grid.Column="1" Name="KnownLevel">0</Label>
         <Label Grid.Row="5">Source</Label>
         <Label Grid.Row="5" Grid.Column="1" Name="Source"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="2" >
-            <Button MinWidth="100" MinHeight="30" FontWeight="Bold" Margin="4" Click="Check_Click">Check</Button>
+        <Label Grid.Row="6">Mode</Label>
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+            <RadioButton Name="ChineseEnglish" VerticalAlignment="Center" Margin="0,0,16,0" IsChecked="True">Chinese → English</RadioButton>
+            <RadioButton Name="EnglishChinese" VerticalAlignment="Center" IsChecked="True">English → Chinese</RadioButton>
+        </StackPanel>
+        <StackPanel Name="CheckPanel" Orientation="Horizontal" Grid.Row="7" Grid.ColumnSpan="2"  HorizontalAlignment="Center">
+            <Button MinWidth="200" MinHeight="30" FontWeight="Bold" Margin="4" Click="Check_Click">Check</Button>
+        </StackPanel>
+        <StackPanel Name="CorrectIncorrectPanel" Orientation="Horizontal" Grid.Row="7" Grid.ColumnSpan="2"  HorizontalAlignment="Center">
             <Button MinWidth="100" MinHeight="30" FontWeight="Bold" Margin="4" Click="Correct_Click" Background="#a0d0a0">Correct</Button>
             <Button MinWidth="100" MinHeight="30" FontWeight="Bold" Margin="4" Click="Uncorrect_Click" Background="#d0a0a0">Incorrect</Button>
         </StackPanel>
