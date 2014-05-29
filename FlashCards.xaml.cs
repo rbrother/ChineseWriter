@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Brotherus;
 
 namespace ChineseWriter {
 
@@ -48,6 +49,8 @@ namespace ChineseWriter {
             _word = new Word( props );
             HanyuBox.Child = new WordPanel( props, showEnglish: false );
             EnglishBox.Text = _word.English;
+            var file = System.IO.Path.Combine( Utils.FindRelativeFile( "images" ), _word.Image + ".jpg" ).Replace("\\","/");
+            Picture.Source = new BitmapImage( new Uri( "file://" + file.Replace("\\","/") ) );
             KnownLevel.Content = WordDatabase.KNOWLEDGE_LEVEL_DESCR[_word.KnownLevel];
             Source.Content = _word.Source;
             CheckPanel.Visibility = Visibility.Visible;

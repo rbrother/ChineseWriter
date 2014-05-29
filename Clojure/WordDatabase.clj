@@ -23,7 +23,7 @@
 
 (defn get-word [ hanyu pinyin ] (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ))
 
-(defn get-random-word [] (rand-nth (filter :known (vals @hanyu-pinyin-dict))))
+(defn get-random-word [] (rand-nth (filter :image (vals @hanyu-pinyin-dict))))
 
 ;--------------------------------------------------------------------------------
 

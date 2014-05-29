@@ -22,9 +22,7 @@
         <Border Name="HanyuBox" Grid.Column="2" Margin="4"></Border>
         <Label Grid.Row="2">English</Label>
         <TextBlock Grid.Row="2" Grid.Column="1" Name="EnglishBox" TextWrapping="Wrap" Width="250" Height="60" Margin="4"/>
-        <Border Grid.Row="3" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1" Margin="4">
-            <Image Height="100" Width="100" Name="Picture"></Image>
-        </Border>
+        <Image Grid.Row="3" Grid.ColumnSpan="2" Margin="4" Height="200" Width="300" Name="Picture"></Image>
         <Label Grid.Row="4">Known level</Label>
         <Label Grid.Row="4" Grid.Column="1" Name="KnownLevel">0</Label>
         <Label Grid.Row="5">Source</Label>

@@ -45,6 +45,7 @@
             <DataGridTextColumn Header="HSK Index" FontFamily="Times New Roman" Binding="{Binding Path=HSKIndex}" MinWidth="50"/>
             <DataGridTextColumn Header="Hanzi rarity" FontFamily="Times New Roman" Binding="{Binding Path=HanziRarity}" MinWidth="50"/>
             <DataGridTextColumn Header="Finnish" FontFamily="Times New Roman" Binding="{Binding Path=Finnish}" MinWidth="50"/>
+            <DataGridTextColumn Header="Image" FontFamily="Times New Roman" Binding="{Binding Path=Image}" MinWidth="50"/>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>

@@ -85,6 +85,10 @@ namespace ChineseWriter {
             get { return (string)Get( "finnish" ); }
             set { Set( "finnish", value ); }
         }
+        public string Image {
+            get { return (string)Get( "image" ); }
+            set { Set( "image", value ); }
+        }
         internal void Delete( ) {
             WordDatabase.DeleteWordInfo( this );
         }
