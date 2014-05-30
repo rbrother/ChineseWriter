@@ -168,11 +168,11 @@
 ; The key here is to have all-words pre-sorted in order of :known, so no new sorting is needed:
 ; Top results come quickly from top of the list.
 ; We could as well return all 100 000 items in whole dictionary, but no-one will need them so
-; to consume less processor power, limit to 5000 (we never expect to need more words)
+; to consume less processor power, limit to 500 (we never expect to need more words)
 
 (defn find-words [ input english ]
   (let [ matcher ((if english english-matcher pinyin-matcher) input) ]
-    (take 5000 (filter matcher @all-words))))
+    (take 500 (filter matcher @all-words))))
 
 
 (run-tests)

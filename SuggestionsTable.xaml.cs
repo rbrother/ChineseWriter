@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,7 +40,6 @@ namespace ChineseWriter {
                 _updaterTask.Wait( );
             }
             MessageStream.OnNext( Tuple.Create( "Searching dictionary...", Colors.Red ) );
-            _suggestions.Clear( ); 
             _cancellationSource = new CancellationTokenSource( );
             _cancellationToken = _cancellationSource.Token;
             _updaterTask = Task.Factory.StartNew( new Action( ( ) => UpdateSuggestionsBackground( suggestions ) ), _cancellationToken );
@@ -47,6 +47,7 @@ namespace ChineseWriter {
 
         private void UpdateSuggestionsBackground( IEnumerable<Word> suggestions ) {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Clear( ) ) );
             var index = 0;
             foreach ( var suggestion in suggestions ) {
                 if ( _cancellationToken.IsCancellationRequested ) return;
