@@ -85,7 +85,7 @@ namespace ChineseWriter {
                 GuiUtils.CheckBoxChangeObservable( ShowEnglish ).
                     CombineLatest( PinyinInputChanges, ( english, input ) => Tuple.Create( english, input ) ).
                     ObserveOnDispatcher( ).
-                    Subscribe( tuple => Suggestions.UpdateSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
+                    Subscribe( tuple => Suggestions.NewSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 WritingState.WordsChanges.
                     ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
                 WritingState.WordsChanges.Subscribe( words => WritingState.SaveCurrentText( ) );
@@ -292,7 +292,7 @@ namespace ChineseWriter {
                     if ( panel.IsHanyuWord ) {
                         var word = ( (WordPanel)sender ).HanyuWord;
                         // Show word breakdown and Move cursor only on clicking on single field, not dragging selection
-                        Suggestions.UpdateSuggestions( WordDatabase.BreakDown( word ) );
+                        Suggestions.NewSuggestions( WordDatabase.BreakDown( word ) );
                         WritingState.SetCursorPos( WordPanelIndex( panel ) + 1 );
                     }
                 }
@@ -410,6 +410,7 @@ namespace ChineseWriter {
             flashCardsWindow.Owner = this;
             flashCardsWindow.Show( );
         }
+
     } // class
 
 } // namespace

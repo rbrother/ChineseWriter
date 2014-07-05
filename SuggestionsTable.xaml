@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:cw="clr-namespace:ChineseWriter"             
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             Unloaded="UserControl_Unloaded"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <DataGrid Name="Suggestions" AutoGenerateColumns="False" Focusable="False"

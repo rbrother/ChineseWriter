@@ -16,6 +16,7 @@ namespace ChineseWriter {
     public partial class SuggestionsTable : UserControl {
 
         private ObservableCollection<Word> _suggestions = new ObservableCollection<Word>( );
+        private IEnumerable<Word> _newSuggestions = null;
 
         public Subject<Word> SuggestionSelected = new Subject<Word>( );
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
@@ -26,6 +27,9 @@ namespace ChineseWriter {
         public SuggestionsTable( ) {
             InitializeComponent( );
             Suggestions.ItemsSource = _suggestions;
+            _cancellationSource = new CancellationTokenSource( );
+            _cancellationToken = _cancellationSource.Token;
+            _updaterTask = Task.Factory.StartNew( new Action( ( ) => UpdateSuggestionsBackground( ) ), _cancellationToken );
         }
 
         public bool Empty { get { return _suggestions.Count == 0; } }
@@ -34,33 +38,37 @@ namespace ChineseWriter {
             return ( index < Suggestions.Items.Count ) ? _suggestions[index] : null;
         }
 
-        internal void UpdateSuggestions( IEnumerable<Word> suggestions ) {
-            if ( _cancellationSource != null ) {
-                _cancellationSource.Cancel( );
-                try { 
-                    _updaterTask.Wait( );
-                } catch ( Exception ex ) {
-                    System.Diagnostics.Debug.Print( "Exception at waiting task cancel" );
-                }
-            }
+        internal void NewSuggestions( IEnumerable<Word> suggestions ) {
+            Interlocked.Exchange( ref _newSuggestions, suggestions );
             MessageStream.OnNext( Tuple.Create( "Searching dictionary...", Colors.Red ) );
-            _cancellationSource = new CancellationTokenSource( );
-            _cancellationToken = _cancellationSource.Token;
-            _updaterTask = Task.Factory.StartNew( new Action( ( ) => UpdateSuggestionsBackground( suggestions ) ), _cancellationToken );
         }
 
-        private void UpdateSuggestionsBackground( IEnumerable<Word> suggestions ) {
+        /// <summary>
+        /// This will run for the whole duration of the software
+        /// </summary>
+        private void UpdateSuggestionsBackground( ) {
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            IEnumerable<Word> currentlyProcessingSuggestions = null;
+            while ( true ) {
+                if ( _cancellationToken.IsCancellationRequested ) return;
+                if ( object.ReferenceEquals( _newSuggestions, currentlyProcessingSuggestions ) ) {
+                    Thread.Sleep( 50 );
+                } else {
+                    currentlyProcessingSuggestions = _newSuggestions;
+                    UpdateSuggestionsInner( currentlyProcessingSuggestions );
+                }
+            }
+        }
+
+        private void UpdateSuggestionsInner( IEnumerable<Word> suggestions ) {
             Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Clear( ) ) );
             var index = 0;
             foreach ( var suggestion in suggestions ) {
-                if ( _cancellationToken.IsCancellationRequested ) return;
+                if ( !object.ReferenceEquals( _newSuggestions, suggestions ) ) return;
                 index++;
-                var shortcut = index == 1 ? "Enter" :
-                    index <= 10 ? string.Format( "{0}", index ) : "<click>";
-                var hanyuPinyin = new HanyuPinyin { Hanyu = suggestion.Hanyu, Pinyin = suggestion.Pinyin };
-                var dataWord = new Word( hanyuPinyin, shortcut, index );
-                Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( dataWord ) ) );
+                suggestion.Index = index;
+                suggestion.Shortcut = index == 1 ? "Enter" : index <= 10 ? index.ToString() : "<click>";
+                Dispatcher.BeginInvoke( new Action( ( ) => _suggestions.Add( suggestion) ) );
             }
             MessageStream.OnNext( Tuple.Create( string.Format( "{0} suggestions", index ), Colors.Black ) );
             Dispatcher.BeginInvoke( new Action( ( ) => {
@@ -68,7 +76,7 @@ namespace ChineseWriter {
                     col.Width = DataGridLength.SizeToHeader;
                     col.Width = DataGridLength.SizeToCells;
                 }
-            } ));
+            } ) );
         }
 
         private void Suggestions_MouseUp( object sender, MouseButtonEventArgs e ) {
@@ -101,6 +109,11 @@ namespace ChineseWriter {
                 Word.WordUpdateException = null;
                 MessageBox.Show( Window.GetWindow( this ), ex.ToString(), "Error during word editing" );
             }
+        }
+
+        private void UserControl_Unloaded( object sender, RoutedEventArgs e ) {
+            _cancellationSource.Cancel( );
+            _updaterTask.Wait( );
         }
     }
 }
