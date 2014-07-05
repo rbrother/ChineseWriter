@@ -37,7 +37,11 @@ namespace ChineseWriter {
         internal void UpdateSuggestions( IEnumerable<Word> suggestions ) {
             if ( _cancellationSource != null ) {
                 _cancellationSource.Cancel( );
-                _updaterTask.Wait( );
+                try { 
+                    _updaterTask.Wait( );
+                } catch ( Exception ex ) {
+                    System.Diagnostics.Debug.Print( "Exception at waiting task cancel" );
+                }
             }
             MessageStream.OnNext( Tuple.Create( "Searching dictionary...", Colors.Red ) );
             _cancellationSource = new CancellationTokenSource( );
