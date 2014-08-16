@@ -64,11 +64,11 @@ namespace ChineseWriter {
         }
 
         private void Correct_Click( object sender, RoutedEventArgs e ) {
-            NextCard( );
+            GuiUtils.HandleExceptions( ( ) => NextCard( ) );
         }
 
         private void Uncorrect_Click( object sender, RoutedEventArgs e ) {
-            NextCard( );
+            GuiUtils.HandleExceptions( ( ) => NextCard( ) );
         }
     }
 }

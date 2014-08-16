@@ -12,6 +12,14 @@ namespace ChineseWriter {
 
     static class GuiUtils {
 
+        public static void HandleExceptions( Action action, Window parent = null ) {
+            try {
+                action.Invoke( );
+            } catch ( Exception ex ) {
+                MessageBox.Show( parent, ex.Message, "Exception in ChineseWriter", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None );
+            }
+        }
+
         public static FrameworkElement WrapToBorder( FrameworkElement child ) {
             return new Border {
                 Child = child, BorderThickness = new Thickness( 1.0 ),

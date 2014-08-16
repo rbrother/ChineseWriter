@@ -375,14 +375,6 @@ namespace ChineseWriter {
             this.Topmost = StayOnTop.IsChecked ?? false;
         }
 
-        private void HandleExceptions( Action action ) {
-            try {
-                action.Invoke( );
-            } catch ( Exception ex ) {
-                MessageBox.Show( this, ex.Message, "Exception in ChineseWriter", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None );
-            }
-        }
-
         private void Window_Activated( object sender, EventArgs e ) {
             this._pinyinInput.Focus( );
         }
