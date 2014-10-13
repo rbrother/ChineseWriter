@@ -87,18 +87,22 @@ namespace ChineseWriter {
         }
 
         public static string HanyiText( IEnumerable<IDictionary<object, object>> words ) {
+            return GetText(words, word => word.Text( ) );
+        }
+
+        public static string PinyinText( IEnumerable<IDictionary<object, object>> words ) {
+            return GetText( words, word => new Word( word ).PinyinDiacritics.Replace(" ","") );
+        }
+
+        internal static string GetText( IEnumerable<IDictionary<object, object>> words, Func<IDictionary<object, object>, string> getter ) {
             var finalWords = words != null ? words : Words;
-            var hanyus = finalWords.Select( word => word.Text( ) );
-            return string.Join( " ", hanyus.ToArray( ) );
+            var texts = finalWords.Select( getter );
+            return string.Join( " ", texts.ToArray( ) );
         }
 
         internal static void Clear( ) {
             RT.var( "WritingState", "clear-current-text!" ).invoke( );
             WordsChanges.OnNext( Words );
-        }
-
-        internal static string Hanyu {
-            get { return string.Join( "", Words.Select( word => word.Get<string>( "hanyu" ) ).ToArray( ) ); }
         }
 
         internal static string TextSaveFileName {

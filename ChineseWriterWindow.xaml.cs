@@ -337,6 +337,11 @@ namespace ChineseWriter {
             CopyNow( );
         }
 
+        private void CopyPinyinClick( object sender, RoutedEventArgs e ) {
+            CopyWrapper( ( ) =>
+                Clipboard.SetText( WritingState.PinyinText( SelectedWords ), TextDataFormat.UnicodeText ) );
+        }
+
         private void CopyNow( ) {
             CopyWrapper( () => 
                 Clipboard.SetText( WritingState.HanyiText( SelectedWords ), TextDataFormat.UnicodeText ));
