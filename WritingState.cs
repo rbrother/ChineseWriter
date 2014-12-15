@@ -91,7 +91,7 @@ namespace ChineseWriter {
         }
 
         public static string PinyinText( IEnumerable<IDictionary<object, object>> words ) {
-            return GetText( words, word => new Word( word ).PinyinDiacritics.Replace(" ","") );
+            return GetText( words, word => word.PinyinDiacritics() );
         }
 
         internal static string GetText( IEnumerable<IDictionary<object, object>> words, Func<IDictionary<object, object>, string> getter ) {

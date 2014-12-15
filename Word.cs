@@ -135,6 +135,10 @@ namespace ChineseWriter {
             return word.HasKeyword( "known" ) && word.Get<int>( "known" ) >= 2;
         }
 
+        public static string PinyinDiacritics( this IDictionary<object, object> word ) {
+            return word.IsLiteralText( ) ? word.Text( ) : new Word( word ).PinyinDiacritics.Replace( " ", "" );
+        }
+
         
 
     }
