@@ -23,12 +23,12 @@
 
 (defn get-word [ hanyu pinyin ] (@hanyu-pinyin-dict { :hanyu hanyu :pinyin pinyin } ))
 
-(defn get-random-word [] (rand-nth (filter :image  @hanyu-pinyin-dict))))
+(defn get-random-word [] (rand-nth (filter :image (vals @hanyu-pinyin-dict))))
 
 ;--------------------------------------------------------------------------------
 
 (defn database-info []
-  (let [ known-words (filter :known  @hanyu-pinyin-dict))
+  (let [ known-words (filter :known (vals @hanyu-pinyin-dict))
          known-level-count (fn [level] (count (filter #(= (:known %) level) known-words)))
          known-level-str (fn [level] (str "level " level ": " (known-level-count level)))
          known-levels (str/join ", " (map known-level-str [4 3 2 1]) ) ]
@@ -112,7 +112,7 @@
   (let [ short-dict (create-hanyu-pinyin-dict (load-from-file short-dict-file))
          large-dict (create-hanyu-pinyin-dict (load-from-file cc-dict-file))
          full-dict (merge-with merge large-dict short-dict)
-         merged-words (sort-suggestions  full-dict))
+         merged-words (sort-suggestions (vals full-dict))
          hanyu-indexed (index merged-words [ :hanyu ])
          sort-and-simplify (fn [word-list] (map simple-props (sort-suggestions word-list))) ]
       (reset! info-file-name short-dict-file)
@@ -134,7 +134,7 @@
   (do
     (swap! hanyu-pinyin-dict swap-func)
     (if @info-file-name
-      (let [ words-str (pretty-pr (sort-suggestions (filter known?  @hanyu-pinyin-dict)))) ]
+      (let [ words-str (pretty-pr (sort-suggestions (filter known? (vals @hanyu-pinyin-dict)))) ]
         (System.IO.File/WriteAllText @info-file-name words-str)))))
 
 (defn update-word-props! [ hanyu-pinyin new-props ]

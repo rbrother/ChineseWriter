@@ -44,7 +44,7 @@
 
 (defn combine-duplicates [word-list]
   (let [ dict (index word-list [ :hanyu :pinyin ]) ]
-     (map-map-values combine-duplicates-inner dict))))
+    (vals (map-map-values combine-duplicates-inner dict))))
 
 (defn parse-cc-lines [ lines freqs hsk-freqs ]
   (let [ add-word-attributes-freq (fn [word] (add-word-attributes word freqs hsk-freqs)) ]
