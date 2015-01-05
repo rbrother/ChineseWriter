@@ -1,6 +1,6 @@
 (ns WritingState
   (:require [clojure.string :as str])
-  (:use Utils)
+  (:use utils)
   (:use WordDatabase)
   (:use ParseChinese))
 

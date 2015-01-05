@@ -1,5 +1,5 @@
 (ns WordDatabaseTests
-  (:use Utils)
+  (:use utils)
   (:use WordDatabase)
   (:require WritingState)
   (:require ExportText)

@@ -1,5 +1,5 @@
 (ns WordDatabase
-  (:use Utils)
+  (:use utils)
   (:require [clojure.string :as str])
   (:use clojure.pprint)
   (:use clojure.set)

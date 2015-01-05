@@ -1,5 +1,5 @@
 (ns ParseChinese
-  (:use Utils)
+  (:use utils)
   (:use WordDatabase))
 
 (defn find-first-word-len [ chinese len ]

@@ -4,7 +4,7 @@
   (:require [clojure.string :as str])
   (:use clojure.pprint)
   (:use clojure.set)
-  (:use Utils))
+  (:use utils))
 
 (defn regex-groups [ regex str ]
    (let [ matcher (re-matcher regex str) ]
