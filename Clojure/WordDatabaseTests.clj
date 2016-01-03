@@ -1,5 +1,5 @@
 (ns WordDatabaseTests
-  (:use utils)
+  (:use clojure-common.utils)
   (:use WordDatabase)
   (:require WritingState)
   (:require ExportText)

@@ -1,5 +1,5 @@
 (ns ParseChinese
-  (:use utils)
+  (:use clojure-common.utils)
   (:use WordDatabase))
 
 (defn find-first-word-len [ chinese len ]
