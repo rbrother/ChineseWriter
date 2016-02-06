@@ -87,6 +87,9 @@
       <DependentUpon>FlashCards.xaml</DependentUpon>
     </Compile>
     <Compile Include="GuiUtils.cs" />
+    <Compile Include="InputDialog.xaml.cs">
+      <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StringUtils.cs" />
     <Compile Include="SuggestionsTable.xaml.cs">
       <DependentUpon>SuggestionsTable.xaml</DependentUpon>
@@ -109,6 +112,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="FlashCards.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

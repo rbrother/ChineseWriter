@@ -31,8 +31,10 @@ namespace ChineseWriter {
 
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
+        private string InitialClojureLoadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH");
+
         public void InitClojureLoadPath( ) {
-            var loadPath = Environment.GetEnvironmentVariable( "CLOJURE_LOAD_PATH" ) ?? "";
+            var loadPath = InitialClojureLoadPath ?? "";
             loadPath = AppendToPath( loadPath, Utils.FindRelativeFile("Clojure") ); // TODO: USE relative path, from SearchUpwardFile
             loadPath = loadPath.Replace( '\\', '/' );
             Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath );
@@ -173,12 +175,37 @@ namespace ChineseWriter {
 
         private void ReportErrorThreadSafe( Exception ex ) {
             var message = ex.ToString( );
-            if ( message.Contains( "Could not locate clojure.core.clj.dll" ) ) {
+            if ( message.Contains( "Could not locate clojure" ) ) {
                 this.Dispatcher.Invoke( new Action( ( ) => {
-                    MessageBox.Show( "Please ensure that environment variable CLOJURE_LOAD_PATH\n" +
-                        "Contains clojure-clr directory and any other library directories needed",
-                        "Cannot find Clojure files" );
-                } ) );
+                    var exampleClojureHome = @"c:\Google Drive\Programs\clojure-clr\bin\4.0\Debug;c:\github\ClojureCommon";
+                    var currentValue = InitialClojureLoadPath;
+                    MessageBox.Show(
+                        currentValue == null ? 
+                            "CLOJURE_LOAD_PATH environment variable not set.\n" +
+                            "You will now be propted to give value for CLOJURE_LOAD_PATH\n" +
+                            "with suggested default value." :
+                            "CLOJURE_LOAD_PATH has probably invalid directories specified.\n" +
+                            "You will be now prompted to review value of CLOJURE_LOAD_PATH\n" +
+                            "and make any necessary corrections.",
+                        "Cannot find Clojure files");
+                    if (currentValue == null) currentValue = exampleClojureHome;
+                    var result = InputDialog.AskInput(this, "CLOJURE_LOAD_PATH", 
+                        "Specify semicolon-separated directories with clojure root and libraries.\n" +
+                        "The application must be started with ADMINISTRATOR-rights to set this!\n" +
+                        "Application will close after this and need to be restarted.\n" +
+                        "Reboot might be needed.", currentValue);
+                    if (result != null) {
+                        try { 
+                            Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
+                                "CLOJURE_LOAD_PATH", result, Microsoft.Win32.RegistryValueKind.ExpandString);
+                        } catch (Exception ex2) {
+                            MessageBox.Show("Global CLOJURE_LOAD_PATH environment variable setting failed.\n" +
+                                "Application must be run as ADMINISTRATOR for this to succeed.", ex2.Message,
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    this.Close();
+                }));
             } else {
                 this.Dispatcher.Invoke( new Action( ( ) => {
                     MessageBox.Show( ex.ToString( ), "Error in ChineseWriter Clojure initialization" );
