@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace ChineseWriter {
 
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
-        private string InitialClojureLoadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH");
+        private readonly string InitialClojureLoadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH");
 
         public void InitClojureLoadPath( ) {
             var loadPath = InitialClojureLoadPath ?? "";
@@ -138,6 +139,7 @@ namespace ChineseWriter {
         }
 
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
+            Debug.WriteLine("CLOJURE_LOAD_PATH: " + InitialClojureLoadPath);
             ThreadPool.QueueUserWorkItem( state => {
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
                 try {
@@ -175,9 +177,10 @@ namespace ChineseWriter {
 
         private void ReportErrorThreadSafe( Exception ex ) {
             var message = ex.ToString( );
+            MessageBox.Show(message + "\n\nPress ok for further actions", "Chinesewriter load error", MessageBoxButton.OK, MessageBoxImage.Error);
             if ( message.Contains( "Could not locate clojure" ) ) {
                 this.Dispatcher.Invoke( new Action( ( ) => {
-                    var exampleClojureHome = @"c:\Google Drive\Programs\clojure-clr\bin\4.0\Debug;c:\github\ClojureCommon";
+                    var exampleClojureHome = @"c:\Google Drive\Programs\clojure-clr\bin\4.0\Debug;c:\github\clojure-common\src";
                     var currentValue = InitialClojureLoadPath;
                     MessageBox.Show(
                         currentValue == null ? 
