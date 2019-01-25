@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ChineseWriter</RootNamespace>
     <AssemblyName>ChineseWriter</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -42,11 +42,20 @@
     <ApplicationIcon>GoToSolutionCenterIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Clojure">
-      <HintPath>..\..\Google Drive\Programs\clojure-clr\bin\4.0\Debug\Clojure.dll</HintPath>
+    <Reference Include="Clojure, Version=1.9.0.0, Culture=neutral, PublicKeyToken=cf3caecd327a2fa9, processorArchitecture=MSIL">
+      <HintPath>packages\Clojure.1.9.0\lib\net40\Clojure.dll</HintPath>
     </Reference>
-    <Reference Include="clojure.core.clj">
-      <HintPath>..\..\Google Drive\Programs\clojure-clr\bin\4.0\Debug\clojure.core.clj.dll</HintPath>
+    <Reference Include="clojure.core.specs.alpha, Version=0.1.24.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Clojure.1.9.0\lib\net40\clojure.core.specs.alpha.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.spec.alpha, Version=0.1.143.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Clojure.1.9.0\lib\net40\clojure.spec.alpha.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\Clojure.1.9.0\lib\net40\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\Clojure.1.9.0\lib\net40\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -143,6 +152,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

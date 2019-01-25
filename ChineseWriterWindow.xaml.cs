@@ -32,10 +32,8 @@ namespace ChineseWriter {
 
         public Subject<Tuple<string, Color>> MessageStream = new Subject<Tuple<string, Color>>( );
 
-        private readonly string InitialClojureLoadPath = Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH");
-
         public void InitClojureLoadPath( ) {
-            var loadPath = InitialClojureLoadPath ?? "";
+            var loadPath = "";
             loadPath = AppendToPath( loadPath, Utils.FindRelativeFile("Clojure") ); // TODO: USE relative path, from SearchUpwardFile
             loadPath = loadPath.Replace( '\\', '/' );
             Environment.SetEnvironmentVariable( "CLOJURE_LOAD_PATH", loadPath );
@@ -91,7 +89,6 @@ namespace ChineseWriter {
                     Subscribe( tuple => Suggestions.NewSuggestions( WordDatabase.Suggestions( tuple.Item2, tuple.Item1 ) ) );
                 WritingState.WordsChanges.
                     ObserveOnDispatcher( ).Subscribe( words => PopulateCharGrid( words, WritingState.CursorPos ) );
-                WritingState.WordsChanges.Subscribe( words => WritingState.SaveCurrentText( ) );
 
                 MessageStream.Merge(Suggestions.MessageStream).
                     ObserveOnDispatcher( ).Subscribe( messageAndColor => {
@@ -139,7 +136,6 @@ namespace ChineseWriter {
         }
 
         private void Window_Loaded( object sender, RoutedEventArgs e ) {
-            Debug.WriteLine("CLOJURE_LOAD_PATH: " + InitialClojureLoadPath);
             ThreadPool.QueueUserWorkItem( state => {
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
                 try {
@@ -180,33 +176,9 @@ namespace ChineseWriter {
             MessageBox.Show(message + "\n\nPress ok for further actions", "Chinesewriter load error", MessageBoxButton.OK, MessageBoxImage.Error);
             if ( message.Contains( "Could not locate clojure" ) ) {
                 this.Dispatcher.Invoke( new Action( ( ) => {
-                    var exampleClojureHome = @"c:\Google Drive\Programs\clojure-clr\bin\4.0\Debug;c:\github\clojure-common\src";
-                    var currentValue = InitialClojureLoadPath;
                     MessageBox.Show(
-                        currentValue == null ? 
-                            "CLOJURE_LOAD_PATH environment variable not set.\n" +
-                            "You will now be propted to give value for CLOJURE_LOAD_PATH\n" +
-                            "with suggested default value." :
-                            "CLOJURE_LOAD_PATH has probably invalid directories specified.\n" +
-                            "You will be now prompted to review value of CLOJURE_LOAD_PATH\n" +
-                            "and make any necessary corrections.",
+                        "Problem finding clojure files" ,
                         "Cannot find Clojure files");
-                    if (currentValue == null) currentValue = exampleClojureHome;
-                    var result = InputDialog.AskInput(this, "CLOJURE_LOAD_PATH", 
-                        "Specify semicolon-separated directories with clojure root and libraries.\n" +
-                        "The application must be started with ADMINISTRATOR-rights to set this!\n" +
-                        "Application will close after this and need to be restarted.\n" +
-                        "Reboot might be needed.", currentValue);
-                    if (result != null) {
-                        try { 
-                            Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
-                                "CLOJURE_LOAD_PATH", result, Microsoft.Win32.RegistryValueKind.ExpandString);
-                        } catch (Exception ex2) {
-                            MessageBox.Show("Global CLOJURE_LOAD_PATH environment variable setting failed.\n" +
-                                "Application must be run as ADMINISTRATOR for this to succeed.", ex2.Message,
-                                MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
                     this.Close();
                 }));
             } else {

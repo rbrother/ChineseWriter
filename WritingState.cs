@@ -45,9 +45,6 @@ namespace ChineseWriter {
         }
 
         public static void LoadText( ) {
-            if ( File.Exists( TextSaveFileName ) ) {
-                RT.var( "WritingState", "load-current-text" ).invoke( TextSaveFileName );
-            }
             WordsChanges.OnNext( Words );
         }
 
@@ -103,16 +100,6 @@ namespace ChineseWriter {
         internal static void Clear( ) {
             RT.var( "WritingState", "clear-current-text!" ).invoke( );
             WordsChanges.OnNext( Words );
-        }
-
-        internal static string TextSaveFileName {
-            get {
-                return Path.Combine( Utils.ExeDir.ToString( ), "text.clj" );
-            }
-        }
-
-        internal static void SaveCurrentText( ) {
-            RT.var( "WritingState", "save-current-text" ).invoke( TextSaveFileName );
         }
 
         internal static void Move( string dir ) {
