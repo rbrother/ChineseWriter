@@ -31,7 +31,17 @@ namespace ChineseWriter {
         public static string[] KNOWLEDGE_DESCRIPTIONS = KNOWLEDGE_LEVEL_DESCR.Values.ToArray( );
 
 
-        public static string SmallDictionaryFile { get { return @"C:\Google Drive\Ann\chinese study\words.clj"; } }
+        public static string SmallDictionaryFile {
+            get {
+                var folders = new string[] { @"C:\Users\RobertBrotherus\Google Drive\Ann\chinese study\words.clj",
+                @"C:\Google Drive\Ann\chinese study\words.clj"};
+                foreach(string file in folders)
+                {
+                    if (File.Exists(file)) return file;
+                }
+                throw new ApplicationException("Could not find words.clj");
+            }
+        }
 
         public static void LoadWords( ) {
             RT.var( "WordDatabase", "load-database" )
