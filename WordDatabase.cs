@@ -33,8 +33,9 @@ namespace ChineseWriter {
 
         public static string SmallDictionaryFile {
             get {
-                var folders = new string[] { @"C:\Users\RobertBrotherus\Google Drive\Ann\chinese study\words.clj",
-                @"C:\Google Drive\Ann\chinese study\words.clj"};
+                var userDir = Environment.GetEnvironmentVariable("USERPROFILE");
+                var folders = new string[] { $@"{userDir}\Google Drive\Ann\chinese study\words.clj",
+                    @"C:\Google Drive\Ann\chinese study\words.clj"};
                 foreach(string file in folders)
                 {
                     if (File.Exists(file)) return file;
